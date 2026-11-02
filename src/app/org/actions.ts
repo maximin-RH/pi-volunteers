@@ -79,7 +79,7 @@ const PostSchema = z.object({
   orgId: z.string().uuid(),
   id: z.string().uuid().optional().or(z.literal("")),
   clonedFrom: z.string().uuid().optional().or(z.literal("")),
-  title: z.string().trim().min(3, "Add a role title."),
+  title: z.string().trim().min(3, "Add what you need help with, e.g. Carols setup crew."),
   category: z.string().min(1),
   kind: z.enum(["slot", "ongoing"]),
   date: z.string().optional(),

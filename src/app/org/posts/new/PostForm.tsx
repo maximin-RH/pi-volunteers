@@ -59,7 +59,7 @@ export function PostForm({ orgId, orgName, orgLogo, init, categories, suburbs, r
         <input type="hidden" name="clonedFrom" value={f.clonedFrom ?? ""} />
         <input type="hidden" name="kind" value={f.kind} />
         <input type="hidden" name="imagePath" value={f.imagePath ?? ""} />
-        <label className={label}>Role title<input name="title" value={f.title ?? ""} onChange={set("title")} required placeholder="e.g. Carols setup crew" className={input} /></label>
+        <label className={label}>What do you need help with?<input name="title" value={f.title ?? ""} onChange={set("title")} required placeholder="e.g. Carols setup crew, Sausage sizzle helpers" className={input} /></label>
         <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
           <label className={label}>Category
             <select name="category" value={f.category ?? categories[0]?.slug} onChange={set("category")} className={input}>
@@ -169,7 +169,7 @@ export function PostForm({ orgId, orgName, orgLogo, init, categories, suburbs, r
           <div className={"w-full aspect-[1.91/1] bg-center bg-no-repeat " + (previewIsLogo ? "bg-white bg-contain bg-origin-content p-6" : "bg-navy bg-cover")} style={{ backgroundImage: "url(" + preview + ")" }} />
           <div className="px-3.5 py-2.5 bg-[#F0F2F5] flex flex-col gap-0.5">
             <span className="text-xs text-[#65676B] uppercase">{(process.env.NEXT_PUBLIC_SITE_URL ?? "").replace(/^https?:\/\//, "") || "your-domain"}</span>
-            <span className="text-base font-bold text-[#050505] leading-tight">{(f.title || "Your role title") + " · " + orgName}</span>
+            <span className="text-base font-bold text-[#050505] leading-tight">{(f.title || "What you need help with") + " · " + orgName}</span>
             <span className="text-sm text-[#65676B]">{fmt(f.date, f.start, f.end)}{f.venue ? " · " + f.venue : ""}{f.suburb ? " · " + f.suburb : ""}. {f.peopleNeeded} people needed.</span>
           </div>
         </div>
