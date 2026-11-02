@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { copyToClipboard } from "@/lib/clipboard";
 
 export type SharePost = {
@@ -12,14 +12,16 @@ export type SharePost = {
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
 const clip = (s: string, n: number) => (s.length > n ? s.slice(0, n).replace(/\s+\S*$/, "") + "…" : s);
 
-const pill = "min-h-11 px-3.5 whitespace-nowrap rounded-full border-[1.5px] border-sand-line bg-white font-bold text-[15px] flex items-center justify-center gap-2 no-underline hover:border-navy";
+const noSubscribe = () => () => {};
+
+const pill ="min-h-11 px-3.5 whitespace-nowrap rounded-full border-[1.5px] border-sand-line bg-white font-bold text-[15px] flex items-center justify-center gap-2 no-underline hover:border-navy";
 const section = "flex flex-col gap-2.5 pt-4 border-t border-sand-line";
 
 export function ShareDialog({ post }: { post: SharePost }) {
   const router = useRouter();
   const [copied, setCopied] = useState<string | null>(null);
-  const [canNativeShare, setCanNativeShare] = useState(false);
-  useEffect(() => setCanNativeShare(typeof navigator.share === "function"), []);
+  // false on the server and first paint, then whether this browser has a share sheet.
+  const canNativeShare = useSyncExternalStore(noSubscribe, () => typeof navigator.share === "function", () => false);
 
   const base = process.env.NEXT_PUBLIC_SITE_URL || (typeof window !== "undefined" ? window.location.origin : "");
   const url = base + "/roles/" + post.id;

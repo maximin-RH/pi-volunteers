@@ -25,7 +25,7 @@ Design reference: `docs/design/Pi-Volunteers Website v3.dc.html`. Open it in a b
 
 ## 1. Run it locally
 
-You need Node 20+, Docker Desktop (for the local database) and the GitHub CLI.
+You need Node 20.9+ (22 recommended: the Supabase library is dropping Node 20) and Docker Desktop (for the local database). In Vercel, set the Node.js version to 22 or later.
 
 ```bash
 npm install

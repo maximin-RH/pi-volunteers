@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import Link from "next/link";
 import { registerOrg, type RegState } from "../actions";
 import { IMAGE_ACCEPT, MAX_IMAGE_MB, imageProblem } from "@/lib/images";
+import { keepValues } from "@/lib/keepValues";
 
 const input = "h-12 rounded-xl border-[1.5px] border-sand-line bg-white px-3.5 text-[17px] font-normal w-full";
 const label = "flex flex-col gap-1.5 font-bold min-w-0";
@@ -43,7 +44,7 @@ export default function RegisterOrg() {
             <Link href="/org/dashboard" className="self-start h-13 px-6 flex items-center rounded-full bg-orange hover:bg-orange-deep text-white hover:text-white font-bold no-underline">Open your dashboard</Link>
           </div>
         ) : (
-          <form action={action} className="rounded-panel bg-white border border-sand-line p-7 flex flex-col gap-4">
+          <form onSubmit={keepValues(action)} className="rounded-panel bg-white border border-sand-line p-7 flex flex-col gap-4">
             <label className={label}>Organisation name<input name="name" required className={input} /></label>
             <label className={label}>Type of group
               <select name="type" className={input}>

@@ -105,7 +105,7 @@ Keep a simple log of any incident, even ones that turn out not to need notifying
 - [ ] Store `CRON_SECRET` and API keys only in Vercel or Supabase settings, never in code or chat.
 
 **Code (tracked in docs/ROADMAP.md)**
-- [ ] Upgrade Next.js (15 → 16) and Zod (3 → 4): both have security advisories that only major versions fix. The other 15 audit warnings are in developer-only tools.
+- [x] Upgraded Next.js 15 → 16, Zod 3 → 4 and @supabase/ssr 0.5 → 0.12 (November 2026). Remaining audit warnings (16, moderate) are all in developer-only lint tools that never reach the live site.
 - [ ] Admin screen: show organisation contacts and open Child Safe documents through admin-only database functions (the public can no longer read them).
 - [ ] "Download my information" for volunteers (APP 12). Until then, handle requests by email.
 - [ ] Automatic clean-up for the history limit you choose above.

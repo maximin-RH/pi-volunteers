@@ -26,6 +26,8 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
     sp.tab === "calendar" ? supabase.rpc("my_calendar_token", { p_org: org.id }) : Promise.resolve({ data: null }),
   ]);
 
+  // Server Component: rendered once per request, so reading the clock here is fine.
+  // eslint-disable-next-line react-hooks/purity
   const now = Date.now();
   const allPosts = (posts ?? []).map((p) => {
     const confirmedList = (ints ?? []).filter((i) => i.opportunity_id === p.id && i.status === "confirmed");

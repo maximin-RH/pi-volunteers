@@ -5,7 +5,7 @@ type CookieList = { name: string; value: string; options: CookieOptions }[];
 
 const PROTECTED = ["/me", "/org/dashboard", "/org/posts", "/org/register"];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

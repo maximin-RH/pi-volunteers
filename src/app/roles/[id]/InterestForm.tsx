@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import { registerInterest, type InterestState } from "./actions";
+import { keepValues } from "@/lib/keepValues";
 
 type Props = {
   opportunityId: string;
@@ -30,7 +31,7 @@ export function InterestForm(p: Props) {
   if (p.full) return <p className="m-0 text-slate">Check back later in case a spot opens.</p>;
 
   return (
-    <form action={action} className="flex flex-col gap-4">
+    <form onSubmit={keepValues(action)} className="flex flex-col gap-4">
       <input type="hidden" name="opportunityId" value={p.opportunityId} />
       <label className="flex flex-col gap-1.5 font-bold">
         Your name, as the group will see it

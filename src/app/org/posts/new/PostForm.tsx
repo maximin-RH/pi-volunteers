@@ -33,7 +33,7 @@ function Chip({ name, value, on, toggle, children }: { name: string; value: stri
 function fmt(date?: string, start?: string, end?: string) {
   if (!date) return "Date to be set";
   const d = new Date(date + "T00:00").toLocaleDateString("en-AU", { weekday: "short", day: "numeric", month: "short" });
-  const t = (s?: string) => { if (!s) return ""; let [h, m] = s.split(":").map(Number); const ap = h >= 12 ? "pm" : "am"; h = h % 12 || 12; return h + (m ? ":" + String(m).padStart(2, "0") : "") + ap; };
+  const t = (s?: string) => { if (!s) return ""; const [h, m] = s.split(":").map(Number); const ap = h >= 12 ? "pm" : "am"; return (h % 12 || 12) + (m ? ":" + String(m).padStart(2, "0") : "") + ap; };
   return d + (start && end ? ", " + t(start) + "–" + t(end) : "");
 }
 
