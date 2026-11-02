@@ -103,7 +103,7 @@ export default async function Me({ searchParams }: { searchParams: Promise<{ vie
 
       <section className="flex flex-col gap-3">
         <h2 className="m-0 text-2xl font-bold">Calendar and reminders</h2>
-        <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(min(100%,400px),1fr))] items-start">
+        <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(min(100%,400px),1fr))]">
           {token && <SubscribePanel links={subscribeLinks(token as string, "Pi-Volunteers")} what="your volunteering" />}
           <ReminderPrefs
             // Remount after saving so the form shows what was saved.

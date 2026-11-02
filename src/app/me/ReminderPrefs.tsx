@@ -10,7 +10,7 @@ export function ReminderPrefs({ email, init }: { email: string | null; init: { e
   const [sms, setSms] = useState(init.sms);
 
   return (
-    <form action={action} className="rounded-card bg-white border border-sand-line p-5 flex flex-col gap-2">
+    <form action={action} className="h-full rounded-card bg-white border border-sand-line p-5 flex flex-col gap-2">
       <span className="text-lg font-bold">Reminders</span>
       <span className="text-[15px] text-slate">Groups choose when to remind confirmed volunteers. You choose how.</span>
       <label className={check}>
@@ -32,7 +32,8 @@ export function ReminderPrefs({ email, init }: { email: string | null; init: { e
       {!sms && <input type="hidden" name="reminderPhone" value={init.phone} />}
       {state.error && <p role="alert" className="m-0 text-rust font-bold">{state.error}</p>}
       {state.ok && !pending && <p className="m-0 text-navy font-bold">Saved.</p>}
-      <button disabled={pending} className="self-start h-11 px-5 mt-1 rounded-full bg-navy hover:bg-navy-deep text-white font-bold disabled:opacity-60">
+      {/* mt-auto keeps the button on the card's bottom edge, level with the calendar card beside it. */}
+      <button disabled={pending} className="self-start mt-auto h-11 px-5 rounded-full bg-navy hover:bg-navy-deep text-white font-bold disabled:opacity-60">
         {pending ? "Saving…" : "Save reminder settings"}
       </button>
     </form>

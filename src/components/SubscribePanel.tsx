@@ -11,7 +11,7 @@ const pill = "min-h-11 px-4 whitespace-nowrap rounded-full border-[1.5px] border
 export function SubscribePanel({ links, what }: { links: Links; what: string }) {
   const [copied, setCopied] = useState<boolean | null>(null);
   return (
-    <div className="rounded-card bg-cream p-5 flex flex-col gap-3">
+    <div className="h-full rounded-card bg-white border border-sand-line p-5 flex flex-col gap-3">
       <span className="text-lg font-bold">Keep {what} in your calendar</span>
       <span className="text-[15px] text-slate">Subscribe once. New and changed volunteer slots appear by themselves, usually within a few hours.</span>
       <div className="grid gap-2 grid-cols-[repeat(auto-fit,minmax(150px,1fr))]">
