@@ -6,13 +6,14 @@ const nextConfig: NextConfig = {
   },
   // Default is 1 MB, too small for logos, event photos and Child Safe PDFs.
   experimental: { serverActions: { bodySizeLimit: "16mb" } },
-  // pi-volunteer.com (singular) catches typos. Send it, keeping the path, to the real site.
+  // The site lives at goodlocallife.com. Send www and the earlier pi-volunteers.com / pi-volunteer.com
+  // names there, keeping the path (harmless if those domains aren't kept).
   async redirects() {
     return [
       {
         source: "/:path*",
-        has: [{ type: "host", value: "(www\\.)?pi-volunteer\\.com" }],
-        destination: "https://www.pi-volunteers.com/:path*",
+        has: [{ type: "host", value: "(www\\.goodlocallife|(www\\.)?pi-volunteers?)\\.com" }],
+        destination: "https://goodlocallife.com/:path*",
         permanent: true,
       },
     ];

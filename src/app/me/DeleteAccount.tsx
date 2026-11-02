@@ -11,7 +11,7 @@ export function DeleteAccount() {
     <div className="rounded-card bg-white border border-sand-line p-5 flex flex-col gap-2">
       <span className="text-lg font-bold">Your account</span>
       <span className="text-[15px] text-slate">
-        Deleting your account removes your name, sign-in, volunteering history, reminder settings and calendar links. Groups lose the details you shared with them through Pi-Volunteers. This can't be undone.
+        Deleting your account removes your name, sign-in, volunteering history, reminder settings and calendar links. Groups lose the details you shared with them through Good Local Life. This can't be undone.
       </span>
       {!open ? (
         <button onClick={() => setOpen(true)} className="self-start h-11 px-5 mt-1 rounded-full border-[1.5px] border-sand-line bg-white font-bold hover:border-rust">

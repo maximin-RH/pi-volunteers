@@ -55,7 +55,7 @@ function send(r: Due): Promise<SendResult> {
 
   if (r.channel === "sms") {
     const body = [
-      `Pi-Volunteers: ${r.title} with ${r.org_name} is ` + (whenText.startsWith("on ") ? "on " + date : whenText + ", " + date),
+      `Good Local Life: ${r.title} with ${r.org_name} is ` + (whenText.startsWith("on ") ? "on " + date : whenText + ", " + date),
       place && "at " + place,
     ].filter(Boolean).join(" ") + "." + (onsite ? ` Ask for ${onsite}.` : "") + ` Can't make it? ${SITE()}/me`;
     return sendSms(r.phone!, body);
@@ -69,7 +69,7 @@ function send(r: Due): Promise<SendResult> {
     onsite && `On the day, ask for ${onsite}.`,
     `Details: ${link}`,
     `Can't make it? Let the group know in My volunteering: ${SITE()}/me`,
-    "Thanks for helping out on the Island.\nPi-Volunteers",
+    "Thanks for helping out on the Island.\nGood Local Life – Phillip Island",
   ].filter(Boolean) as string[];
   const html =
     `<p>Hi ${esc(r.display_name)},</p>` +
@@ -78,6 +78,6 @@ function send(r: Due): Promise<SendResult> {
     (onsite ? `<p>On the day, ask for <strong>${esc(onsite)}</strong>.</p>` : "") +
     `<p><a href="${esc(link)}">See the details</a></p>` +
     `<p>Can't make it? <a href="${esc(SITE())}/me">Let the group know in My volunteering</a>.</p>` +
-    `<p>Thanks for helping out on the Island.<br>Pi-Volunteers</p>`;
+    `<p>Thanks for helping out on the Island.<br>Good Local Life – Phillip Island</p>`;
   return sendEmail(r.email!, subject, lines.join("\n\n"), html);
 }

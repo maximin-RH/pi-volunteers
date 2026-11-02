@@ -12,7 +12,7 @@ const atkinson = Atkinson_Hyperlegible({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
-  title: { default: "Pi-Volunteers · Phillip Island", template: "%s · Pi-Volunteers" },
+  title: { default: "Good Local Life – Phillip Island", template: "%s · Good Local Life – Phillip Island" },
   description: "Local groups post what they need. You pick what suits your week. Phillip Island only.",
   openGraph: { images: ["/images/sunrise-sky.jpg"], locale: "en_AU", type: "website" },
 };

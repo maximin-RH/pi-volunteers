@@ -1,6 +1,6 @@
 # Privacy and security
 
-How Pi-Volunteers handles personal information, which Australian rules apply, what's built in, and what's still to do before launch.
+How Good Local Life handles personal information, which Australian rules apply, what's built in, and what's still to do before launch.
 
 > This is a practical guide written alongside the code, not legal advice. Before launch, have the privacy policy and volunteer terms reviewed. Free starting points for community groups: **Justice Connect Not-for-profit Law** (guides and a free legal help service) and the **OAIC's guides for small business**.
 
@@ -8,7 +8,7 @@ How Pi-Volunteers handles personal information, which Australian rules apply, wh
 
 | Rule | Does it apply? | What it means for us |
 |---|---|---|
-| **Privacy Act 1988 (Cth) and the 13 Australian Privacy Principles (APPs)** | Probably not legally at first: entities with annual turnover of A$3 million or less are usually exempt. **Recommended: opt in anyway** (free, through the OAIC's opt-in register). | Groups, councils and funders will expect it, the government has agreed in principle to remove the small business exemption, and the build already follows the APPs. First decide **which legal entity runs Pi-Volunteers** (for example an incorporated association, or EdgeIQ). That entity is the one bound by the Act. |
+| **Privacy Act 1988 (Cth) and the 13 Australian Privacy Principles (APPs)** | Probably not legally at first: entities with annual turnover of A$3 million or less are usually exempt. **Recommended: opt in anyway** (free, through the OAIC's opt-in register). | Groups, councils and funders will expect it, the government has agreed in principle to remove the small business exemption, and the build already follows the APPs. First decide **which legal entity runs Good Local Life** (for example an incorporated association, or EdgeIQ). That entity is the one bound by the Act. |
 | **Notifiable Data Breaches scheme** (part of the Privacy Act) | Yes, if we're covered or opt in. | If a breach is likely to cause serious harm: assess within 30 days, then notify the OAIC and the people affected. See the breach plan in section 5. |
 | **Statutory tort for serious invasions of privacy** (Privacy and Other Legislation Amendment Act 2024, in force since June 2025) | Yes, for everyone. No small business exemption. | People can sue for serious, intentional or reckless misuse of their information. Strong access controls and not collecting more than we need are the defence. |
 | **Health Records Act 2001 (Vic)** | Yes, if we hold any health information, whatever our size. | **Don't collect health information.** The volunteer "note for the group" now asks people not to include medical details. |
@@ -20,7 +20,7 @@ How Pi-Volunteers handles personal information, which Australian rules apply, wh
 
 ## 2. What personal information we hold
 
-Everything is in Supabase (Sydney region), encrypted at rest (AES-256) and in transit (TLS). "Admins" means Pi-Volunteers admins.
+Everything is in Supabase (Sydney region), encrypted at rest (AES-256) and in transit (TLS). "Admins" means Good Local Life admins.
 
 | Information | Whose | Stored in | Who can see it | Why | Kept for |
 |---|---|---|---|---|---|
@@ -58,7 +58,7 @@ Everything is in Supabase (Sydney region), encrypted at rest (AES-256) and in tr
 - Calendar links can be reset if shared by mistake. Calendar feeds never include anyone's contact details, because feeds get forwarded and copied into Google, Apple and Microsoft.
 
 **Security in transit and on the website**
-- HTTPS only (HSTS), no embedding in other sites (stops click-jacking), forms only post back to Pi-Volunteers, and other sites never see page addresses (which may hold a private calendar link).
+- HTTPS only (HSTS), no embedding in other sites (stops click-jacking), forms only post back to Good Local Life, and other sites never see page addresses (which may hold a private calendar link).
 - Uploads are checked for type and size (images: JPG, PNG or WebP, 5 MB max). SVG is blocked because it can carry scripts.
 - Sign-in links expire after 1 hour.
 
@@ -88,8 +88,10 @@ Keep a simple log of any incident, even ones that turn out not to need notifying
 
 ## 6. To do before launch
 
-**Decisions for Robyn**
-- [ ] Which legal entity runs Pi-Volunteers, and does it opt in to the Privacy Act (recommended)?
+**Decisions for Robyn and Mark**
+- [ ] GoodLocalLife is a joint, wider offering. Decide which legal entity collects the information (the "APP entity") and how the partners share it. Each partner using volunteers' information for its own purposes would be a disclosure that needs telling people about up front, and usually consent.
+- [ ] Before adding business promotion or a loyalty programme: promotional emails need consent and an unsubscribe link (Spam Act), and sharing volunteers' details with venues needs clear consent. Plan this into sign-up rather than adding it later.
+- [ ] Which legal entity runs Good Local Life, and does it opt in to the Privacy Act (recommended)?
 - [ ] Email provider: Amazon SES Sydney (onshore, cheapest at scale) or Resend (simplest, overseas).
 - [ ] How long to keep volunteering history and attendance after a slot (suggestion: 2 years, then remove names), and for groups that close.
 - [ ] Who are the admins? Keep it to 1–2 people.

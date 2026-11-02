@@ -1,8 +1,8 @@
-# Pi-Volunteers
+# Good Local Life – Phillip Island
 
-Volunteer roles from Phillip Island groups, in one place. Volunteers browse and say they're interested; organisations post roles, confirm volunteers and share them on Facebook, WhatsApp, email, text, newsletters and their own websites.
+The volunteering part of **Good Local Life** (goodlocallife.com), starting with Phillip Island as the first community. Volunteer roles from Phillip Island groups, in one place. Volunteers browse and say they're interested; organisations post roles, confirm volunteers and share them on Facebook, WhatsApp, email, text, newsletters and their own websites.
 
-Stack: **Next.js 15 (App Router) · Supabase (Postgres, Auth, Storage) · Tailwind CSS 4 · Vercel**.
+Stack: **Next.js 16 (App Router) · Supabase (Postgres, Auth, Storage) · Tailwind CSS 4 · Vercel**.
 
 ## What's in this starter
 
@@ -50,7 +50,7 @@ The repo `maximin-RH/pi-volunteers` already exists and is empty.
 ```bash
 git init -b main
 git add .
-git commit -m "Pi-Volunteers starter"
+git commit -m "Good Local Life starter"
 git remote add origin https://github.com/maximin-RH/pi-volunteers.git
 git push -u origin main
 ```
@@ -66,23 +66,23 @@ git push -u origin main
 2. **Make yourself admin**: sign in once on the live site, then in the SQL editor run
    `update profiles set is_admin = true where id = (select id from auth.users where email = 'you@example.com');`
 3. **Vercel**: import the GitHub repo, add the env vars from `.env.example` (Supabase, site URL, `CRON_SECRET`, SMTP, and Twilio if using texts), deploy.
-4. **Supabase → Auth → URL configuration**: set Site URL to `https://www.pi-volunteers.com` and add `https://www.pi-volunteers.com/auth/callback` to redirect URLs.
+4. **Supabase → Auth → URL configuration**: set Site URL to `https://goodlocallife.com` and add `https://goodlocallife.com/auth/callback` to redirect URLs.
 5. **Email**: Supabase's built-in email allows only a few messages an hour. Add your email provider as custom SMTP (Auth → SMTP settings): Amazon SES in Sydney (onshore, about US$0.10 per 1,000) or Resend (free up to 3,000 a month, US-based). See `docs/PRIVACY-AND-SECURITY.md` section 4.
 6. **SMS (only once funded)**: Auth → Providers → Phone → Twilio, set the `TWILIO_*` vars and `NEXT_PUBLIC_SMS_ENABLED=true`.
-7. **Domains**: the site is `www.pi-volunteers.com`. `pi-volunteer.com` (singular) catches typos and forwards to it.
-   - In Vercel → Project → Domains, add all four: `www.pi-volunteers.com` (primary), `pi-volunteers.com`, `www.pi-volunteer.com` and `pi-volunteer.com`. Set the last three to **Redirect to `www.pi-volunteers.com` (308 permanent)**.
-   - At the domain registrar, point each domain's DNS at Vercel as Vercel shows (an A record for the bare domain, a CNAME for `www`).
-   - Set `NEXT_PUBLIC_SITE_URL=https://www.pi-volunteers.com` in Vercel.
-   - `next.config.ts` also redirects the singular domain, keeping the path, in case the Vercel setting is missed.
+7. **Domain**: the site is `goodlocallife.com`.
+   - In Vercel → Project → Domains, add `goodlocallife.com` (primary) and `www.goodlocallife.com`, set to **Redirect to `goodlocallife.com` (308 permanent)**.
+   - At the domain registrar, point DNS at Vercel as Vercel shows (an A record for `goodlocallife.com`, a CNAME for `www`).
+   - Set `NEXT_PUBLIC_SITE_URL=https://goodlocallife.com` in Vercel.
+   - `next.config.ts` also redirects `www.goodlocallife.com` and the earlier `pi-volunteers.com` / `pi-volunteer.com` names (if kept), keeping the path.
 8. **Reminders**: they're sent by `/api/reminders/run`, which the database calls every 15 minutes.
-   - Email: in Vercel set `SMTP_HOST`, `SMTP_PORT=465`, `SMTP_USER`, `SMTP_PASS` and `SMTP_FROM` from your provider (SES Sydney: `email-smtp.ap-southeast-2.amazonaws.com` with SES SMTP credentials; Resend: `smtp.resend.com`, user `resend`, your API key). Verify the `pi-volunteers.com` domain with the provider first.
+   - Email: in Vercel set `SMTP_HOST`, `SMTP_PORT=465`, `SMTP_USER`, `SMTP_PASS` and `SMTP_FROM` from your provider (SES Sydney: `email-smtp.ap-southeast-2.amazonaws.com` with SES SMTP credentials; Resend: `smtp.resend.com`, user `resend`, your API key). Verify the `goodlocallife.com` domain with the provider first.
    - Texts stay off until funded. When they're on: `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM` and `NEXT_PUBLIC_SMS_ENABLED=true`.
    - In the Supabase SQL editor, store the secret and start the schedule (use the same value as `CRON_SECRET` in Vercel):
      ```sql
      insert into app_secrets (name, value) values ('cron_secret', 'YOUR-CRON-SECRET');
      select cron.schedule('pi-volunteers-reminders', '*/15 * * * *', $$
        select net.http_post(
-         url := 'https://www.pi-volunteers.com/api/reminders/run',
+         url := 'https://goodlocallife.com/api/reminders/run',
          headers := jsonb_build_object('Authorization', 'Bearer YOUR-CRON-SECRET')
        );
      $$);
@@ -97,7 +97,7 @@ git push -u origin main
 | Supabase | Free | $0. Free projects pause after 7 days with no traffic. Move to Pro (about US$25) at launch. |
 | Email | SES Sydney or Resend free tier | About $0 at our volume (SES about US$0.10 per 1,000) |
 | Twilio SMS | **Off until funded** | $0 now. If turned on: about A$0.08–0.10 per text; 100 volunteers with 2 text reminders each is about A$16–20 a month. |
-| Domains (pi-volunteers.com, pi-volunteer.com) | Yearly | About A$3–5 a month for both |
+| Domain (goodlocallife.com) | Yearly | About A$2–3 a month |
 
 With Supabase Pro this comes to about A$40–45 a month in total (Supabase Pro plus domains). Everything else stays on free tiers, and text messages are switched off until funded.
 

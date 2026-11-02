@@ -1,6 +1,8 @@
-# Pi-Volunteers: notes for Claude Code
+# Good Local Life – Phillip Island: notes for Claude Code
 
 ## Product
+Good Local Life (goodlocallife.com, working title) is a wider local-life offering developed by Robyn Hill with Mark Ritterman. This repo is its volunteering part, "Good Local Life – Phillip Island", with Phillip Island as the first community. In the UI: "Good Local Life – Phillip Island" in titles and sign-offs, "Good Local Life" in running sentences. Later parts may include local business promotion and a loyalty programme with local venues: keep that in mind (for example, don't hard-code Phillip Island where it costs nothing to avoid), but don't build for it until asked.
+
 Volunteer noticeboard for Phillip Island (Victoria, Australia). Two account types: volunteers and organisation members. Plus admins.
 Launch scope: website with accounts. **Volunteers must be 18+**. Under-18 and guardian consent is phase 2.
 Launch organisations: Island Voice, Carols by the Bay. Their details in `supabase/seed.sql` are TODO placeholders. Never invent ABNs, addresses or contacts.
@@ -23,7 +25,7 @@ Tokens live in `src/app/globals.css` (`@theme`). Use those Tailwind names (`bg-n
 Australian English (organisation, programme). Sentence case. Numerals for quantities. En dash for ranges (9am–12pm). No exclamation marks, no emoji. Say "volunteer slot" in the UI, never "shift". In code the enum is `slot`.
 
 ## Code rules
-- Next.js 15 App Router. Server Components by default; `"use client"` only for forms with local state.
+- Next.js 16 App Router (auth checks are in `src/proxy.ts`, formerly middleware). Server Components by default; `"use client"` only for forms with local state.
 - Mutations are Server Actions in `actions.ts` files, validated with zod.
 - All data access goes through Supabase with RLS. **Never use the service-role key in app code.** If a feature seems to need it, write a `security definer` SQL function instead.
 - Schema changes: add a new file in `supabase/migrations/`, never edit `0001_init.sql` after it's been pushed.
@@ -31,7 +33,7 @@ Australian English (organisation, programme). Sentence case. Numerals for quanti
 - Calendar feeds are read by token through `calendar_feed_events`; org feeds carry counts only, never volunteer names.
 - Times are stored as UTC `timestamptz` and shown in `Australia/Melbourne` (see `src/lib/format.ts`).
 - Personal data: organisations only see a volunteer's display name plus what the volunteer ticked to share. In the other direction, a role's contacts (`opportunity_contacts`) are only visible to volunteers registered for that role, and only once the org has ticked permission to share. Never add them to `opportunity_listing`.
-- Domain: `https://www.pi-volunteers.com`. `pi-volunteer.com` (singular) redirects to it.
+- Domain: `https://goodlocallife.com`. `www.goodlocallife.com` and the earlier `pi-volunteers.com` / `pi-volunteer.com` redirect to it (`next.config.ts`).
 
 ## Commands
 `npm run dev` · `npx supabase db reset` · `npm run typecheck` · `npm run db:types`

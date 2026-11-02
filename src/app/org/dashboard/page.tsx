@@ -133,7 +133,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
                 }))}
               />
               {calToken && (
-                <SubscribePanel key={calToken as string} links={subscribeLinks(calToken as string, "Pi-Volunteers: " + org.name)}
+                <SubscribePanel key={calToken as string} links={subscribeLinks(calToken as string, "Good Local Life: " + org.name)}
                   what={org.name + "'s volunteer slots"} onReset={resetCalendarLink.bind(null, org.id)} />
               )}
             </>

@@ -17,8 +17,9 @@ export function Wordmark() {
   return (
     <span className="flex items-center gap-2.5 whitespace-nowrap">
       <LogoMark />
-      <span className="text-xl font-bold tracking-tight">
-        Pi<span className="text-orange">-</span>Volunteers
+      <span className="flex flex-col leading-none gap-1">
+        <span className="text-xl font-bold tracking-tight">Good Local Life</span>
+        <span className="text-[13px] font-bold text-orange tracking-wide">Phillip Island</span>
       </span>
     </span>
   );

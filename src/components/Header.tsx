@@ -15,7 +15,7 @@ export async function Header() {
   return (
     <header className="sticky top-3 z-40 px-4">
       <div className="mx-auto max-w-[1240px] flex items-center gap-3 md:gap-5 rounded-full bg-paper/80 backdrop-blur-md border border-sand-line pl-5 pr-2 py-2">
-        <Link href="/" className="no-underline shrink-0" aria-label="Pi-Volunteers home">
+        <Link href="/" className="no-underline shrink-0" aria-label="Good Local Life – Phillip Island home">
           <Wordmark />
         </Link>
         <nav className="flex-1 min-w-0 flex justify-center overflow-x-auto">

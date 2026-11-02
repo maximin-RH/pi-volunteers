@@ -37,7 +37,7 @@ export function toIcs(events: CalEvent[], opts: { name: string; alarms?: number[
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Pi-Volunteers//Phillip Island//EN",
+    "PRODID:-//Good Local Life//Phillip Island//EN",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     "X-WR-CALNAME:" + esc(opts.name),
@@ -48,7 +48,7 @@ export function toIcs(events: CalEvent[], opts: { name: string; alarms?: number[
   for (const e of events) {
     lines.push(
       "BEGIN:VEVENT",
-      "UID:" + e.id + "@pi-volunteers.com",
+      "UID:" + e.id + "@goodlocallife.com",
       "DTSTAMP:" + now,
       "DTSTART:" + stamp(e.start),
       "DTEND:" + stamp(e.end),

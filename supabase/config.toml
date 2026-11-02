@@ -30,7 +30,7 @@ enable_confirmations = false
 [auth.sms]
 enable_signup = true
 enable_confirmations = false
-template = "Your Pi-Volunteers code is {{ .Code }}"
+template = "Your Good Local Life code is {{ .Code }}"
 
 # Local testing without Twilio: sign in with this number and code.
 [auth.sms.test_otp]

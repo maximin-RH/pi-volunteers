@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/server";
 const Schema = z.object({
   opportunityId: z.string().uuid(),
   displayName: z.string().trim().min(1, "Add the name the group will see.").max(60),
-  adult: z.literal("on", { error: "You need to be 18 or over to volunteer through Pi-Volunteers for now." }),
+  adult: z.literal("on", { error: "You need to be 18 or over to volunteer through Good Local Life for now." }),
   shareEmail: z.string().optional(),
   sharePhone: z.string().optional(),
   note: z.string().max(500).optional(),

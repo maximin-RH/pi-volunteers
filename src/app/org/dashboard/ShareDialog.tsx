@@ -37,7 +37,7 @@ export function ShareDialog({ post }: { post: SharePost }) {
   const newsletterHtml =
     `<p><strong>Volunteers needed: ${esc(post.title)}</strong><br>${esc(details)}. ${esc(needed)}</p>` +
     (blurb ? `<p>${esc(blurb)}</p>` : "") +
-    `<p><a href="${esc(url)}">Say you're interested on Pi-Volunteers</a></p>`;
+    `<p><a href="${esc(url)}">Say you're interested on Good Local Life</a></p>`;
   const buttonHtml =
     `<a href="${esc(url)}" style="display:inline-block;padding:12px 24px;border-radius:999px;background:#D2601A;color:#ffffff;font-weight:bold;text-decoration:none">Volunteer: ${esc(post.title)}</a>`;
 
@@ -52,7 +52,7 @@ export function ShareDialog({ post }: { post: SharePost }) {
       <div role="dialog" aria-modal="true" aria-label="Share your post" className="relative w-full max-w-[600px] max-h-[calc(100vh-48px)] overflow-auto bg-white rounded-panel p-7 flex flex-col gap-4">
         <div className="flex justify-between items-start gap-4">
           <div className="flex flex-col gap-1.5">
-            <span className="font-bold text-orange">Live on Pi-Volunteers</span>
+            <span className="font-bold text-orange">Live on Good Local Life</span>
             <h2 className="m-0 text-[26px] leading-tight">Share it where Island locals look</h2>
           </div>
           <button onClick={close} className="shrink-0 min-h-11 px-4 rounded-full border-[1.5px] border-sand-line bg-white font-bold hover:border-navy">Done</button>
@@ -89,7 +89,7 @@ export function ShareDialog({ post }: { post: SharePost }) {
 
         <div className={section}>
           <span className="font-bold">Your website</span>
-          <span className="text-[15px] text-slate">Link once to your page on Pi-Volunteers. It always lists your current roles, so you won't need to update your site for each new post.</span>
+          <span className="text-[15px] text-slate">Link once to your page on Good Local Life. It always lists your current roles, so you won't need to update your site for each new post.</span>
           <div className="flex gap-2 flex-wrap">
             <button onClick={() => copy("org", orgUrl)} className={pill}>{label("org", "Copy link to all your roles")}</button>
             <button onClick={() => copy("button", buttonHtml)} className={pill}>{label("button", "Copy button code for this role")}</button>

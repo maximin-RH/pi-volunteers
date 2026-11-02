@@ -4,7 +4,7 @@ export const metadata = { title: "About" };
 export default function About() {
   return (
     <div className="mx-auto max-w-[900px] px-6 pt-10 pb-16 flex flex-col gap-6">
-      <h1 className="m-0 text-[clamp(36px,4.5vw,56px)] leading-none font-bold tracking-tight">About Pi-Volunteers</h1>
+      <h1 className="m-0 text-[clamp(36px,4.5vw,56px)] leading-none font-bold tracking-tight">About Good Local Life – Phillip Island</h1>
       <p className="m-0 text-xl leading-relaxed text-slate">
         A free noticeboard for volunteer roles on Phillip Island. Local groups post what they need. You pick what suits your week.
       </p>

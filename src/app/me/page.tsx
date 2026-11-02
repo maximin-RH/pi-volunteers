@@ -107,7 +107,7 @@ export default async function Me({ searchParams }: { searchParams: Promise<{ vie
         <h2 className="m-0 text-2xl font-bold">Calendar, reminders and account</h2>
         <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(min(100%,400px),1fr))]">
           {token && (
-            <SubscribePanel key={token as string} links={subscribeLinks(token as string, "Pi-Volunteers")} what="your volunteering"
+            <SubscribePanel key={token as string} links={subscribeLinks(token as string, "Good Local Life")} what="your volunteering"
               onReset={resetCalendarLink.bind(null, null)} />
           )}
           <ReminderPrefs
