@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box}body{margin:0;background:#FBF8F3;font-family:'Atkinson Hyperlegible',system-ui,sans-serif;color:#13294B}a{color:#13294B}a:hover{color:#D2601A}button,input,select{font-family:inherit;color:inherit}:focus-visible{outline:3px solid #D2601A;outline-offset:2px}</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<header style="position:sticky;top:0;z-index:10;padding:12px 16px 0">
+<div style="max-width:1240px;margin:0 auto;padding:8px 8px 8px 20px;display:flex;align-items:center;gap:clamp(8px,1.5vw,20px);flex-wrap:nowrap;background:rgba(251,248,243,.78);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);border:1px solid rgba(226,211,189,.7);border-radius:999px;box-shadow:0 8px 30px -12px rgba(19,41,75,.18)">
+<button onClick="{{ goHome }}" style="flex:none;white-space:nowrap;display:flex;align-items:center;gap:10px;background:none;border:0;padding:0;cursor:pointer">
+<svg aria-hidden="true" viewBox="0 0 40 40" width="40" height="40" style="flex:none;display:block"><rect width="40" height="40" rx="12" fill="#13294B"></rect><g stroke="#F6B36B" stroke-width="2" stroke-linecap="round" fill="none"><path d="M20 5v3M9.4 9.4l2.1 2.1M30.6 9.4l-2.1 2.1M5 20h2.5M32.5 20H35"></path></g><path d="M10 21a10 10 0 0 1 20 0z" fill="#F28A2E"></path><path d="M5 21h30" stroke="#F28A2E" stroke-width="2" stroke-linecap="round"></path><path d="M6 27c2.3 0 2.3-2 4.7-2s2.3 2 4.6 2 2.3-2 4.7-2 2.3 2 4.6 2 2.3-2 4.7-2 2.3 2 4.7 2" stroke="#F6B36B" stroke-width="2.2" stroke-linecap="round" fill="none"></path><path d="M9 32.5c2 0 2-1.7 4-1.7s2 1.7 4 1.7 2-1.7 4-1.7 2 1.7 4 1.7 2-1.7 4-1.7 2 1.7 4 1.7" stroke="#6F95C4" stroke-width="2" stroke-linecap="round" fill="none"></path></svg>
+<span style="font-size:20px;font-weight:700;letter-spacing:-0.02em">Pi<span style="color:#D2601A">-</span>Volunteers</span>
+</button>
+<nav style="display:flex;gap:0;flex-wrap:nowrap;flex:1 1 auto;min-width:0;justify-content:center;overflow-x:auto;scrollbar-width:none">
+<sc-for list="{{ navLinks }}" as="l" hint-placeholder-count="4"><button onClick="{{ l.onClick }}" style="flex:none;white-space:nowrap;min-height:44px;padding:0 clamp(8px,1.2vw,16px);border:0;border-radius:999px;background:{{ l.bg }};font-size:16px;font-weight:700;cursor:pointer;color:#13294B;transition:background .15s" style-hover="background:#F3E6D3">{{ l.label }}</button></sc-for>
+</nav>
+<div style="display:flex;gap:6px;flex:none">
+<button onClick="{{ postNeed }}" style="white-space:nowrap;height:44px;padding:0 clamp(10px,1.2vw,18px);border:0;border-radius:999px;background:transparent;font-size:16px;font-weight:700;cursor:pointer" style-hover="background:#F3E6D3">Post a need</button>
+<button onClick="{{ signIn }}" style="white-space:nowrap;height:44px;padding:0 20px;border:0;border-radius:999px;background:#13294B;color:#FFFFFF;font-size:16px;font-weight:700;cursor:pointer" style-hover="background:#0C1C36">Sign in</button>
+</div>
+</div>
+</header>
+
+<main style="flex:1">
+
+<sc-if value="{{ pg.home }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column">
+<section style="position:relative;margin-top:-76px;min-height:clamp(680px,92vh,900px);display:flex;overflow:hidden;background:#13294B">
+<img src="images/sunrise-sky.jpg" alt="Blue sky fading to orange over Western Port, with surfers waiting on the waves" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 72%;display:block">
+<div style="position:absolute;inset:0;background:linear-gradient(100deg,rgba(12,28,54,.78) 0%,rgba(12,28,54,.5) 40%,rgba(12,28,54,0) 72%)"></div>
+<div style="position:relative;max-width:1240px;width:100%;margin:0 auto;padding:clamp(128px,16vh,170px) 24px 40px;display:flex;flex-direction:column;justify-content:space-between;gap:48px">
+<div style="display:flex;flex-direction:column;gap:24px;max-width:760px">
+<div style="align-self:flex-start;display:flex;align-items:center;gap:10px;padding:8px 14px 8px 10px;border-radius:999px;background:rgba(251,248,243,.9);font-size:15px;color:#13294B"><span style="width:10px;height:10px;border-radius:5px;background:#D2601A;box-shadow:0 0 0 5px rgba(210,96,26,.2)"></span><span><strong>{{ openCount }} open</strong> right now · {{ shiftCount }} volunteer slots in the next 2 weeks</span></div>
+<h1 style="margin:0;font-size:clamp(52px,7vw,104px);line-height:.95;letter-spacing:-0.045em;text-wrap:balance;color:#FFFFFF">Lend a hand on the Island <span style="color:#F7A24B">this week.</span></h1>
+<p style="margin:0;font-size:21px;line-height:1.5;color:#F3E6D3;max-width:44ch;text-wrap:pretty">Local groups post what they need. You pick what suits your week. Free, Phillip Island only, and nothing about you is shared until you say so.</p>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between">
+<div style="flex:1 1 420px;display:flex;align-items:center;gap:6px;padding:6px;border-radius:999px;background:#FFFFFF;box-shadow:0 20px 50px -20px rgba(12,28,54,.6);max-width:620px;flex-wrap:wrap">
+<label style="flex:1 1 200px;display:flex;flex-direction:column;padding:6px 18px;min-width:0"><span style="font-size:13px;font-weight:700;color:#4A5A72">What interests you</span><select style="border:0;background:transparent;font-size:17px;font-weight:700;padding:0;outline:none;min-width:0"><option>Anything</option><sc-for list="{{ catTiles }}" as="c" hint-placeholder-count="0"><option>{{ c.label }}</option></sc-for></select></label>
+<span style="width:1px;height:36px;background:#ECDFCB"></span>
+<label style="flex:1 1 140px;display:flex;flex-direction:column;padding:6px 18px;min-width:0"><span style="font-size:13px;font-weight:700;color:#4A5A72">When</span><select style="border:0;background:transparent;font-size:17px;font-weight:700;padding:0;outline:none"><option>This week</option><option>Next 2 weeks</option><option>Any time</option></select></label>
+<button onClick="{{ goFind }}" style="flex:none;height:56px;padding:0 28px;border:0;border-radius:999px;background:#D2601A;color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer;transition:background .15s" style-hover="background:#B14E12">Find a role</button>
+</div>
+<button onClick="{{ nextUp.open }}" style="flex:0 1 340px;text-align:left;background:#FFFFFF;border:0;border-radius:24px;padding:18px;display:flex;gap:14px;align-items:center;cursor:pointer;box-shadow:0 24px 60px -20px rgba(12,28,54,.6);color:#13294B">
+<span style="flex:none;width:60px;height:64px;border-radius:20px;background:#FCE3CC;color:#8A3B0E;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-size:12px;font-weight:700">{{ nextUp.d1 }}</span><span style="font-size:24px;font-weight:700;line-height:1">{{ nextUp.d2 }}</span><span style="font-size:12px;font-weight:700">{{ nextUp.d3 }}</span></span>
+<span style="display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font-size:13px;font-weight:700;color:#D2601A">Next up</span><span style="font-size:17px;font-weight:700;line-height:1.2">{{ nextUp.title }}</span><span style="font-size:14px;color:#4A5A72">{{ nextUp.left }}</span></span>
+</button>
+</div>
+</div>
+</section>
+
+<section style="max-width:1240px;width:100%;margin:0 auto;padding:56px 24px;display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap"><h2 style="margin:0;font-size:clamp(32px,3.6vw,48px);letter-spacing:-0.03em;line-height:1">Coming up</h2><button onClick="{{ goFind }}" style="height:48px;padding:0 20px;border:1px solid #E2D3BD;border-radius:999px;background:#FFFFFF;font-size:16px;font-weight:700;cursor:pointer" style-hover="border-color:#13294B">See all {{ openCount }} →</button></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:20px">
+<sc-for list="{{ featured }}" as="o" hint-placeholder-count="6"><dc-import name="OppCard Sunset" item="{{ o }}" variant="{{ cardVariant }}" hint-size="100%,200px"></dc-import></sc-for>
+</div>
+</section>
+
+<section style="max-width:1240px;width:100%;margin:0 auto;padding:24px 24px 56px;display:flex;flex-direction:column;gap:28px">
+<h2 style="margin:0;font-size:clamp(32px,3.6vw,48px);letter-spacing:-0.03em;line-height:1">Browse by category</h2>
+<div style="display:flex;flex-wrap:wrap;gap:10px">
+<sc-for list="{{ catTiles }}" as="c" hint-placeholder-count="12">
+<button onClick="{{ c.onClick }}" style="display:flex;align-items:center;gap:12px;min-height:60px;padding:8px 20px 8px 8px;border:1px solid #ECDFCB;border-radius:999px;background:#FFFFFF;cursor:pointer;transition:border-color .15s,background .15s" style-hover="border-color:#13294B;background:#F8F2E8">
+<span style="width:44px;height:44px;border-radius:22px;background:#F3E6D3;display:flex;align-items:center;justify-content:center;font:700 11px ui-monospace,Menlo,monospace;flex:none">{{ c.abbr }}</span>
+<span style="font-size:17px;font-weight:700">{{ c.label }}</span><span style="font-size:15px;color:#D2601A;font-weight:700">{{ c.count }}</span>
+</button>
+</sc-for>
+</div>
+</section>
+
+<section style="max-width:1240px;width:100%;margin:0 auto;padding:0 24px 56px">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));grid-auto-rows:260px;gap:12px">
+<img src="images/nobbies.jpg" alt="The Nobbies and Seal Rocks under a grey sky" style="grid-column:span 2;width:100%;height:100%;object-fit:cover;border-radius:28px;display:block;min-width:0">
+<img src="images/wallaby.jpg" alt="Swamp wallaby in coastal scrub" style="width:100%;height:100%;object-fit:cover;border-radius:28px;display:block">
+<img src="images/kookaburra.jpg" alt="Kookaburra on a branch" style="width:100%;height:100%;object-fit:cover;border-radius:28px;display:block">
+</div>
+</section>
+
+<section style="max-width:1240px;width:100%;margin:0 auto;padding:24px 24px 64px;display:flex;flex-direction:column;gap:28px">
+<h2 style="margin:0;font-size:clamp(32px,3.6vw,48px);letter-spacing:-0.03em;line-height:1">How it works</h2>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:20px">
+<sc-for list="{{ steps }}" as="st" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:14px;padding:28px;border-radius:28px;background:#F8F2E8;min-height:260px">
+<span style="font-size:64px;font-weight:700;line-height:1;letter-spacing:-0.05em;color:#D2601A">{{ st.n }}</span>
+<span style="margin-top:auto;font-size:24px;font-weight:700;line-height:1.15;letter-spacing:-0.02em">{{ st.t }}</span>
+<span style="font-size:17px;line-height:1.5;color:#4A5A72">{{ st.b }}</span>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section style="max-width:1240px;width:100%;margin:0 auto;padding:0 24px 64px">
+<div style="background:#13294B;color:#FFFFFF;border-radius:40px;padding:clamp(32px,5vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:48px;align-items:center;position:relative;overflow:hidden">
+<img src="images/sunset-pano.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 60%;pointer-events:none"><div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(12,28,54,.92) 0%,rgba(12,28,54,.7) 60%,rgba(12,28,54,.45) 100%)"></div>
+<div style="position:relative;display:flex;flex-direction:column;gap:20px">
+<span style="align-self:flex-start;padding:6px 14px;border-radius:999px;background:rgba(243,230,211,.14);font-size:14px;font-weight:700;color:#F3E6D3">For Island groups</span>
+<h2 style="margin:0;font-size:clamp(32px,3.8vw,50px);line-height:1.02;letter-spacing:-0.03em;text-wrap:balance">Post a 4-hour Saturday volunteer slot in 2 minutes. A local sees it that night.</h2>
+<p style="margin:0;font-size:18px;line-height:1.55;color:#F3E6D3;max-width:50ch">Clone last year's event post, share it to your Facebook group with a proper preview, and confirm people with one tap. We're a noticeboard, not a volunteer management system.</p>
+<button onClick="{{ goOrgReg }}" style="align-self:flex-start;height:56px;padding:0 28px;border:0;border-radius:999px;background:#D2601A;color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer" style-hover="background:#B14E12">Register your group</button>
+</div>
+<div style="position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+<sc-for list="{{ orgPoints }}" as="pt" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;gap:6px;padding:20px;border-radius:22px;background:rgba(255,255,255,.07);border:1px solid rgba(243,230,211,.16)"><span style="font-size:18px;font-weight:700">{{ pt.t }}</span><span style="font-size:15px;line-height:1.45;color:#F3E6D3">{{ pt.b }}</span></div></sc-for>
+</div>
+</div>
+</section>
+
+<section style="max-width:1240px;width:100%;margin:0 auto;padding:0 24px 64px;display:flex;flex-direction:column;gap:16px">
+<span style="font-size:15px;font-weight:700;color:#4A5A72">Working with</span>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px">
+<div style="height:72px;border:1px dashed #C9B595;border-radius:999px;display:flex;align-items:center;justify-content:center;font:12px ui-monospace,Menlo,monospace;color:#4A5A72">PARTNER LOGO</div>
+<div style="height:72px;border:1px dashed #C9B595;border-radius:999px;display:flex;align-items:center;justify-content:center;font:12px ui-monospace,Menlo,monospace;color:#4A5A72">PARTNER LOGO</div>
+<div style="height:72px;border:1px dashed #C9B595;border-radius:999px;display:flex;align-items:center;justify-content:center;font:12px ui-monospace,Menlo,monospace;color:#4A5A72">PARTNER LOGO</div>
+<div style="height:72px;border:1px dashed #C9B595;border-radius:999px;display:flex;align-items:center;justify-content:center;font:12px ui-monospace,Menlo,monospace;color:#4A5A72">PARTNER LOGO</div>
+<div style="height:72px;border:1px dashed #C9B595;border-radius:999px;display:flex;align-items:center;justify-content:center;font:12px ui-monospace,Menlo,monospace;color:#4A5A72">PARTNER LOGO</div>
+</div>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{ pg.find }}" hint-placeholder-val="{{ false }}">
+<div style="background:#F8F2E8;min-height:100%">
+<div style="max-width:1240px;margin:0 auto;padding:32px 24px 56px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap"><h1 style="margin:0;font-size:clamp(40px,4.5vw,60px);letter-spacing:-0.035em;line-height:1">Opportunities</h1><span style="font-size:17px;color:#4A5A72">{{ visCount }} showing · soonest volunteer slots first, then newest ongoing</span></div>
+<div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">
+<aside style="flex:1 1 260px;max-width:100%;background:#FFFFFF;border:1px solid #E2D3BD;border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:20px;position:sticky;top:96px">
+<div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0;font-size:20px">Filters</h2><button onClick="{{ clearFilters }}" style="min-height:40px;border:0;background:none;font-size:15px;font-weight:700;text-decoration:underline;cursor:pointer">Clear all</button></div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:16px;font-weight:700">Type</span>
+<div style="display:flex;gap:4px;background:#F3E6D3;border-radius:999px;padding:4px"><sc-for list="{{ typeChips }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="flex:1;height:38px;border:0;border-radius:999px;font-size:15px;font-weight:700;cursor:pointer;background:{{ c.bg }}">{{ c.label }}</button></sc-for></div></div>
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:16px;font-weight:700;margin-bottom:4px">Category</span>
+<sc-for list="{{ catChecks }}" as="c" hint-placeholder-count="12"><button onClick="{{ c.onClick }}" role="checkbox" aria-checked="{{ c.on }}" style="display:flex;align-items:center;gap:10px;min-height:36px;padding:0;border:0;background:none;font-size:15px;text-align:left;cursor:pointer"><span style="flex:none;width:20px;height:20px;border-radius:5px;border:2px solid #13294B;background:{{ c.box }};color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">{{ c.tick }}</span><span style="flex:1">{{ c.label }}</span><span style="color:#4A5A72">{{ c.count }}</span></button></sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:16px;font-weight:700">Time of day</span><div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ todChips }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="min-height:40px;padding:0 12px;border-radius:999px;border:1.5px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};font-size:15px;font-weight:700;cursor:pointer">{{ c.label }}</button></sc-for></div></div>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700">Suburb<select style="height:44px;border:1.5px solid #E2D3BD;border-radius:999px;padding:0 10px;font-size:16px;background:#FFFFFF"><option>Anywhere on the Island</option><sc-for list="{{ suburbs }}" as="sb" hint-placeholder-count="0"><option>{{ sb.v }}</option></sc-for></select></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700">Dates<select style="height:44px;border:1.5px solid #E2D3BD;border-radius:999px;padding:0 10px;font-size:16px;background:#FFFFFF"><option>Any time</option><option>This week</option><option>Next 2 weeks</option><option>This month</option></select></label>
+<div style="display:flex;flex-direction:column;gap:4px;padding-top:12px;border-top:1px solid #E2D3BD">
+<sc-for list="{{ toggles }}" as="t" hint-placeholder-count="3">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span style="font-size:15px;font-weight:700">{{ t.label }}</span>
+<button onClick="{{ t.onClick }}" role="switch" aria-label="{{ t.label }}" style="width:52px;height:44px;border:0;background:none;padding:0;cursor:pointer;display:flex;align-items:center;flex:none"><span style="position:relative;width:48px;height:28px;border-radius:20px;background:{{ t.track }};display:block"><span style="position:absolute;top:2px;left:{{ t.left }};width:24px;height:24px;border-radius:12px;background:#FFFFFF;transition:left .15s"></span></span></button></div>
+</sc-for>
+</div>
+</aside>
+<div style="flex:999 1 480px;min-width:0;display:flex;flex-direction:column;gap:16px">
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px">
+<sc-for list="{{ visCards }}" as="o" hint-placeholder-count="6"><dc-import name="OppCard Sunset" item="{{ o }}" variant="{{ cardVariant }}" hint-size="100%,130px"></dc-import></sc-for>
+</div>
+<sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+<div style="background:#FFFFFF;border:1px dashed #C9B595;border-radius:24px;padding:40px 24px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
+<div style="width:180px;height:120px;border-radius:12px;background:repeating-linear-gradient(135deg,#F3E6D3 0 8px,#F8F2E8 8px 16px);display:flex;align-items:center;justify-content:center;font:11px ui-monospace,Menlo,monospace;color:#4A5A72">EMPTY STATE</div>
+<div style="font-size:20px;font-weight:700">No matches yet</div>
+<div style="font-size:17px;color:#4A5A72;max-width:44ch">Try removing a filter, or sign in to save this search and get an email when something comes up.</div>
+<button onClick="{{ clearFilters }}" style="height:48px;padding:0 20px;border:0;border-radius:999px;background:#13294B;color:#FFFFFF;font-size:17px;font-weight:700;cursor:pointer">Clear filters</button>
+</div>
+</sc-if>
+</div>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ pg.detail }}" hint-placeholder-val="{{ false }}">
+<div style="max-width:1240px;margin:0 auto;padding:24px 24px 64px;display:flex;flex-direction:column;gap:20px">
+<button onClick="{{ goFind }}" style="align-self:flex-start;min-height:44px;border:0;background:none;padding:0;font-size:17px;font-weight:700;cursor:pointer">← All opportunities</button>
+<sc-if value="{{ o.hasImg }}" hint-placeholder-val="{{ false }}"><div role="img" aria-label="{{ o.imgAlt }}" style="width:100%;height:clamp(220px,32vw,400px);border-radius:32px;background:#13294B url({{ o.img }}) center/cover no-repeat"></div></sc-if>
+<div style="display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start">
+<article style="flex:2 1 480px;min-width:0;display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<span style="font-size:16px;font-weight:700;color:#4A5A72">{{ o.cat }}</span>
+<h1 style="margin:0;font-size:clamp(32px,4vw,46px);line-height:1.08;letter-spacing:-0.01em;text-wrap:balance">{{ o.title }}</h1>
+<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+<button onClick="{{ o.openOrg }}" style="background:none;border:0;padding:0;font-size:19px;text-decoration:underline;cursor:pointer">{{ o.org }}</button>
+<span style="padding:3px 10px;border-radius:999px;font-size:14px;font-weight:700;background:#13294B;color:#FFFFFF">✓ Approved org</span>
+<span style="padding:3px 10px;border-radius:999px;font-size:14px;font-weight:700;background:{{ o.typeBg }};color:{{ o.typeFg }}">{{ o.typeLabel }}</span>
+<sc-if value="{{ o.u18 }}" hint-placeholder-val="{{ false }}"><span style="padding:2px 9px;border-radius:999px;font-size:14px;font-weight:700;border:1.5px solid #13294B">Open to under 18s</span></sc-if>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px"><h2 style="margin:0;font-size:22px">About this role</h2><p style="margin:0;font-size:18px;line-height:1.6;max-width:65ch;text-wrap:pretty">{{ o.desc }}</p></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px">
+<div style="display:flex;flex-direction:column;gap:10px"><h2 style="margin:0;font-size:20px">Requirements</h2>
+<sc-for list="{{ o.reqFull }}" as="q" hint-placeholder-count="0"><div style="display:flex;gap:10px;align-items:center;font-size:17px"><span style="border:1.5px solid #13294B;border-radius:6px;padding:1px 6px;font-size:13px;font-weight:700;min-width:52px;text-align:center">{{ q.r }}</span><span>{{ q.full }}</span></div></sc-for>
+<p style="margin:0;font-size:16px;line-height:1.5;color:#4A5A72">{{ o.reqNote }}</p></div>
+<div style="display:flex;flex-direction:column;gap:10px"><h2 style="margin:0;font-size:20px">Provided</h2><p style="margin:0;font-size:17px;line-height:1.5">{{ o.provides }}</p>
+<h2 style="margin:8px 0 0;font-size:20px">Access</h2><p style="margin:0;font-size:17px;line-height:1.5">{{ o.access }}</p></div>
+</div>
+<sc-if value="{{ o.u18 }}" hint-placeholder-val="{{ false }}">
+<div style="padding:20px;border-radius:24px;background:#F3E6D3;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 24px;font-size:17px;line-height:1.45">
+<h2 style="grid-column:1/-1;margin:0;font-size:20px">For volunteers aged 15 to 17</h2>
+<div><strong>Minimum age</strong><br>15</div>
+<div><strong>Supervision</strong><br>Always with a named adult holding a WWCC</div>
+<div><strong>Parent may attend</strong><br>Yes</div>
+<div><strong>Finishes by</strong><br>{{ o.finish }}</div>
+</div>
+</sc-if>
+<div style="padding:20px;border:1px solid #E2D3BD;border-radius:24px;display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center">
+<div style="display:flex;flex-direction:column;gap:4px;max-width:56ch"><span style="font-size:19px;font-weight:700">{{ o.org }}</span><span style="font-size:17px;line-height:1.45;color:#4A5A72">{{ o.orgAbout }}</span></div>
+<button onClick="{{ o.openOrg }}" style="height:48px;padding:0 18px;border:1.5px solid #13294B;border-radius:999px;background:#FFFFFF;font-size:16px;font-weight:700;cursor:pointer">See their {{ o.orgRoles }} open roles</button>
+</div>
+<button onClick="{{ reportPost }}" style="align-self:flex-start;background:none;border:0;padding:0;min-height:44px;font-size:16px;color:#4A5A72;text-decoration:underline;cursor:pointer">Report this post</button>
+</article>
+<aside style="flex:1 1 320px;max-width:100%;position:sticky;top:96px;border:2px solid #13294B;border-radius:28px;overflow:hidden">
+<div style="display:flex;gap:16px;padding:20px;background:#F3E6D3;align-items:center">
+<div style="flex:none;width:76px;height:84px;border-radius:12px;background:#FFFFFF;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-size:14px;font-weight:700">{{ o.d1 }}</span><span style="font-size:32px;font-weight:700;line-height:1">{{ o.d2 }}</span><span style="font-size:14px;font-weight:700">{{ o.d3 }}</span></div>
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:18px;font-weight:700">{{ o.when }}</span><span style="font-size:16px">{{ o.venueLine }}</span></div>
+</div>
+<div style="padding:20px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;justify-content:space-between;font-size:17px"><strong>{{ o.left }}</strong><span style="color:#4A5A72">{{ o.have }} confirmed</span></div>
+<div style="height:8px;border-radius:4px;background:#F3E6D3;overflow:hidden"><div style="height:100%;background:#D2601A;width:{{ o.pct }}"></div></div>
+<sc-if value="{{ o.canExpress }}" hint-placeholder-val="{{ true }}"><button onClick="{{ openConsent }}" style="height:58px;border:0;border-radius:999px;background:#D2601A;color:#FFFFFF;font-size:19px;font-weight:700;cursor:pointer" style-hover="background:#B14E12">I'm interested</button></sc-if>
+<sc-if value="{{ o.hasStatus }}" hint-placeholder-val="{{ false }}"><div style="padding:14px;border-radius:12px;background:#F3E6D3;font-size:17px;font-weight:700;line-height:1.4">Interest sent. {{ o.orgShort }} will confirm by email. Calendar buttons and reminders appear once you're confirmed.</div></sc-if>
+<span style="font-size:15px;line-height:1.5;color:#4A5A72">Nothing is shared until you tap. Then the group sees your display name, email and declared checks.</span>
+<div style="display:flex;gap:8px;padding-top:12px;border-top:1px solid #E2D3BD">
+<button onClick="{{ shareFb }}" style="flex:1;height:44px;border:1.5px solid #13294B;border-radius:999px;background:#FFFFFF;font-size:15px;font-weight:700;cursor:pointer">Share to Facebook</button>
+<button onClick="{{ copyLink }}" style="flex:1;height:44px;border:1.5px solid #13294B;border-radius:999px;background:#FFFFFF;font-size:15px;font-weight:700;cursor:pointer">Copy link</button>
+</div>
+</div>
+</aside>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ pg.calendar }}" hint-placeholder-val="{{ false }}">
+<div style="max-width:1240px;margin:0 auto;padding:32px 24px 56px;display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
+<h1 style="margin:0;font-size:clamp(40px,4.5vw,60px);letter-spacing:-0.035em;line-height:1">Calendar</h1>
+<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+<div style="display:flex;gap:4px;background:#F3E6D3;border-radius:999px;padding:4px"><sc-for list="{{ calTabs }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="min-width:84px;height:40px;border:0;border-radius:999px;font-size:16px;font-weight:700;cursor:pointer;background:{{ c.bg }}">{{ c.label }}</button></sc-for></div>
+<div style="display:flex;gap:6px;align-items:center"><button onClick="{{ calNav }}" aria-label="Previous month" style="width:44px;height:44px;border:1px solid #E2D3BD;border-radius:999px;background:#FFFFFF;font-size:18px;cursor:pointer">‹</button><span style="font-size:19px;font-weight:700;min-width:150px;text-align:center">{{ calTitle }}</span><button onClick="{{ calNav }}" aria-label="Next month" style="width:44px;height:44px;border:1px solid #E2D3BD;border-radius:999px;background:#FFFFFF;font-size:18px;cursor:pointer">›</button></div>
+</div>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+<span style="font-size:16px;font-weight:700;margin-right:4px">Show</span>
+<sc-for list="{{ calCatChips }}" as="c" hint-placeholder-count="5"><button onClick="{{ c.onClick }}" style="min-height:40px;padding:0 12px;border-radius:999px;border:1.5px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};font-size:15px;font-weight:700;cursor:pointer">{{ c.label }}</button></sc-for>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 16px;border-radius:12px;background:#DCE6F0">
+<strong style="font-size:16px">Regular roles</strong><span style="font-size:16px">run every week, so they're listed here instead of on each day:</span>
+<sc-for list="{{ ongoing }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.open }}" style="min-height:36px;padding:0 12px;border-radius:999px;border:0;background:#FFFFFF;font-size:15px;font-weight:700;cursor:pointer">{{ o.title }}</button></sc-for>
+</div>
+<sc-if value="{{ calMonth }}" hint-placeholder-val="{{ true }}">
+<div style="overflow-x:auto">
+<div style="min-width:720px;border:1px solid #E2D3BD;border-radius:20px;overflow:hidden">
+<div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));background:#F8F2E8;border-bottom:1px solid #E2D3BD"><sc-for list="{{ dows }}" as="d" hint-placeholder-count="7"><span style="padding:10px 12px;font-size:15px;font-weight:700;color:#4A5A72">{{ d.v }}</span></sc-for></div>
+<div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr))">
+<sc-for list="{{ cells }}" as="c" hint-placeholder-count="35">
+<div style="min-height:118px;padding:8px;border-right:1px solid #E2D3BD;border-bottom:1px solid #E2D3BD;display:flex;flex-direction:column;gap:6px;background:{{ c.bg }}">
+<span style="font-size:15px;font-weight:700;color:{{ c.fg }}">{{ c.n }}</span>
+<sc-for list="{{ c.evs }}" as="e" hint-placeholder-count="0"><button onClick="{{ e.open }}" style="text-align:left;border:0;border-left:3px solid #D2601A;background:#FCE3CC;border-radius:4px;padding:5px 7px;display:flex;flex-direction:column;gap:1px;cursor:pointer"><span style="font-size:13px;font-weight:700;line-height:1.25">{{ e.title }}</span><span style="font-size:12px">{{ e.time }}</span></button></sc-for>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ calWeek }}" hint-placeholder-val="{{ false }}">
+<div style="overflow-x:auto"><div style="min-width:720px;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border:1px solid #E2D3BD;border-radius:20px;overflow:hidden">
+<sc-for list="{{ weekCols }}" as="w" hint-placeholder-count="7">
+<div style="min-height:320px;border-right:1px solid #E2D3BD;display:flex;flex-direction:column">
+<div style="padding:10px 12px;background:#F8F2E8;border-bottom:1px solid #E2D3BD;display:flex;gap:6px;align-items:baseline"><span style="font-size:15px;font-weight:700;color:#4A5A72">{{ w.dow }}</span><span style="font-size:20px;font-weight:700">{{ w.n }}</span></div>
+<div style="padding:8px;display:flex;flex-direction:column;gap:6px">
+<sc-for list="{{ w.items }}" as="e" hint-placeholder-count="0"><button onClick="{{ e.open }}" style="text-align:left;border:0;border-left:3px solid #D2601A;background:#FCE3CC;border-radius:4px;padding:8px;display:flex;flex-direction:column;gap:2px;cursor:pointer"><span style="font-size:14px;font-weight:700;line-height:1.25">{{ e.title }}</span><span style="font-size:13px">{{ e.time }}</span><span style="font-size:13px">{{ e.suburb }}</span></button></sc-for>
+</div>
+</div>
+</sc-for>
+</div></div>
+</sc-if>
+<sc-if value="{{ calList }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:20px">
+<sc-for list="{{ listGroups }}" as="lg" hint-placeholder-count="3">
+<div style="display:grid;grid-template-columns:minmax(120px,180px) 1fr;gap:16px;padding-top:16px;border-top:1px solid #E2D3BD">
+<h2 style="margin:0;font-size:20px">{{ lg.label }}</h2>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px"><sc-for list="{{ lg.items }}" as="o" hint-placeholder-count="1"><dc-import name="OppCard Sunset" item="{{ o }}" variant="{{ cardVariant }}" hint-size="100%,130px"></dc-import></sc-for></div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<p style="margin:0;font-size:15px;color:#4A5A72">Shows open posts only. Never volunteer details.</p>
+</div>
+</sc-if>
+
+<sc-if value="{{ pg.orgs }}" hint-placeholder-val="{{ false }}">
+<div style="max-width:1240px;margin:0 auto;padding:32px 24px 56px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:column;gap:8px"><h1 style="margin:0;font-size:clamp(40px,4.5vw,60px);letter-spacing:-0.035em;line-height:1">Island organisations</h1><p style="margin:0;font-size:18px;color:#4A5A72;max-width:60ch">Every group here has been checked by an admin before posting. Contact happens through their posts, so no contact details are listed.</p></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px">
+<sc-for list="{{ orgCards }}" as="g" hint-placeholder-count="6">
+<button onClick="{{ g.open }}" style="text-align:left;background:#FFFFFF;border:1px solid #E2D3BD;border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:10px;cursor:pointer" style-hover="border-color:#13294B">
+<div style="width:56px;height:56px;border-radius:12px;background:#F3E6D3;display:flex;align-items:center;justify-content:center;font:700 11px ui-monospace,Menlo,monospace">LOGO</div>
+<span style="font-size:19px;font-weight:700;line-height:1.25">{{ g.name }}</span>
+<span style="font-size:16px;line-height:1.45;color:#4A5A72">{{ g.about }}</span>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:4px">
+<span style="font-size:15px;font-weight:700">{{ g.rolesLabel }}</span>
+<sc-if value="{{ g.cs }}" hint-placeholder-val="{{ false }}"><span style="padding:2px 9px;border-radius:999px;font-size:13px;font-weight:700;border:1.5px solid #13294B">Child Safe evidence provided</span></sc-if>
+</div>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ pg.org }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column">
+<div style="background:#F3E6D3">
+<div style="max-width:1240px;margin:0 auto;padding:24px 24px 36px;display:flex;flex-direction:column;gap:16px">
+<button onClick="{{ goOrgs }}" style="align-self:flex-start;min-height:44px;border:0;background:none;padding:0;font-size:17px;font-weight:700;cursor:pointer">← All organisations</button>
+<div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+<div style="width:88px;height:88px;border-radius:24px;background:#FFFFFF;display:flex;align-items:center;justify-content:center;font:700 12px ui-monospace,Menlo,monospace">LOGO</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<h1 style="margin:0;font-size:clamp(30px,4vw,42px);line-height:1.1">{{ og.name }}</h1>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><span style="padding:3px 10px;border-radius:999px;font-size:14px;font-weight:700;background:#13294B;color:#FFFFFF">✓ Approved org</span><sc-if value="{{ og.cs }}" hint-placeholder-val="{{ false }}"><span style="padding:2px 9px;border-radius:999px;font-size:14px;font-weight:700;border:1.5px solid #13294B;background:#FFFFFF">Child Safe evidence provided (reviewed Mar 2026)</span></sc-if></div>
+</div>
+</div>
+<p style="margin:0;font-size:19px;line-height:1.55;max-width:62ch">{{ og.long }}</p>
+<a href="#" style="font-size:17px;font-weight:700">Visit their website ↗</a>
+</div>
+</div>
+<div style="background:#F8F2E8">
+<div style="max-width:1240px;margin:0 auto;padding:32px 24px 56px;display:flex;flex-direction:column;gap:16px">
+<h2 style="margin:0;font-size:26px">Open roles</h2>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px"><sc-for list="{{ og.roles }}" as="o" hint-placeholder-count="2"><dc-import name="OppCard Sunset" item="{{ o }}" variant="{{ cardVariant }}" hint-size="100%,130px"></dc-import></sc-for></div>
+<button onClick="{{ reportPost }}" style="align-self:flex-start;background:none;border:0;padding:0;min-height:44px;font-size:16px;color:#4A5A72;text-decoration:underline;cursor:pointer">Report this organisation</button>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ pg.about }}" hint-placeholder-val="{{ false }}">
+<div style="max-width:760px;margin:0 auto;padding:48px 24px 64px;display:flex;flex-direction:column;gap:28px">
+<img src="images/wallabies-field.jpg" alt="Wallabies in green grassland on the Island" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:32px;display:block">
+<h1 style="margin:0;font-size:clamp(34px,4.5vw,50px);line-height:1.08;letter-spacing:-0.01em">A noticeboard for Phillip Island volunteering.</h1>
+<p style="margin:0;font-size:20px;line-height:1.6">Pi-Volunteers matches Island groups with locals who can help. Groups post ongoing roles and one-off shifts. Volunteers find them by interest and when they're free. It's free, and no money changes hands.</p>
+<sc-for list="{{ aboutBlocks }}" as="b" hint-placeholder-count="4">
+<div style="display:flex;flex-direction:column;gap:8px;padding-top:20px;border-top:1px solid #E2D3BD"><h2 style="margin:0;font-size:22px">{{ b.t }}</h2><p style="margin:0;font-size:18px;line-height:1.6;color:#2C3E5A">{{ b.b }}</p></div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ pg.orgReg }}" hint-placeholder-val="{{ false }}">
+<div style="max-width:1240px;margin:0 auto;padding:32px 24px 64px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:40px;align-items:start">
+<div style="display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:column;gap:10px"><span style="font-size:15px;font-weight:700;color:#D2601A">For Island groups</span><h1 style="margin:0;font-size:clamp(36px,4.5vw,56px);line-height:1;letter-spacing:-0.035em">Register your group</h1><p style="margin:0;font-size:19px;line-height:1.5;color:#4A5A72;max-width:52ch">One form, about 3 minutes. An admin checks your details before your first post goes live.</p></div>
+<sc-if value="{{ regOpen }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:16px;background:#FFFFFF;border:1px solid #E2D3BD;border-radius:28px;padding:28px">
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700;min-width:0">Organisation name<input value="{{ rg.name.value }}" onChange="{{ rg.name.onChange }}" placeholder="e.g. Phillip Island Landcare" style="height:48px;border:1.5px solid #E2D3BD;border-radius:12px;padding:0 14px;font-size:17px;background:#FFFFFF;width:100%;min-width:0"></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700;min-width:0">Type of group<select value="{{ rg.type.value }}" onChange="{{ rg.type.onChange }}" style="height:48px;border:1.5px solid #E2D3BD;border-radius:12px;padding:0 14px;font-size:17px;background:#FFFFFF;width:100%;min-width:0"><option>Incorporated association</option><option>Registered charity</option><option>Sporting or service club</option><option>School or council program</option><option>Informal community group</option></select></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700;min-width:0">ABN or incorporation number<input value="{{ rg.abn.value }}" onChange="{{ rg.abn.onChange }}" placeholder="11 digits, or A0012345B" style="height:48px;border:1.5px solid #E2D3BD;border-radius:12px;padding:0 14px;font-size:17px;background:#FFFFFF;width:100%;min-width:0"><span style="font-size:14px;font-weight:400;color:#4A5A72">We check this against the ABN Lookup or Consumer Affairs Victoria register.</span></label>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700;min-width:0">Contact name<input value="{{ rg.contact.value }}" onChange="{{ rg.contact.onChange }}" style="height:48px;border:1.5px solid #E2D3BD;border-radius:12px;padding:0 14px;font-size:17px;background:#FFFFFF;width:100%;min-width:0"></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700;min-width:0">Contact email<input type="email" value="{{ rg.email.value }}" onChange="{{ rg.email.onChange }}" style="height:48px;border:1.5px solid #E2D3BD;border-radius:12px;padding:0 14px;font-size:17px;background:#FFFFFF;width:100%;min-width:0"></label>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:16px;font-weight:700">Child Safe evidence <span style="font-weight:400;color:#4A5A72">(needed to post roles open to under 18s)</span></span>
+<button onClick="{{ uploadCs }}" style="min-height:64px;border:1.5px dashed #C9B595;border-radius:16px;background:#F8F2E8;font-size:16px;font-weight:700;cursor:pointer;text-align:left;padding:12px 18px">{{ csLabel }}</button></div>
+<button onClick="{{ submitReg }}" style="align-self:flex-start;height:56px;padding:0 28px;border:0;border-radius:999px;background:#D2601A;color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer" style-hover="background:#B14E12">Submit for approval</button>
+</div>
+</sc-if>
+<sc-if value="{{ regDone }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:14px;background:#13294B;color:#FFFFFF;border-radius:28px;padding:28px">
+<span style="font-size:15px;font-weight:700;color:#F7A24B">Submitted</span>
+<h2 style="margin:0;font-size:30px;line-height:1.1">Thanks. We'll email {{ regEmail }} within 48 hours.</h2>
+<p style="margin:0;font-size:17px;line-height:1.5;color:#F3E6D3">You can draft posts now. They go live once you're approved.</p>
+<button onClick="{{ goOrgDash }}" style="align-self:flex-start;height:52px;padding:0 24px;border:0;border-radius:999px;background:#D2601A;color:#FFFFFF;font-size:17px;font-weight:700;cursor:pointer" style-hover="background:#B14E12">Open your dashboard</button>
+</div>
+</sc-if>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="position:relative;border-radius:28px;overflow:hidden;aspect-ratio:4/3"><img src="images/sunset-pano.jpg" alt="Western Port at sunset with surfers on the waves" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 50%;display:block"></div>
+<sc-for list="{{ regSteps }}" as="st" hint-placeholder-count="3"><div style="display:flex;gap:16px;padding:18px 20px;background:#FFFFFF;border:1px solid #E2D3BD;border-radius:20px"><span style="font-size:28px;font-weight:700;color:#D2601A;letter-spacing:-0.03em;line-height:1">{{ st.n }}</span><span style="display:flex;flex-direction:column;gap:4px"><span style="font-size:18px;font-weight:700">{{ st.t }}</span><span style="font-size:16px;line-height:1.45;color:#4A5A72">{{ st.b }}</span></span></div></sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ pg.orgDash }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column">
+<div style="background:#13294B;color:#FFFFFF;margin:0 16px;border-radius:32px;position:relative;overflow:hidden">
+<img src="images/sunset-pano.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 65%;opacity:.35;pointer-events:none">
+<div style="position:relative;max-width:1240px;margin:0 auto;padding:36px 24px;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-end;justify-content:space-between">
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:15px;font-weight:700;color:#F7A24B">Organisation dashboard</span><h1 style="margin:0;font-size:clamp(32px,4vw,48px);line-height:1;letter-spacing:-0.03em">Phillip Island Landcare</h1><span style="font-size:16px;color:#F3E6D3">Signed in as Jo Marsh · Approved Mar 2026 · Child Safe evidence on file</span></div>
+<button onClick="{{ newPost }}" style="height:56px;padding:0 28px;border:0;border-radius:999px;background:#D2601A;color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer" style-hover="background:#B14E12">+ New post</button>
+</div>
+</div>
+<div style="max-width:1240px;width:100%;margin:0 auto;padding:28px 24px 64px;display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start">
+<section style="flex:2 1 560px;min-width:0;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><h2 style="margin:0;font-size:28px;letter-spacing:-0.02em">Your posts</h2><div style="display:flex;gap:4px;background:#F3E6D3;border-radius:999px;padding:4px"><sc-for list="{{ postTabs }}" as="t" hint-placeholder-count="3"><button onClick="{{ t.onClick }}" style="height:38px;padding:0 16px;border:0;border-radius:999px;background:{{ t.bg }};font-size:15px;font-weight:700;cursor:pointer">{{ t.label }}</button></sc-for></div></div>
+<sc-for list="{{ postRows }}" as="p" hint-placeholder-count="3">
+<div style="background:#FFFFFF;border:1px solid #E2D3BD;border-radius:22px;padding:18px 20px;display:flex;flex-wrap:wrap;gap:16px;align-items:center">
+<div style="flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span style="padding:2px 10px;border-radius:999px;font-size:13px;font-weight:700;background:{{ p.stBg }};color:{{ p.stFg }}">{{ p.status }}</span><span style="font-size:15px;color:#4A5A72">{{ p.when }}</span></div>
+<span style="font-size:19px;font-weight:700;line-height:1.2">{{ p.title }}</span>
+<div style="display:flex;gap:10px;align-items:center"><div style="flex:0 0 140px;height:6px;border-radius:3px;background:#F3E6D3;overflow:hidden"><div style="height:100%;background:#D2601A;width:{{ p.pct }}"></div></div><span style="font-size:15px;color:#4A5A72">{{ p.have }} of {{ p.need }} confirmed</span><sc-if value="{{ p.hasNew }}" hint-placeholder-val="{{ false }}"><span style="padding:2px 9px;border-radius:999px;font-size:13px;font-weight:700;background:#FCE3CC;color:#8A3B0E">{{ p.newLabel }}</span></sc-if></div>
+</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<button onClick="{{ p.edit }}" style="height:44px;padding:0 16px;border:1.5px solid #E2D3BD;border-radius:999px;background:#FFFFFF;font-size:15px;font-weight:700;cursor:pointer" style-hover="border-color:#13294B">Edit</button>
+<button onClick="{{ p.clone }}" style="height:44px;padding:0 16px;border:1.5px solid #E2D3BD;border-radius:999px;background:#FFFFFF;font-size:15px;font-weight:700;cursor:pointer" style-hover="border-color:#13294B">Clone</button>
+<sc-if value="{{ p.isLive }}" hint-placeholder-val="{{ false }}"><button onClick="{{ p.share }}" style="height:44px;padding:0 16px;border:0;border-radius:999px;background:#13294B;color:#FFFFFF;font-size:15px;font-weight:700;cursor:pointer" style-hover="background:#0C1C36">Share</button></sc-if>
+</div>
+</div>
+</sc-for>
+<sc-if value="{{ noPostRows }}" hint-placeholder-val="{{ false }}"><p style="margin:0;padding:24px;border-radius:22px;background:#F8F2E8;font-size:17px;color:#4A5A72">Nothing here yet.</p></sc-if>
+</section>
+<aside style="flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:14px">
+<h2 style="margin:0;font-size:28px;letter-spacing:-0.02em">Waiting for you <span style="color:#D2601A">{{ newCount }}</span></h2>
+<sc-for list="{{ intRows }}" as="i" hint-placeholder-count="3">
+<div style="background:#FFFFFF;border:1px solid #E2D3BD;border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;gap:12px;align-items:center"><span style="width:44px;height:44px;border-radius:22px;background:#F3E6D3;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none">{{ i.init }}</span><span style="display:flex;flex-direction:column;min-width:0"><span style="font-size:18px;font-weight:700">{{ i.name }}</span><span style="font-size:15px;color:#4A5A72">{{ i.role }}</span></span></div>
+<span style="font-size:15px;line-height:1.45">{{ i.detail }}</span>
+<sc-if value="{{ i.isNew }}" hint-placeholder-val="{{ true }}"><div style="display:flex;gap:6px"><sc-if value="{{ i.canConfirm }}" hint-placeholder-val="{{ true }}"><button onClick="{{ i.confirm }}" style="flex:1;height:44px;border:0;border-radius:999px;background:#D2601A;color:#FFFFFF;font-size:15px;font-weight:700;cursor:pointer" style-hover="background:#B14E12">Confirm</button></sc-if><sc-if value="{{ i.waiting }}" hint-placeholder-val="{{ false }}"><span style="flex:1;min-height:44px;display:flex;align-items:center;justify-content:center;border-radius:999px;background:#F8F2E8;font-size:15px;font-weight:700;color:#4A5A72">Waiting for guardian</span></sc-if><button onClick="{{ i.decline }}" style="height:44px;padding:0 16px;border:1.5px solid #E2D3BD;border-radius:999px;background:#FFFFFF;font-size:15px;font-weight:700;cursor:pointer">Decline</button></div></sc-if>
+<sc-if value="{{ i.isDone }}" hint-placeholder-val="{{ false }}"><span style="font-size:15px;font-weight:700;color:{{ i.doneFg }}">{{ i.doneLabel }}</span></sc-if>
+</div>
+</sc-for>
+<p style="margin:0;font-size:15px;line-height:1.5;color:#4A5A72">You see only what each volunteer chose to share. Confirming sends them the details and a calendar invite.</p>
+</aside>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ pg.orgPost }}" hint-placeholder-val="{{ false }}">
+<div style="max-width:1240px;margin:0 auto;padding:24px 24px 64px;display:flex;flex-direction:column;gap:20px">
+<button onClick="{{ goOrgDash }}" style="align-self:flex-start;min-height:44px;border:0;background:none;padding:0;font-size:17px;font-weight:700;cursor:pointer">← Dashboard</button>
+<h1 style="margin:0;font-size:clamp(32px,4vw,48px);line-height:1;letter-spacing:-0.03em">{{ editorTitle }}</h1>
+<div style="display:flex;flex-direction:column;gap:10px;padding:18px 20px;border-radius:22px;background:#F3E6D3">
+<span style="font-size:16px;font-weight:700">Start from last year</span>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><sc-for list="{{ cloneChips }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="min-height:44px;padding:6px 16px;border-radius:999px;border:1.5px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};font-size:15px;font-weight:700;cursor:pointer;text-align:left">{{ c.label }}</button></sc-for></div>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start">
+<div style="flex:3 1 520px;min-width:0;display:flex;flex-direction:column;gap:16px;background:#FFFFFF;border:1px solid #E2D3BD;border-radius:28px;padding:28px">
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700;min-width:0">Role title<input value="{{ fm.title.value }}" onChange="{{ fm.title.onChange }}" placeholder="e.g. Coastal weeding morning" style="height:48px;border:1.5px solid #E2D3BD;border-radius:12px;padding:0 14px;font-size:17px;background:#FFFFFF;width:100%;min-width:0"></label>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700;min-width:0">Category<select value="{{ fm.cat.value }}" onChange="{{ fm.cat.onChange }}" style="height:48px;border:1.5px solid #E2D3BD;border-radius:12px;padding:0 14px;font-size:17px;background:#FFFFFF;width:100%;min-width:0"><sc-for list="{{ catOpts }}" as="c" hint-placeholder-count="0"><option>{{ c.v }}</option></sc-for></select></label>
+<div style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700;min-width:0">Type<div style="display:flex;gap:4px;background:#F3E6D3;border-radius:999px;padding:4px"><sc-for list="{{ typeOpts }}" as="t" hint-placeholder-count="2"><button onClick="{{ t.onClick }}" style="flex:1;height:40px;border:0;border-radius:999px;background:{{ t.bg }};font-size:15px;font-weight:700;cursor:pointer">{{ t.label }}</button></sc-for></div></div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px">
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700;min-width:0">Date<input type="date" value="{{ fm.date.value }}" onChange="{{ fm.date.onChange }}" style="height:48px;border:1.5px solid #E2D3BD;border-radius:12px;padding:0 14px;font-size:17px;background:#FFFFFF;width:100%;min-width:0"></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700;min-width:0">Start<input type="time" value="{{ fm.start.value }}" onChange="{{ fm.start.onChange }}" style="height:48px;border:1.5px solid #E2D3BD;border-radius:12px;padding:0 14px;font-size:17px;background:#FFFFFF;width:100%;min-width:0"></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700;min-width:0">Finish<input type="time" value="{{ fm.end.value }}" onChange="{{ fm.end.onChange }}" style="height:48px;border:1.5px solid #E2D3BD;border-radius:12px;padding:0 14px;font-size:17px;background:#FFFFFF;width:100%;min-width:0"></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700;min-width:0">People needed<input type="number" min="1" value="{{ fm.need.value }}" onChange="{{ fm.need.onChange }}" style="height:48px;border:1.5px solid #E2D3BD;border-radius:12px;padding:0 14px;font-size:17px;background:#FFFFFF;width:100%;min-width:0"></label>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700;min-width:0">Meeting point<input value="{{ fm.venue.value }}" onChange="{{ fm.venue.onChange }}" style="height:48px;border:1.5px solid #E2D3BD;border-radius:12px;padding:0 14px;font-size:17px;background:#FFFFFF;width:100%;min-width:0"></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700;min-width:0">Suburb<select value="{{ fm.suburb.value }}" onChange="{{ fm.suburb.onChange }}" style="height:48px;border:1.5px solid #E2D3BD;border-radius:12px;padding:0 14px;font-size:17px;background:#FFFFFF;width:100%;min-width:0"><sc-for list="{{ suburbs }}" as="s" hint-placeholder-count="0"><option>{{ s.v }}</option></sc-for></select></label>
+</div>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700;min-width:0">What volunteers will do<textarea value="{{ fm.desc.value }}" onChange="{{ fm.desc.onChange }}" rows="4" style="border:1.5px solid #E2D3BD;border-radius:12px;padding:12px 14px;font-size:17px;line-height:1.5;font-family:inherit;resize:vertical;width:100%"></textarea></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700;min-width:0">What you provide<input value="{{ fm.provides.value }}" onChange="{{ fm.provides.onChange }}" placeholder="e.g. Gloves, tools, morning tea" style="height:48px;border:1.5px solid #E2D3BD;border-radius:12px;padding:0 14px;font-size:17px;background:#FFFFFF;width:100%;min-width:0"></label>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:16px;font-weight:700">Checks needed</span><div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ reqOpts }}" as="q" hint-placeholder-count="6"><button onClick="{{ q.onClick }}" style="min-height:40px;padding:0 14px;border-radius:999px;border:1.5px solid {{ q.bd }};background:{{ q.bg }};color:{{ q.fg }};font-size:15px;font-weight:700;cursor:pointer">{{ q.label }}</button></sc-for></div></div>
+<button onClick="{{ u18Toggle.onClick }}" role="switch" aria-checked="{{ fmU18 }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px;padding:0 18px;border-radius:16px;border:1px solid #E2D3BD;background:#F8F2E8;font-size:17px;font-weight:700;cursor:pointer;text-align:left"><span>Open to 15–17 year olds <span style="font-weight:400;color:#4A5A72">· guardian approves each request</span></span><span style="position:relative;width:46px;height:26px;border-radius:13px;background:{{ u18Toggle.track }};flex:none"><span style="position:absolute;top:2px;left:{{ u18Toggle.left }};width:22px;height:22px;border-radius:11px;background:#FFFFFF"></span></span></button>
+<div style="display:flex;gap:10px;flex-wrap:wrap;padding-top:8px;border-top:1px solid #E2D3BD">
+<button onClick="{{ publish }}" style="height:56px;padding:0 28px;border:0;border-radius:999px;background:#D2601A;color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer" style-hover="background:#B14E12">Publish</button>
+<button onClick="{{ saveDraft }}" style="height:56px;padding:0 24px;border:1.5px solid #E2D3BD;border-radius:999px;background:#FFFFFF;font-size:17px;font-weight:700;cursor:pointer" style-hover="border-color:#13294B">Save draft</button>
+</div>
+</div>
+<aside style="flex:2 1 360px;min-width:0;display:flex;flex-direction:column;gap:14px;position:sticky;top:96px">
+<span style="font-size:16px;font-weight:700;color:#4A5A72">How it looks on Facebook</span>
+<div style="border:1px solid #DADDE1;border-radius:10px;overflow:hidden;background:#FFFFFF;font-family:system-ui,-apple-system,'Segoe UI',sans-serif">
+<div style="padding:12px 14px;display:flex;gap:10px;align-items:center"><span style="width:36px;height:36px;border-radius:18px;background:#13294B;flex:none"></span><span style="display:flex;flex-direction:column"><span style="font-size:14px;font-weight:700;color:#050505">Phillip Island Landcare</span><span style="font-size:12px;color:#65676B">Posted to Phillip Island Community Noticeboard</span></span></div>
+<p style="margin:0;padding:0 14px 12px;font-size:15px;line-height:1.4;color:#050505">We need a hand on {{ pv.date }}. Tap to see the details and say you're interested.</p>
+<div style="width:100%;aspect-ratio:1.91/1;background:#13294B url({{ pv.img }}) center/cover no-repeat"></div>
+<div style="padding:10px 14px;background:#F0F2F5;display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:#65676B;text-transform:uppercase">pi-volunteers.au</span><span style="font-size:16px;font-weight:700;color:#050505;line-height:1.25">{{ pv.title }}</span><span style="font-size:14px;color:#65676B;line-height:1.35">{{ pv.desc }}</span></div>
+</div>
+<span style="font-size:15px;line-height:1.5;color:#4A5A72">Every post gets this preview automatically when the link is shared to a Facebook group.</span>
+</aside>
+</div>
+</div>
+</sc-if>
+</main>
+
+<footer style="background:#13294B;color:#F3E6D3;margin:0 16px 16px;border-radius:40px">
+<div style="max-width:1240px;margin:0 auto;padding:40px 24px;display:flex;flex-wrap:wrap;gap:32px;justify-content:space-between">
+<div style="flex:1 1 280px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:center;gap:10px"><span style="position:relative;width:36px;height:36px;border-radius:9px;background:#F3E6D3;overflow:hidden;display:block"><span style="position:absolute;left:8px;bottom:14px;width:20px;height:10px;border-radius:10px 10px 0 0;background:#D2601A"></span><span style="position:absolute;left:5px;right:5px;bottom:11px;height:2px;background:#13294B"></span><span style="position:absolute;left:11px;right:11px;bottom:7px;height:2px;background:#13294B"></span></span><span style="font-size:20px;font-weight:700;color:#FFFFFF">Pi-Volunteers</span></div>
+<p style="margin:0;font-size:16px;line-height:1.5;max-width:40ch">Free to use. Phillip Island only. No tracking cookies, so no cookie banner.</p>
+</div>
+<div style="flex:2 1 420px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:4px 24px">
+<sc-for list="{{ footerLinks }}" as="l" hint-placeholder-count="8"><button onClick="{{ l.onClick }}" style="text-align:left;background:none;border:0;padding:0;min-height:40px;font-size:16px;color:#FFFFFF;text-decoration:underline;cursor:pointer">{{ l.label }}</button></sc-for>
+</div>
+</div>
+</footer>
+
+<sc-if value="{{ consent }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:24px">
+<button aria-label="Cancel" onClick="{{ closeConsent }}" style="position:absolute;inset:0;background:rgba(12,28,54,.55);border:0;cursor:pointer"></button>
+<div role="dialog" aria-modal="true" aria-label="Share your details" style="position:relative;width:100%;max-width:520px;background:#FFFFFF;border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:16px">
+<h2 style="margin:0;font-size:26px;line-height:1.2">Share your details with {{ o.org }}?</h2>
+<p style="margin:0;font-size:17px;line-height:1.45;color:#4A5A72">They see this, and only for "{{ o.title }}":</p>
+<div style="display:flex;flex-direction:column;border-top:1px solid #E2D3BD">
+<div style="display:grid;grid-template-columns:150px 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #E2D3BD;font-size:17px"><span style="color:#4A5A72">Display name</span><strong>Sam T.</strong></div>
+<div style="display:grid;grid-template-columns:150px 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #E2D3BD;font-size:17px"><span style="color:#4A5A72">Email</span><strong>sam.t@example.com</strong></div>
+<div style="display:grid;grid-template-columns:150px 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #E2D3BD;font-size:17px"><span style="color:#4A5A72">Declared checks</span><strong>First Aid (exp 08/2027)</strong></div>
+</div>
+<button onClick="{{ togglePhone }}" role="checkbox" aria-checked="{{ sharePhone }}" style="display:flex;align-items:center;gap:12px;min-height:48px;padding:0;border:0;background:none;font-size:17px;text-align:left;cursor:pointer"><span style="flex:none;width:24px;height:24px;border-radius:6px;border:2px solid #13294B;background:{{ phoneBox }};color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700">{{ phoneTick }}</span><span>Also share my phone (0412 555 019) for this post</span></button>
+<p style="margin:0;font-size:16px;line-height:1.45;color:#4A5A72">Nothing else is shared. You can withdraw from your dashboard at any time.</p>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><button onClick="{{ sendInterest }}" style="flex:1 1 220px;height:56px;border:0;border-radius:999px;background:#D2601A;color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer" style-hover="background:#B14E12">Share and send interest</button><button onClick="{{ closeConsent }}" style="flex:0 1 140px;height:56px;border:1.5px solid #13294B;border-radius:999px;background:#FFFFFF;font-size:17px;font-weight:700;cursor:pointer">Cancel</button></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ shareOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:24px">
+<button aria-label="Close" onClick="{{ closeShare }}" style="position:absolute;inset:0;background:rgba(12,28,54,.55);border:0;cursor:pointer"></button>
+<div role="dialog" aria-modal="true" aria-label="Share your post" style="position:relative;width:100%;max-width:520px;max-height:calc(100vh - 48px);overflow:auto;background:#FFFFFF;border-radius:28px;padding:28px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:15px;font-weight:700;color:#D2601A">{{ sh.kicker }}</span><h2 style="margin:0;font-size:26px;line-height:1.15">Share it where Island locals look</h2></div>
+<div style="border:1px solid #DADDE1;border-radius:10px;overflow:hidden;background:#FFFFFF;font-family:system-ui,-apple-system,'Segoe UI',sans-serif">
+<div style="padding:12px 14px;display:flex;gap:10px;align-items:center"><span style="width:36px;height:36px;border-radius:18px;background:#13294B;flex:none"></span><span style="display:flex;flex-direction:column"><span style="font-size:14px;font-weight:700;color:#050505">Phillip Island Landcare</span><span style="font-size:12px;color:#65676B">Posted to Phillip Island Community Noticeboard</span></span></div>
+<p style="margin:0;padding:0 14px 12px;font-size:15px;line-height:1.4;color:#050505">We need a hand on {{ sh.date }}. Tap to see the details and say you're interested.</p>
+<div style="width:100%;aspect-ratio:1.91/1;background:#13294B url({{ sh.img }}) center/cover no-repeat"></div>
+<div style="padding:10px 14px;background:#F0F2F5;display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:#65676B;text-transform:uppercase">pi-volunteers.au</span><span style="font-size:16px;font-weight:700;color:#050505;line-height:1.25">{{ sh.title }}</span><span style="font-size:14px;color:#65676B;line-height:1.35">{{ sh.desc }}</span></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<button onClick="{{ shareFb }}" style="height:54px;border:0;border-radius:999px;background:#13294B;color:#FFFFFF;font-size:17px;font-weight:700;cursor:pointer" style-hover="background:#0C1C36">Share to a Facebook group</button>
+<div style="display:flex;gap:8px"><button onClick="{{ copyLink }}" style="flex:1;height:50px;border:1.5px solid #E2D3BD;border-radius:999px;background:#FFFFFF;font-size:16px;font-weight:700;cursor:pointer">Copy link</button><button onClick="{{ getPdf }}" style="flex:1;height:50px;border:1.5px solid #E2D3BD;border-radius:999px;background:#FFFFFF;font-size:16px;font-weight:700;cursor:pointer">Noticeboard PDF</button></div>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+<div role="status" style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:60;max-width:calc(100% - 32px);background:#13294B;color:#FFFFFF;border-radius:12px;padding:14px 20px;font-size:17px;line-height:1.4;box-shadow:0 10px 30px rgba(12,28,54,.3)">{{ toastMsg }}</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;cardVariant&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Row&quot;,&quot;Date block&quot;,&quot;Ticket&quot;,&quot;Modern&quot;],&quot;default&quot;:&quot;Modern&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Variations&quot;}}">
+const CATS=['Environment and wildlife','Events and festivals','Sport and clubs','Emergency services','Aged care and social support','Arts and culture','Op shops and retail','Food and hospitality','Admin and committee','Youth and education','Animals','Trades and maintenance'];
+const ABBR=['ENV','EVT','SPT','EMG','AGE','ART','OPS','FOD','ADM','YTH','ANI','TRD'];
+const SUBURBS=['Cowes','Rhyll','Newhaven','Cape Woolamai','Ventnor','Smiths Beach','Surf Beach','San Remo','Silverleaves','Wimbledon Heights','Summerlands'];
+const REQFULL={WWCC:'Working with Children Check',RSA:'RSA (serving alcohol)','First Aid':'First Aid certificate',Licence:'Driver licence','Police check':'Police check','18+':'Over 18'};
+const DOW=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const ORGS={
+'Phillip Island Nature Parks':{about:'Runs the Penguin Parade, Churchill Island and the Nobbies.',long:'Nature Parks looks after the Penguin Parade, Churchill Island, the Nobbies and the Koala Conservation Reserve. Volunteers host visitors, help with wildlife monitoring and support events across the year.',cs:true},
+'Phillip Island Landcare':{about:'Volunteer group restoring Island bushland and coast.',long:'Landcare runs weeding mornings, planting days and nest fencing for hooded plovers. No experience needed. Team leaders show you what to do.',cs:true},
+'Island Community Kitchen':{about:'Free weekly dinners for anyone on the Island.',long:'A free Thursday dinner at the Cowes Cultural Centre, cooked and served by volunteers.',cs:false},
+'Island Lions Club':{about:'Service club running Island fundraisers and events.',long:'The Lions run car parking, barbecues and fundraisers at major Island events, including Grand Prix week.',cs:false},
+'Cowes Night Market Committee':{about:'Runs the summer twilight markets on the Cowes foreshore.',long:'A volunteer committee running the summer twilight markets. Set-up, pack-down and the info table each week.',cs:true},
+'Woolamai Beach SLSC':{about:'Surf life saving club patrolling Woolamai Beach.',long:'The club patrols Woolamai Beach on summer weekends and public holidays and runs training for new members.',cs:true},
+'Cowes Community Op Shop':{about:'Community op shop funding local groups.',long:'Sorting donations and running the till on Thompson Avenue. Profits go back to Island community groups.',cs:false},
+'Newhaven Seniors Social Club':{about:'Weekly social mornings for older Island residents.',long:'Tuesday mornings at the Newhaven Public Hall with tea, cards and the occasional guest speaker.',cs:false}
+};
+const OPPS=[
+{id:'penguin',title:'Penguin Parade visitor host',org:'Phillip Island Nature Parks',orgShort:'Nature Parks',cat:'Environment and wildlife',type:'Shift',day:'Sat',date:31,mon:'Oct',key:'Oct31',when:'Sat 31 Oct · 6:30–9:00pm',time:'6:30–9:00pm',suburb:'Summerlands',venue:'Penguin Parade visitor centre',need:4,have:1,reqs:[],provides:'Training on the night, uniform, dinner',u18:true,finish:'9:00pm',tod:'Evening',desc:'Welcome visitors as they arrive, point people to the viewing stands and explain the no-photos rule before the penguins come ashore. You work alongside a ranger all evening.',access:'Mostly standing on boardwalks. Seating available on breaks.'},
+{id:'weeding',title:'Coastal weeding morning',org:'Phillip Island Landcare',orgShort:'Landcare',cat:'Environment and wildlife',type:'Shift',day:'Sun',date:1,mon:'Nov',key:'Nov1',when:'Sun 1 Nov · 9:00am–12:00pm',time:'9:00am–12:00pm',suburb:'Rhyll',venue:'Rhyll Inlet boardwalk car park',need:10,have:6,reqs:[],provides:'Gloves, tools, morning tea',u18:true,finish:'12:00pm',tod:'Morning',desc:'Pull boneseed and sea spurge along the inlet track. No experience needed. A team leader shows you which plants to pull.',access:'Uneven sandy ground. Not suitable for wheelchairs.'},
+{id:'kitchen',title:'Community dinner kitchen and bar',org:'Island Community Kitchen',orgShort:'Community Kitchen',cat:'Food and hospitality',type:'Shift',day:'Thu',date:5,mon:'Nov',key:'Nov5',when:'Thu 5 Nov · 4:30–8:00pm',time:'4:30–8:00pm',suburb:'Cowes',venue:'Cowes Cultural Centre',need:5,have:2,reqs:['RSA','18+'],provides:'Dinner',u18:false,tod:'Evening',desc:'Help serve the free Thursday community dinner. Two people run the drinks table and three help in the kitchen.',access:'Ground floor, step-free entry.'},
+{id:'gp',title:'Grand Prix week car park marshal',org:'Island Lions Club',orgShort:'Lions Club',cat:'Events and festivals',type:'Shift',day:'Sat',date:7,mon:'Nov',key:'Nov7',when:'Sat 7 Nov · 7:00am–1:00pm',time:'7:00am–1:00pm',suburb:'Ventnor',venue:'Back Beach Road, gate 3',need:12,have:3,reqs:['18+','Licence'],provides:'Hi-vis, radio, lunch',u18:false,tod:'Morning',desc:'Direct cars into the public car park during Grand Prix week. You work in pairs with a radio. Funds raised go to Lions community projects.',access:'Standing for long periods, on grass.'},
+{id:'farm',title:'Churchill Island farm day helper',org:'Phillip Island Nature Parks',orgShort:'Nature Parks',cat:'Animals',type:'Shift',day:'Sun',date:8,mon:'Nov',key:'Nov8',when:'Sun 8 Nov · 10:00am–2:00pm',time:'10:00am–2:00pm',suburb:'Newhaven',venue:'Churchill Island Heritage Farm',need:6,have:2,reqs:[],provides:'Lunch, hat',u18:true,finish:'2:00pm',tod:'Morning',desc:'Help visitors at the sheep shearing and whip-cracking demonstrations and keep the farmyard tidy between sessions.',access:'Gravel paths. Some seated roles at the gate.'},
+{id:'market',title:'Twilight market set-up',org:'Cowes Night Market Committee',orgShort:'Night Market',cat:'Events and festivals',type:'Shift',day:'Fri',date:13,mon:'Nov',key:'Nov13',when:'Fri 13 Nov · 4:00–7:00pm',time:'4:00–7:00pm',suburb:'Cowes',venue:'Cowes foreshore',need:6,have:0,reqs:[],provides:'Market voucher, snacks',u18:true,finish:'7:00pm',tod:'Afternoon',desc:'Put up gazebos, run power leads and set out bins before the first summer twilight market.',access:'Lifting up to 10kg. A seated role at the info table is available.'},
+{id:'surf',title:'Beach patrol support',org:'Woolamai Beach SLSC',orgShort:'Woolamai SLSC',cat:'Emergency services',type:'Ongoing',hrs:4,when:'4 hrs/week · weekends Nov–Mar',suburb:'Cape Woolamai',venue:'Woolamai Beach clubhouse',need:8,have:5,reqs:['First Aid','WWCC'],provides:'Training, uniform',u18:false,desc:'Support patrols with first aid, radio and beach set-up. The club runs the training.',access:'Soft sand and stairs to the clubhouse.'},
+{id:'opshop',title:'Op shop sorting and till',org:'Cowes Community Op Shop',orgShort:'Op Shop',cat:'Op shops and retail',type:'Ongoing',hrs:3,when:'3 hrs/week · weekdays',suburb:'Cowes',venue:'Thompson Avenue',need:3,have:1,reqs:[],provides:'Training, morning tea',u18:false,desc:'Sort donations out the back or run the till. Pick a regular weekday morning or afternoon.',access:'Step-free shop floor. Seated till.'},
+{id:'social',title:'Seniors social morning helper',org:'Newhaven Seniors Social Club',orgShort:'Seniors Club',cat:'Aged care and social support',type:'Ongoing',hrs:2,when:'2 hrs/week · Tuesday mornings',suburb:'Newhaven',venue:'Newhaven Public Hall',need:2,have:0,reqs:['Police check'],provides:'Morning tea',u18:false,desc:'Set up tables, make tea and chat with members. Some weeks there is a guest speaker or card games.',access:'Step-free hall with accessible toilet.'}
+];
+const HAS=['First Aid','18+'];
+const BLANK={title:'',cat:'Environment and wildlife',type:'Shift',date:'',start:'09:00',end:'12:00',need:'6',venue:'',suburb:'Cowes',desc:'',provides:'',reqs:[],u18:true};
+const ORGPOSTS=[
+{id:'weeding',title:'Coastal weeding morning',status:'Live',date:'2026-11-01',start:'09:00',end:'12:00',need:10,have:6,cat:'Environment and wildlife',type:'Shift',venue:'Rhyll Inlet boardwalk car park',suburb:'Rhyll',desc:'Pull boneseed and sea spurge along the inlet track. No experience needed. A team leader shows you which plants to pull.',provides:'Gloves, tools, morning tea',reqs:[],u18:true,img:'images/coast.jpg'},
+{id:'spurge',title:'Sea spurge pull, Summerland Beach',status:'Draft',date:'2026-11-22',start:'08:30',end:'11:30',need:8,have:0,cat:'Environment and wildlife',type:'Shift',venue:'Summerland Beach car park',suburb:'Summerlands',desc:'Clear sea spurge from the dunes before the summer nesting season.',provides:'Gloves, bags, water',reqs:[],u18:true,img:'images/coast.jpg'},
+{id:'treeday',title:'National Tree Day planting',status:'Past',date:'2026-07-26',start:'10:00',end:'13:00',need:30,have:27,cat:'Environment and wildlife',type:'Shift',venue:'Ventnor Koala Reserve',suburb:'Ventnor',desc:'Plant 1,500 indigenous seedlings with families from across the Island. Tools and a barbecue lunch provided.',provides:'Tools, gloves, barbecue lunch',reqs:[],u18:true,img:'images/wallabies-field.jpg'},
+{id:'plover',title:'Hooded plover nest fencing',status:'Past',date:'2025-11-15',start:'08:00',end:'11:00',need:6,have:6,cat:'Environment and wildlife',type:'Shift',venue:'Woolamai Surf Beach car park',suburb:'Cape Woolamai',desc:'Put up temporary fencing and signs around hooded plover nests before the summer crowds arrive.',provides:'Tools, hi-vis, morning tea',reqs:['18+'],u18:false,img:'images/nobbies.jpg'}];
+const INTS=[
+{id:'i1',name:'Priya Raman',role:'Coastal weeding morning',detail:'Shared email. First time with Landcare.',st:'new',ok:true},
+{id:'i2',name:'Sam K.',role:'Coastal weeding morning',detail:'Age 16 · guardian approved yesterday. Shared email.',st:'new',ok:true},
+{id:'i3',name:'Ella M.',role:'Coastal weeding morning',detail:'Age 15 · guardian request sent 2 days ago.',st:'new',ok:false},
+{id:'i4',name:'Tom Becker',role:'Coastal weeding morning',detail:'Shared email and phone. Came to Tree Day.',st:'new',ok:true}];
+const fmtDate=d=>{if(!d)return 'Date to be set';const x=new Date(d+'T00:00');return x.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short',year:'numeric'});};
+const fmtTime=t=>{if(!t)return '';let [hh,mm]=t.split(':').map(Number);const ap=hh>=12?'pm':'am';hh=hh%12||12;return hh+':'+String(mm).padStart(2,'0')+ap;};
+const plusYear=d=>{const x=new Date(d+'T00:00');x.setDate(x.getDate()+364);while(x<new Date('2026-10-30T00:00'))x.setDate(x.getDate()+364);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0');};
+const IMGS={penguin:['nobbies','The Nobbies at dusk'],weeding:['coast','Coastal grassland above the ocean'],gp:['karts','Go-karts at the Grand Prix circuit with the ocean behind'],farm:['wallaby-grass','Swamp wallaby grazing on green grass'],market:['sunset','Sunset over Western Port'],surf:['sunset','Calm water at sunset']};
+const MYINT=['Environment and wildlife','Events and festivals','Op shops and retail'];
+
+class Component extends DCLogic {
+  state = { orgPosts:ORGPOSTS, ints:INTS, fm:{...BLANK}, editing:null, cloneFrom:null, postTab:'Live', share:null, reg:{name:'',type:'Incorporated association',abn:'',contact:'',email:''}, regDone:false, csUp:false, page:'home', opp:'penguin', org:'Phillip Island Nature Parks', f:{cats:[],type:'All',tod:null,match:false,reqs:false,u18:false}, cal:'month', calCat:null, consent:false, sharePhone:false, ex:{}, toast:null };
+  go = (page, extra={}) => { this.setState({ page, consent:false, ...extra }); window.scrollTo(0,0); };
+  toast = m => { clearTimeout(this._t); this.setState({toast:m}); this._t=setTimeout(()=>this.setState({toast:null}),3000); };
+  upd = patch => this.setState(s=>({f:{...s.f,...patch}}));
+  chip = (label,on,fn) => ({label,onClick:fn,bg:on?'#13294B':'#FFFFFF',fg:on?'#FFFFFF':'#13294B',bd:on?'#13294B':'#C9B595'});
+  sw = (label,on,fn) => ({label,onClick:fn,track:on?'#13294B':'#B3A68F',left:on?'22px':'2px'});
+  card = o => { const st=this.state.ex[o.id]; const shift=o.type==='Shift';
+    const im=IMGS[o.id];
+    return {...o, hasImg:!!im, img:im?'images/'+im[0]+'.jpg':'', imgAlt:im?im[1]:'', open:()=>this.go('detail',{opp:o.id}), openOrg:()=>this.go('org',{org:o.org}), typeLabel:shift?'Volunteer slot':'Ongoing', typeBg:shift?'#FCE3CC':'#DCE6F0', typeFg:shift?'#8A3B0E':'#13294B',
+      reqList:o.reqs.map(r=>({r})), left:`${o.need-o.have} of ${o.need} spots left`, d1:shift?o.day:'Weekly', d2:shift?o.date:o.hrs, d3:shift?o.mon:'hrs',
+      hasStatus:!!st, canExpress:!st, statusLabel:st?'Interest sent':'', stBg:'#F3E6D3', stFg:'#13294B', venueLine:`${o.venue}, ${o.suburb}`, pct:`${Math.round(o.have/o.need*100)}%`,
+      orgAbout:ORGS[o.org].about, orgRoles:OPPS.filter(x=>x.org===o.org).length,
+      reqFull:o.reqs.map(r=>({r,full:REQFULL[r]})), reqNote:o.reqs.length?'You declare you hold these. The group checks them with you directly.':'No checks needed for this role.' }; };
+  fld = (grp,k) => ({value:this.state[grp][k], onChange:e=>{const v=e.target.value; this.setState(st=>({[grp]:{...st[grp],[k]:v}}));}});
+  loadPost = (p,clone) => ({title:p.title,cat:p.cat,type:p.type,date:clone?plusYear(p.date):p.date,start:p.start,end:p.end,need:String(p.need),venue:p.venue,suburb:p.suburb,desc:p.desc,provides:p.provides,reqs:[...p.reqs],u18:p.u18});
+  shareData = p => ({img:p.img||'images/sunrise-sky.jpg', title:p.title||'Your role title', date:fmtDate(p.date).replace(/ \d{4}$/,''), desc:`${fmtTime(p.start)}–${fmtTime(p.end)} at ${p.venue||'the meeting point'}, ${p.suburb}. ${p.need} people needed.${p.provides?' '+p.provides+' provided.':''}`});
+  orgVals() {
+    const s=this.state, fm=s.fm;
+    const save = status => { if(!fm.title.trim()){this.toast('Add a role title first.');return;}
+      const base={...fm,need:+fm.need||1,status,img:(s.orgPosts.find(x=>x.id===(s.editing||s.cloneFrom))||{}).img||'images/coast.jpg'};
+      let posts, id;
+      if(s.editing){ id=s.editing; posts=s.orgPosts.map(p=>p.id===id?{...p,...base}:p); }
+      else { id='p'+Date.now(); posts=[{...base,id,have:0},...s.orgPosts]; }
+      this.setState({orgPosts:posts,postTab:status,share:status==='Live'?id:null}); this.go('orgDash');
+      if(status==='Draft') this.toast('Draft saved.'); };
+    const rows=s.orgPosts.filter(p=>p.status===s.postTab).map(p=>{const n=p.id==='weeding'?s.ints.filter(i=>i.st==='new').length:0;
+      return {...p, when:`${fmtDate(p.date)} · ${fmtTime(p.start)}–${fmtTime(p.end)}`, pct:Math.round(p.have/p.need*100)+'%', isLive:p.status==='Live', hasNew:n>0, newLabel:n+' new',
+        stBg:p.status==='Live'?'#DCE6F0':p.status==='Draft'?'#FCE3CC':'#F3E6D3', stFg:p.status==='Live'?'#13294B':p.status==='Draft'?'#8A3B0E':'#4A5A72',
+        edit:()=>{this.setState({fm:this.loadPost(p,false),editing:p.id,cloneFrom:null});this.go('orgPost');},
+        clone:()=>{this.setState({fm:this.loadPost(p,true),editing:null,cloneFrom:p.id});this.go('orgPost');this.toast('Copied. Check the date, then publish.');},
+        share:()=>this.setState({share:p.id})};});
+    const sp=s.orgPosts.find(p=>p.id===s.share);
+    const setInt=(id,st)=>this.setState(x=>({ints:x.ints.map(i=>i.id===id?{...i,st}:i),orgPosts:st==='ok'?x.orgPosts.map(p=>p.id==='weeding'?{...p,have:Math.min(p.need,p.have+1)}:p):x.orgPosts}));
+    return {
+      goOrgDash:()=>this.go('orgDash'), goOrgReg:()=>this.go('orgReg'),
+      rg:{name:this.fld('reg','name'),type:this.fld('reg','type'),abn:this.fld('reg','abn'),contact:this.fld('reg','contact'),email:this.fld('reg','email')},
+      regOpen:!s.regDone, regDone:s.regDone, regEmail:s.reg.email||'your contact email',
+      csLabel:s.csUp?'✓ child-safe-policy-2026.pdf uploaded · Replace':'Upload your Child Safe policy or code of conduct (PDF)', uploadCs:()=>this.setState({csUp:true}),
+      submitReg:()=>{ if(!s.reg.name.trim()||!s.reg.abn.trim()){this.toast('Add your organisation name and ABN or incorporation number.');return;} this.setState({regDone:true}); },
+      regSteps:[{n:'01',t:'We check your details',b:'ABN or incorporation number against the public register.'},{n:'02',t:'An admin approves',b:'Usually within 48 hours. We email you either way.'},{n:'03',t:'Post and share',b:'Your first post goes live and gets a Facebook-ready preview.'}],
+      newPost:()=>{this.setState({fm:{...BLANK},editing:null,cloneFrom:null});this.go('orgPost');},
+      postTabs:['Live','Draft','Past'].map(t=>({label:`${t} (${s.orgPosts.filter(p=>p.status===t).length})`,onClick:()=>this.setState({postTab:t}),bg:s.postTab===t?'#FFFFFF':'transparent'})),
+      postRows:rows, noPostRows:!rows.length,
+      newCount:s.ints.filter(i=>i.st==='new').length,
+      intRows:s.ints.map(i=>({...i,init:i.name.split(' ').map(w=>w[0]).join('').slice(0,2),isNew:i.st==='new',isDone:i.st!=='new',canConfirm:i.ok,waiting:!i.ok,
+        doneLabel:i.st==='ok'?'✓ Confirmed. Details and calendar invite sent.':'Declined. They were sent a polite note.',doneFg:i.st==='ok'?'#13294B':'#4A5A72',
+        confirm:()=>{setInt(i.id,'ok');this.toast(`${i.name} confirmed.`);},decline:()=>setInt(i.id,'no')})),
+      editorTitle:s.editing?'Edit post':s.cloneFrom?'New post from last year':'New post',
+      cloneChips:s.orgPosts.filter(p=>p.status==='Past').map(p=>{const on=s.cloneFrom===p.id;return {label:`${p.title} · ${fmtDate(p.date).replace(/^\w+ /,'')}`,bg:on?'#13294B':'#FFFFFF',fg:on?'#FFFFFF':'#13294B',bd:on?'#13294B':'#C9B595',onClick:()=>{this.setState({fm:this.loadPost(p,true),editing:null,cloneFrom:p.id});this.toast('Copied with the date moved to next year. Check it, then publish.');}};}),
+      fm:Object.fromEntries(['title','cat','date','start','end','need','venue','suburb','desc','provides'].map(k=>[k,this.fld('fm',k)])),
+      catOpts:CATS.map(v=>({v})),
+      typeOpts:[['Volunteer slot','Shift'],['Ongoing','Ongoing']].map(([l,v])=>({label:l,onClick:()=>this.setState(st=>({fm:{...st.fm,type:v}})),bg:fm.type===v?'#FFFFFF':'transparent'})),
+      reqOpts:['WWCC','Police check','First Aid','RSA','Licence','18+'].map(q=>{const on=fm.reqs.includes(q);return {label:q,bg:on?'#13294B':'#FFFFFF',fg:on?'#FFFFFF':'#13294B',bd:on?'#13294B':'#C9B595',onClick:()=>this.setState(st=>({fm:{...st.fm,reqs:on?st.fm.reqs.filter(x=>x!==q):[...st.fm.reqs,q]}}))};}),
+      fmU18:fm.u18, u18Toggle:{onClick:()=>this.setState(st=>({fm:{...st.fm,u18:!st.fm.u18}})),track:fm.u18?'#13294B':'#B3A68F',left:fm.u18?'22px':'2px'},
+      pv:this.shareData({...fm,img:(s.orgPosts.find(x=>x.id===(s.editing||s.cloneFrom))||{}).img}),
+      publish:()=>save('Live'), saveDraft:()=>save('Draft'),
+      shareOpen:!!sp, closeShare:()=>this.setState({share:null}),
+      sh:sp?{...this.shareData(sp),kicker:'Live on Pi-Volunteers'}:{img:'',title:'',desc:'',date:'',kicker:''},
+      getPdf:()=>this.toast('Noticeboard PDF downloaded: this week\'s Landcare slots, A4, with a QR code.')
+    };
+  }
+  renderVals() {
+    const s=this.state, p=this.props, f=s.f, cv=p.cardVariant??'Modern';
+    const vis=OPPS.filter(o=>(!f.cats.length||f.cats.includes(o.cat))&&(f.type==='All'||o.type===f.type)&&(!f.tod||o.type==='Ongoing'||o.tod===f.tod)&&(!f.match||MYINT.includes(o.cat))&&(!f.reqs||o.reqs.every(r=>HAS.includes(r)))&&(!f.u18||o.u18));
+    const all=OPPS.map(this.card), shifts=all.filter(o=>o.type==='Shift'), ongoing=all.filter(o=>o.type==='Ongoing');
+    const pgs=['home','find','detail','calendar','orgs','org','about','orgReg','orgDash','orgPost']; const pg={}; pgs.forEach(k=>pg[k]=s.page===k);
+    const navKey = s.page==='detail'?'find':s.page==='org'?'orgs':s.page;
+    const ov=this.orgVals();
+    const o=this.card(OPPS.find(x=>x.id===s.opp));
+    const calVis = all.filter(x=>!s.calCat||x.cat===s.calCat);
+    const cells=[]; for(let i=0;i<35;i++){ let n,mon,muted=false; if(i<6){n=26+i;mon='Oct';muted=true;} else {n=i-5;mon='Nov';} const key=mon+n;
+      cells.push({n:n===1?'1 Nov':n,evs:calVis.filter(x=>x.key===key),bg:muted?'#FBF8F3':'#FFFFFF',fg:muted?'#8A97A8':'#13294B'}); }
+    const weekCols=[2,3,4,5,6,7,8].map((n,i)=>({n,dow:DOW[i],items:calVis.filter(x=>x.key==='Nov'+n)}));
+    const groups={}; calVis.filter(x=>x.type==='Shift').forEach(x=>{const k=`${x.day} ${x.date} ${x.mon}`;(groups[k]=groups[k]||[]).push(x);});
+    const listGroups=Object.keys(groups).map(k=>({label:k,items:groups[k]}));
+    const ogBase=ORGS[s.org];
+    return {
+      pg, cardVariant:cv,
+      navLinks:[['Find a role','find'],['Calendar','calendar'],['Organisations','orgs'],['About','about']].map(([l,k])=>({label:l,onClick:()=>this.go(k),bg:navKey===k?'#F3E6D3':'transparent'})),
+      goHome:()=>this.go('home'), goFind:()=>this.go('find'), goOrgs:()=>this.go('orgs'),
+      postNeed:()=>this.go('orgDash'), ...ov,
+      signIn:()=>this.toast('Sign in with an email link or passkey. No passwords.'),
+      openCount:OPPS.length, nextUp:shifts[0], shiftCount:shifts.length, featured:shifts.slice(0,6), ongoing,
+      catTiles:CATS.map((c,i)=>{const n=OPPS.filter(x=>x.cat===c).length; return {label:c,abbr:ABBR[i],count:n?`${n} open`:'',onClick:()=>{this.upd({cats:[c]});this.go('find');}};}),
+      steps:[{n:'01',t:'Tell us what you like',b:'Pick your interests and when you\'re free. Under 2 minutes, no password.'},{n:'02',t:'Tap "I\'m interested"',b:'You choose what the group sees. Nothing about you is shared before that.'},{n:'03',t:'Get confirmed',b:'The group confirms you. Add it to Google, Outlook or Apple calendar and we email reminders.'}],
+      orgPoints:[{t:'Approved before posting',b:'ABN or incorporation check, then an admin approves. Usually within 48 hours.'},{t:'Clone last year\'s post',b:'Most event needs repeat. Copy, change the date, publish.'},{t:'Share-ready for Facebook',b:'Every post gets a preview image for community groups.'},{t:'Noticeboard PDF',b:'This week\'s volunteer slots, printed for PICAL, the library and the supermarket board.'}],
+      footerLinks:['About','Privacy','Volunteer terms','Organisation terms','Child safety statement','Contact','Report a problem','For organisations'].map(l=>({label:l,onClick:()=>l==='About'?this.go('about'):l==='For organisations'?this.go('orgReg'):this.toast(`${l}: plain-English copy pending legal review.`)})),
+      visCards:vis.map(this.card), visCount:vis.length, noResults:!vis.length,
+      clearFilters:()=>this.setState({f:{cats:[],type:'All',tod:null,match:false,reqs:false,u18:false}}),
+      typeChips:['All','Shift','Ongoing'].map(t=>({label:t==='Shift'?'Slots':t,onClick:()=>this.upd({type:t}),bg:f.type===t?'#FFFFFF':'transparent'})),
+      catChecks:CATS.map(c=>{const on=f.cats.includes(c); return {label:c,on,count:OPPS.filter(x=>x.cat===c).length||'',box:on?'#13294B':'#FFFFFF',tick:on?'✓':'',onClick:()=>this.upd({cats:on?f.cats.filter(x=>x!==c):[...f.cats,c]})};}),
+      todChips:['Morning','Afternoon','Evening'].map(t=>this.chip(t,f.tod===t,()=>this.upd({tod:f.tod===t?null:t}))),
+      toggles:[this.sw('Matches my profile',f.match,()=>this.upd({match:!f.match})),this.sw('Requirements I meet',f.reqs,()=>this.upd({reqs:!f.reqs})),this.sw('Open to under 18s',f.u18,()=>this.upd({u18:!f.u18}))],
+      suburbs:SUBURBS.map(v=>({v})),
+      o, openConsent:()=>this.setState({consent:true,sharePhone:false}), closeConsent:()=>this.setState({consent:false}), consent:s.consent,
+      sharePhone:s.sharePhone, togglePhone:()=>this.setState({sharePhone:!s.sharePhone}), phoneBox:s.sharePhone?'#13294B':'#FFFFFF', phoneTick:s.sharePhone?'✓':'',
+      sendInterest:()=>{ this.setState(st=>({ex:{...st.ex,[o.id]:'interested'},consent:false})); this.toast(`Interest sent to ${o.orgShort}. They'll confirm by email.`); },
+      shareFb:()=>this.toast('Opening Facebook share with the post link and preview image.'), copyLink:()=>this.toast('Link copied.'),
+      reportPost:()=>this.toast('Report sent to the platform admins. We review within 48 hours.'),
+      calTabs:[['Month','month'],['Week','week'],['List','list']].map(([l,k])=>({label:l,onClick:()=>this.setState({cal:k}),bg:s.cal===k?'#FFFFFF':'transparent'})),
+      calMonth:s.cal==='month', calWeek:s.cal==='week', calList:s.cal==='list',
+      calTitle:s.cal==='week'?'2–8 Nov 2026':'November 2026', calNav:()=>this.toast('Demo data covers late October and November.'),
+      calCatChips:[null,'Environment and wildlife','Events and festivals','Food and hospitality','Animals'].map(c=>this.chip(c||'All categories',s.calCat===c,()=>this.setState({calCat:c}))),
+      dows:DOW.map(v=>({v})), cells, weekCols, listGroups,
+      orgCards:Object.keys(ORGS).map(n=>{const r=OPPS.filter(x=>x.org===n).length; return {name:n,about:ORGS[n].about,cs:ORGS[n].cs,rolesLabel:`${r} open role${r===1?'':'s'}`,open:()=>this.go('org',{org:s.org===n?n:n})};}),
+      og:{name:s.org,long:ogBase.long,cs:ogBase.cs,roles:all.filter(x=>x.org===s.org)},
+      aboutBlocks:[{t:'Island first',b:'Only Phillip Island groups and roles. A Cowes group can post a Saturday volunteer slot in 2 minutes and a local sees it that night.'},{t:'Your details stay with you',b:'We store the minimum: display name, email, suburb, interests and availability. Groups see your name, email and declared checks only after you tap "I\'m interested" on their post.'},{t:'Checks are declared, not verified',b:'If a role needs a Working with Children Check or First Aid, you declare you hold it and the group checks with you directly. Our badges say "Declares WWCC held", never "Verified".'},{t:'Volunteers aged 15 to 17',b:'Allowed only on posts from groups that have provided Child Safe evidence, with a parent or guardian approving the account and each volunteer slot.'}],
+      hasToast:!!s.toast, toastMsg:s.toast||''
+    };
+  }
+}
+</script>
+</body>
+</html>

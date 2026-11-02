@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box}body{margin:0;background:#E9DFCE;font-family:'Atkinson Hyperlegible',system-ui,sans-serif;color:#0E3A53}a{color:#0E3A53}a:hover{color:#C8541C}button,input,select,textarea{font-family:inherit;color:inherit}:focus-visible{outline:3px solid #C8541C;outline-offset:2px}</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-wrap:wrap;gap:40px;justify-content:center;align-items:flex-start;padding:32px 24px">
+
+<aside style="width:240px;display:flex;flex-direction:column;gap:22px">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="position:relative;width:36px;height:36px;border-radius:9px;background:#0E3A53;overflow:hidden;flex:none;display:block"><span style="position:absolute;left:8px;bottom:14px;width:20px;height:10px;border-radius:10px 10px 0 0;background:#C8541C"></span><span style="position:absolute;left:5px;right:5px;bottom:11px;height:2px;background:#F2E8D8"></span><span style="position:absolute;left:11px;right:11px;bottom:7px;height:2px;background:#F2E8D8"></span></span>
+<div style="display:flex;flex-direction:column"><span style="font-size:20px;font-weight:700">Pi-Volunteers</span><span style="font-size:14px;color:#4B6476">Prototype v0.1 · 28 Oct 2026</span></div>
+</div>
+<sc-for list="{{ nav }}" as="g" hint-placeholder-count="5">
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#4B6476">{{ g.label }}</div>
+<sc-for list="{{ g.items }}" as="it" hint-placeholder-count="2">
+<button onClick="{{ it.onClick }}" style="text-align:left;border:0;border-radius:10px;padding:10px 12px;font-size:16px;cursor:pointer;background:{{ it.bg }};color:{{ it.fg }};font-weight:700">{{ it.label }}</button>
+</sc-for>
+</div>
+</sc-for>
+<p style="margin:0;font-size:15px;line-height:1.5;color:#4B6476">Home, card and detail layouts each have 3 or 2 variations. Switch them in Tweaks. The Child Safe tweak shows the greyed under-18 option on the new-post form.</p>
+</aside>
+
+<div style="width:390px;height:844px;border-radius:54px;background:#0A1A24;padding:10px;box-shadow:0 30px 60px rgba(9,40,56,.25);flex:none">
+<div style="position:relative;width:100%;height:100%;border-radius:44px;overflow:hidden;background:#FFFFFF;display:flex;flex-direction:column">
+<div style="height:46px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px;font-size:15px;font-weight:700;background:{{ statusBg }};color:{{ statusFg }}">
+<span>9:41</span>
+<span style="width:110px;height:30px;border-radius:15px;background:#0A1A24"></span>
+<span style="display:flex;gap:4px;align-items:center"><span style="width:22px;height:11px;border-radius:3px;border:1.5px solid currentColor;padding:1px;display:flex"><span style="flex:1;background:currentColor;border-radius:1px"></span></span></span>
+</div>
+
+<div ref="{{ scrollRef }}" style="flex:1;overflow-y:auto;position:relative;background:#FFFFFF">
+
+<sc-if value="{{ showHeader }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 20px 12px;background:#FFFFFF">
+<button onClick="{{ goHome }}" style="display:flex;align-items:center;gap:10px;background:none;border:0;padding:0;cursor:pointer">
+<span style="position:relative;width:32px;height:32px;border-radius:8px;background:#0E3A53;overflow:hidden;flex:none;display:block"><span style="position:absolute;left:7px;bottom:12px;width:18px;height:9px;border-radius:9px 9px 0 0;background:#C8541C"></span><span style="position:absolute;left:4px;right:4px;bottom:10px;height:2px;background:#F2E8D8"></span><span style="position:absolute;left:9px;right:9px;bottom:6px;height:2px;background:#F2E8D8"></span></span>
+<span style="font-size:19px;font-weight:700;letter-spacing:-0.01em">Pi-Volunteers</span>
+</button>
+<button onClick="{{ goMe }}" aria-label="My dashboard" style="width:44px;height:44px;border-radius:22px;border:0;background:#F2E8D8;font-size:15px;font-weight:700;cursor:pointer">{{ initials }}</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ showPortal }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 20px 12px;background:#0E3A53;color:#FFFFFF">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="position:relative;width:32px;height:32px;border-radius:8px;background:#F2E8D8;overflow:hidden;flex:none;display:block"><span style="position:absolute;left:7px;bottom:12px;width:18px;height:9px;border-radius:9px 9px 0 0;background:#C8541C"></span><span style="position:absolute;left:4px;right:4px;bottom:10px;height:2px;background:#0E3A53"></span><span style="position:absolute;left:9px;right:9px;bottom:6px;height:2px;background:#0E3A53"></span></span>
+<div style="display:flex;flex-direction:column"><span style="font-size:13px;color:#F2E8D8">Pi-Volunteers</span><span style="font-size:17px;font-weight:700">{{ portalLabel }}</span></div>
+</div>
+<button onClick="{{ goHome }}" style="height:44px;padding:0 12px;border-radius:10px;border:1.5px solid #F2E8D8;background:none;color:#FFFFFF;font-size:15px;cursor:pointer">Exit</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ sc.home }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column">
+<sc-if value="{{ hA }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:20px;padding-bottom:24px">
+<div style="position:relative;margin:0 16px;border-radius:20px;overflow:hidden;background:#0E3A53;min-height:360px;display:flex;flex-direction:column;justify-content:flex-end">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(242,232,216,.06) 0 12px,transparent 12px 24px)"></div>
+<div style="position:absolute;top:14px;left:16px;right:16px;font:12px/1.4 ui-monospace,Menlo,monospace;color:#F2E8D8">HERO PHOTO · Island volunteers at the Nobbies at dusk. Signed consent, no faces of minors.</div>
+<div style="position:relative;padding:24px 20px;display:flex;flex-direction:column;gap:14px;background:linear-gradient(0deg,rgba(9,40,56,.9),rgba(9,40,56,0))">
+<h1 style="margin:0;font-size:32px;line-height:1.1;color:#FFFFFF;letter-spacing:-0.01em;text-wrap:balance">Lend a hand on the Island this week.</h1>
+<p style="margin:0;font-size:17px;line-height:1.45;color:#F2E8D8">Local groups post what they need. You pick what suits your week.</p>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<button onClick="{{ goList }}" style="height:52px;padding:0 22px;border:0;border-radius:12px;background:#C8541C;color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer" style-hover="background:#A8440F">Find a role</button>
+<button onClick="{{ goOrgNew }}" style="height:52px;padding:0 22px;border:2px solid #F2E8D8;border-radius:12px;background:transparent;color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer">Post a need</button>
+</div>
+</div>
+</div>
+<div style="margin:0 20px;display:flex;align-items:center;gap:10px;font-size:16px"><span style="width:10px;height:10px;border-radius:5px;background:#C8541C;flex:none"></span><span><strong>{{ openCount }} open</strong> right now · {{ shiftCount }} volunteer slots in the next 2 weeks</span></div>
+<div style="display:flex;flex-direction:column;gap:12px;padding:20px 16px;background:#F8F3EA">
+<div style="display:flex;justify-content:space-between;align-items:baseline;padding:0 4px"><h2 style="margin:0;font-size:22px">Coming up</h2><button onClick="{{ goList }}" style="background:none;border:0;font-size:16px;font-weight:700;color:#C8541C;cursor:pointer;min-height:44px">See all</button></div>
+<sc-for list="{{ featured }}" as="o" hint-placeholder-count="3"><dc-import name="OppCard" item="{{ o }}" variant="{{ cardVariant }}" hint-size="100%,128px"></dc-import></sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ hB }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column">
+<div style="padding:12px 20px 24px;display:flex;flex-direction:column;gap:16px;background:#F2E8D8">
+<h1 style="margin:0;font-size:32px;line-height:1.1;letter-spacing:-0.01em;text-wrap:balance">What can you help with on the Island?</h1>
+<button onClick="{{ goList }}" style="height:56px;border:2px solid #0E3A53;border-radius:12px;background:#FFFFFF;text-align:left;padding:0 16px;font-size:17px;color:#4B6476;cursor:pointer">Search roles, groups or suburbs</button>
+<div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ quick }}" as="c" hint-placeholder-count="5"><button onClick="{{ c.onClick }}" style="min-height:44px;padding:0 14px;border-radius:999px;border:1.5px solid #0E3A53;background:#FFFFFF;font-size:16px;font-weight:700;cursor:pointer">{{ c.label }}</button></sc-for></div>
+<div style="font-size:16px"><strong>{{ openCount }} open</strong> right now · <button onClick="{{ goOrgNew }}" style="background:none;border:0;padding:0;font-size:16px;font-weight:700;color:#C8541C;text-decoration:underline;cursor:pointer">Post a need</button></div>
+</div>
+<div style="padding:20px 0 8px;display:flex;flex-direction:column;gap:12px;background:#F8F3EA">
+<h2 style="margin:0;padding:0 20px;font-size:22px">This weekend</h2>
+<div style="display:flex;gap:12px;overflow-x:auto;padding:0 20px 12px">
+<sc-for list="{{ weekend }}" as="o" hint-placeholder-count="2">
+<button onClick="{{ o.open }}" style="flex:none;width:232px;text-align:left;background:#FFFFFF;border:1px solid #E2D6C2;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:6px;cursor:pointer">
+<span style="align-self:flex-start;padding:2px 9px;border-radius:999px;font-size:13px;font-weight:700;background:#FBE3D4;color:#8A3510">{{ o.when }}</span>
+<span style="font-size:18px;font-weight:700;line-height:1.25">{{ o.title }}</span>
+<span style="font-size:15px;color:#4B6476">{{ o.org }} · {{ o.suburb }}</span>
+<span style="font-size:14px;font-weight:700;color:#C8541C">{{ o.left }}</span>
+</button>
+</sc-for>
+</div>
+</div>
+<div style="padding:4px 16px 24px;display:flex;flex-direction:column;gap:12px;background:#F8F3EA">
+<h2 style="margin:0;padding:0 4px;font-size:22px">Regular roles</h2>
+<sc-for list="{{ ongoing }}" as="o" hint-placeholder-count="3"><dc-import name="OppCard" item="{{ o }}" variant="{{ cardVariant }}" hint-size="100%,128px"></dc-import></sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ hC }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column">
+<div style="padding:8px 20px 16px;display:flex;flex-direction:column;gap:12px">
+<h1 style="margin:0;font-size:30px;line-height:1.1;letter-spacing:-0.01em">Free this week? Pick a day.</h1>
+<p style="margin:0;font-size:16px;color:#4B6476">{{ openCount }} open opportunities. Volunteer slots by day, regular roles below.</p>
+</div>
+<div style="display:flex;gap:8px;overflow-x:auto;padding:0 20px 16px">
+<sc-for list="{{ strip }}" as="d" hint-placeholder-count="7">
+<button onClick="{{ d.onClick }}" style="flex:none;width:58px;height:82px;border-radius:12px;border:1.5px solid {{ d.bd }};background:{{ d.bg }};color:{{ d.fg }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer">
+<span style="font-size:13px;font-weight:700">{{ d.dow }}</span>
+<span style="font-size:22px;font-weight:700;line-height:1">{{ d.n }}</span>
+<span style="font-size:12px">{{ d.count }}</span>
+</button>
+</sc-for>
+</div>
+<div style="padding:20px 16px 24px;display:flex;flex-direction:column;gap:12px;background:#F8F3EA">
+<h2 style="margin:0;padding:0 4px;font-size:22px">{{ stripLabel }}</h2>
+<sc-for list="{{ stripCards }}" as="o" hint-placeholder-count="1"><dc-import name="OppCard" item="{{ o }}" variant="{{ cardVariant }}" hint-size="100%,128px"></dc-import></sc-for>
+<sc-if value="{{ stripEmpty }}" hint-placeholder-val="{{ false }}">
+<div style="background:#FFFFFF;border:1px dashed #C9B99F;border-radius:14px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center">
+<div style="width:120px;height:80px;border-radius:10px;background:repeating-linear-gradient(135deg,#F2E8D8 0 8px,#F8F3EA 8px 16px);display:flex;align-items:center;justify-content:center;font:11px ui-monospace,Menlo,monospace;color:#4B6476">EMPTY STATE</div>
+<div style="font-size:17px;font-weight:700">Nothing posted for this day yet</div>
+<div style="font-size:15px;color:#4B6476">Regular roles below run every week.</div>
+</div>
+</sc-if>
+<h2 style="margin:12px 0 0;padding:0 4px;font-size:22px">Regular roles</h2>
+<sc-for list="{{ ongoing }}" as="o" hint-placeholder-count="3"><dc-import name="OppCard" item="{{ o }}" variant="{{ cardVariant }}" hint-size="100%,128px"></dc-import></sc-for>
+<div style="margin-top:8px;background:#0E3A53;color:#FFFFFF;border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px">
+<div style="font-size:19px;font-weight:700;line-height:1.3">Running something on the Island? Post a volunteer slot in 2 minutes.</div>
+<button onClick="{{ goOrgNew }}" style="align-self:flex-start;height:48px;padding:0 18px;border:0;border-radius:12px;background:#C8541C;color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer">Post a need</button>
+</div>
+</div>
+</div>
+</sc-if>
+
+<div style="padding:28px 20px;display:flex;flex-direction:column;gap:14px">
+<h2 style="margin:0;font-size:22px">Browse by category</h2>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+<sc-for list="{{ catTiles }}" as="c" hint-placeholder-count="12">
+<button onClick="{{ c.onClick }}" style="min-height:104px;border:1px solid #E2D6C2;border-radius:12px;background:#FFFFFF;padding:10px 8px;display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;cursor:pointer" style-hover="border-color:#0E3A53">
+<span style="width:36px;height:36px;border-radius:8px;background:#F2E8D8;display:flex;align-items:center;justify-content:center;font:700 11px ui-monospace,Menlo,monospace">{{ c.abbr }}</span>
+<span style="font-size:14px;font-weight:700;line-height:1.2">{{ c.label }}</span>
+</button>
+</sc-for>
+</div>
+</div>
+<div style="padding:8px 20px 28px;display:flex;flex-direction:column;gap:16px">
+<h2 style="margin:0;font-size:22px">How it works</h2>
+<sc-for list="{{ steps }}" as="st" hint-placeholder-count="3">
+<div style="display:flex;gap:14px;align-items:flex-start">
+<span style="flex:none;width:40px;height:40px;border-radius:20px;background:#0E3A53;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700">{{ st.n }}</span>
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:17px;font-weight:700">{{ st.t }}</span><span style="font-size:16px;line-height:1.45;color:#4B6476">{{ st.b }}</span></div>
+</div>
+</sc-for>
+</div>
+<div style="padding:0 20px 28px;display:flex;flex-direction:column;gap:12px">
+<h2 style="margin:0;font-size:18px">Working with</h2>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+<div style="height:56px;border:1px dashed #C9B99F;border-radius:10px;display:flex;align-items:center;justify-content:center;font:12px ui-monospace,Menlo,monospace;color:#4B6476">PARTNER LOGO</div>
+<div style="height:56px;border:1px dashed #C9B99F;border-radius:10px;display:flex;align-items:center;justify-content:center;font:12px ui-monospace,Menlo,monospace;color:#4B6476">PARTNER LOGO</div>
+<div style="height:56px;border:1px dashed #C9B99F;border-radius:10px;display:flex;align-items:center;justify-content:center;font:12px ui-monospace,Menlo,monospace;color:#4B6476">PARTNER LOGO</div>
+<div style="height:56px;border:1px dashed #C9B99F;border-radius:10px;display:flex;align-items:center;justify-content:center;font:12px ui-monospace,Menlo,monospace;color:#4B6476">PARTNER LOGO</div>
+</div>
+</div>
+<div style="background:#0E3A53;color:#F2E8D8;padding:24px 20px 32px;display:flex;flex-direction:column;gap:16px">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px">
+<sc-for list="{{ footerLinks }}" as="l" hint-placeholder-count="7"><button onClick="{{ l.onClick }}" style="text-align:left;background:none;border:0;padding:0;min-height:40px;font-size:16px;color:#FFFFFF;text-decoration:underline;cursor:pointer">{{ l.label }}</button></sc-for>
+</div>
+<p style="margin:0;font-size:15px;line-height:1.5">Free to use. No money changes hands. No tracking cookies, so no cookie banner.</p>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sc.list }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;min-height:100%">
+<div style="padding:4px 20px 14px;display:flex;flex-direction:column;gap:12px;border-bottom:1px solid #E2D6C2">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><h1 style="margin:0;font-size:26px">Opportunities</h1><span style="font-size:16px;color:#4B6476">{{ visCount }} showing</span></div>
+<div style="display:flex;gap:8px;align-items:center">
+<button onClick="{{ openSheet }}" style="height:44px;padding:0 14px;border:2px solid #0E3A53;border-radius:10px;background:#FFFFFF;font-size:16px;font-weight:700;cursor:pointer;flex:none">{{ filterLabel }}</button>
+<div style="display:flex;gap:4px;background:#F2E8D8;border-radius:10px;padding:3px;flex:1">
+<sc-for list="{{ typeChips }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="flex:1;height:38px;border:0;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;background:{{ c.bg }};color:{{ c.fg }}">{{ c.label }}</button></sc-for>
+</div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center">
+<span style="font-size:16px">Matches my profile</span>
+<button onClick="{{ swMatch.onClick }}" role="switch" aria-label="Matches my profile" style="width:52px;height:44px;border:0;background:none;padding:0;cursor:pointer;display:flex;align-items:center"><span style="position:relative;width:48px;height:28px;border-radius:14px;background:{{ swMatch.track }};display:block"><span style="position:absolute;top:2px;left:{{ swMatch.left }};width:24px;height:24px;border-radius:12px;background:#FFFFFF;transition:left .15s"></span></span></button>
+</div>
+</div>
+<sc-if value="{{ isMinor }}" hint-placeholder-val="{{ false }}"><div style="padding:12px 20px;background:#F2E8D8;font-size:15px;line-height:1.4">Showing posts open to under 18s only. Your guardian approves each volunteer slot.</div></sc-if>
+<div style="flex:1;padding:16px;display:flex;flex-direction:column;gap:12px;background:#F8F3EA">
+<sc-for list="{{ visCards }}" as="o" hint-placeholder-count="4"><dc-import name="OppCard" item="{{ o }}" variant="{{ cardVariant }}" hint-size="100%,128px"></dc-import></sc-for>
+<sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+<div style="background:#FFFFFF;border:1px dashed #C9B99F;border-radius:14px;padding:24px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
+<div style="width:140px;height:96px;border-radius:10px;background:repeating-linear-gradient(135deg,#F2E8D8 0 8px,#F8F3EA 8px 16px);display:flex;align-items:center;justify-content:center;font:11px ui-monospace,Menlo,monospace;color:#4B6476">EMPTY STATE</div>
+<div style="font-size:18px;font-weight:700">No matches yet</div>
+<div style="font-size:16px;color:#4B6476">Try removing a filter, or save this search and we'll email you when something comes up.</div>
+<button onClick="{{ clearFilters }}" style="height:48px;padding:0 18px;border:0;border-radius:12px;background:#0E3A53;color:#FFFFFF;font-size:17px;font-weight:700;cursor:pointer">Clear filters</button>
+</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sc.detail }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;min-height:100%">
+<div style="display:flex;justify-content:space-between;padding:4px 12px">
+<button onClick="{{ back }}" style="height:44px;padding:0 10px;border:0;background:none;font-size:17px;font-weight:700;cursor:pointer">← Back</button>
+<button onClick="{{ sharePost }}" style="height:44px;padding:0 10px;border:0;background:none;font-size:17px;font-weight:700;cursor:pointer">Share</button>
+</div>
+<div style="padding:4px 20px 18px;display:flex;flex-direction:column;gap:10px">
+<span style="font-size:15px;font-weight:700;color:#4B6476">{{ o.cat }}</span>
+<h1 style="margin:0;font-size:28px;line-height:1.15;letter-spacing:-0.01em;text-wrap:balance">{{ o.title }}</h1>
+<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><span style="font-size:17px">{{ o.org }}</span><span style="padding:2px 9px;border-radius:999px;font-size:13px;font-weight:700;background:#0E3A53;color:#FFFFFF">✓ Approved org</span></div>
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<span style="padding:3px 10px;border-radius:999px;font-size:14px;font-weight:700;background:{{ o.typeBg }};color:{{ o.typeFg }}">{{ o.typeLabel }}</span>
+<sc-if value="{{ o.u18 }}" hint-placeholder-val="{{ false }}"><span style="padding:2px 9px;border-radius:999px;font-size:14px;font-weight:700;border:1.5px solid #0E3A53">Open to under 18s</span></sc-if>
+</div>
+</div>
+
+<sc-if value="{{ dB }}" hint-placeholder-val="{{ false }}">
+<div style="margin:0 16px 20px;border:2px solid #0E3A53;border-radius:16px;overflow:hidden">
+<div style="display:flex;gap:14px;padding:16px;background:#F2E8D8;align-items:center">
+<div style="flex:none;width:68px;height:76px;border-radius:12px;background:#FFFFFF;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-size:13px;font-weight:700">{{ o.d1 }}</span><span style="font-size:28px;font-weight:700;line-height:1">{{ o.d2 }}</span><span style="font-size:13px;font-weight:700">{{ o.d3 }}</span></div>
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:17px;font-weight:700">{{ o.when }}</span><span style="font-size:16px">{{ o.venueLine }}</span></div>
+</div>
+<div style="padding:16px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;justify-content:space-between;font-size:16px"><span>{{ o.left }}</span><span style="color:#4B6476">{{ o.have }} confirmed</span></div>
+<div style="height:8px;border-radius:4px;background:#F2E8D8;overflow:hidden"><div style="height:100%;background:#C8541C;width:{{ o.pct }}"></div></div>
+<sc-if value="{{ o.canExpress }}" hint-placeholder-val="{{ true }}"><button onClick="{{ openConsent }}" style="height:56px;border:0;border-radius:12px;background:#C8541C;color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer" style-hover="background:#A8440F">I'm interested</button></sc-if>
+<sc-if value="{{ o.hasStatus }}" hint-placeholder-val="{{ false }}"><div style="padding:14px;border-radius:12px;background:#F2E8D8;font-size:16px;font-weight:700">{{ o.statusLong }}</div></sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ dA }}" hint-placeholder-val="{{ true }}">
+<div style="margin:0 20px 20px;display:flex;flex-direction:column;border-top:1px solid #E2D6C2">
+<sc-for list="{{ o.facts }}" as="fx" hint-placeholder-count="4"><div style="display:grid;grid-template-columns:96px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid #E2D6C2;font-size:16px;line-height:1.4"><span style="color:#4B6476">{{ fx.k }}</span><span>{{ fx.v }}</span></div></sc-for>
+</div>
+</sc-if>
+
+<div style="padding:0 20px 20px;display:flex;flex-direction:column;gap:8px">
+<h2 style="margin:0;font-size:20px">About this role</h2>
+<p style="margin:0;font-size:17px;line-height:1.55;text-wrap:pretty">{{ o.desc }}</p>
+</div>
+<div style="padding:0 20px 20px;display:flex;flex-direction:column;gap:10px">
+<h2 style="margin:0;font-size:20px">Requirements</h2>
+<sc-for list="{{ o.reqFull }}" as="q" hint-placeholder-count="0"><div style="display:flex;gap:10px;align-items:center;font-size:16px"><span style="border:1.5px solid #0E3A53;border-radius:6px;padding:1px 6px;font-size:13px;font-weight:700;min-width:48px;text-align:center">{{ q.r }}</span><span>{{ q.full }}</span></div></sc-for>
+<p style="margin:0;font-size:15px;line-height:1.5;color:#4B6476">{{ o.reqNote }}</p>
+</div>
+<sc-if value="{{ o.u18 }}" hint-placeholder-val="{{ false }}">
+<div style="margin:0 16px 20px;padding:16px;border-radius:14px;background:#F2E8D8;display:flex;flex-direction:column;gap:8px;font-size:16px;line-height:1.45">
+<h2 style="margin:0;font-size:18px">For volunteers aged 15 to 17</h2>
+<div><strong>Minimum age:</strong> 15</div>
+<div><strong>Supervision:</strong> always with a named adult holding a WWCC</div>
+<div><strong>Parent may attend:</strong> yes</div>
+<div><strong>Finishes by:</strong> {{ o.finish }}</div>
+</div>
+</sc-if>
+<div style="padding:0 20px 20px;display:flex;flex-direction:column;gap:8px">
+<h2 style="margin:0;font-size:20px">Access</h2>
+<p style="margin:0;font-size:16px;line-height:1.5">{{ o.access }}</p>
+</div>
+<div style="margin:0 16px 16px;padding:16px;border:1px solid #E2D6C2;border-radius:14px;display:flex;flex-direction:column;gap:6px">
+<span style="font-size:17px;font-weight:700">{{ o.org }}</span>
+<span style="font-size:16px;line-height:1.45;color:#4B6476">{{ o.orgAbout }}</span>
+<span style="font-size:16px"><a href="#" style="font-weight:700">Website ↗</a> · {{ o.orgRoles }} open roles</span>
+</div>
+<div style="padding:0 20px 24px"><button onClick="{{ reportPost }}" style="background:none;border:0;padding:0;min-height:44px;font-size:15px;color:#4B6476;text-decoration:underline;cursor:pointer">Report this post</button></div>
+<sc-if value="{{ dA }}" hint-placeholder-val="{{ true }}">
+<div style="position:sticky;bottom:0;margin-top:auto;padding:12px 16px 16px;background:#FFFFFF;border-top:1px solid #E2D6C2;display:flex;gap:12px;align-items:center">
+<div style="display:flex;flex-direction:column;flex:none"><span style="font-size:15px;font-weight:700">{{ o.left }}</span><span style="font-size:14px;color:#4B6476">{{ o.shortWhen }}</span></div>
+<sc-if value="{{ o.canExpress }}" hint-placeholder-val="{{ true }}"><button onClick="{{ openConsent }}" style="flex:1;height:54px;border:0;border-radius:12px;background:#C8541C;color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer" style-hover="background:#A8440F">I'm interested</button></sc-if>
+<sc-if value="{{ o.hasStatus }}" hint-placeholder-val="{{ false }}"><div style="flex:1;padding:10px 12px;border-radius:12px;background:#F2E8D8;font-size:15px;font-weight:700;line-height:1.3">{{ o.statusLong }}</div></sc-if>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ sc.calendar }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;min-height:100%">
+<div style="padding:4px 20px 14px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;justify-content:space-between;align-items:center"><h1 style="margin:0;font-size:26px">Calendar</h1><button onClick="{{ openSheet }}" style="height:44px;padding:0 14px;border:2px solid #0E3A53;border-radius:10px;background:#FFFFFF;font-size:16px;font-weight:700;cursor:pointer">{{ filterLabel }}</button></div>
+<div style="display:flex;gap:4px;background:#F2E8D8;border-radius:10px;padding:3px">
+<sc-for list="{{ calTabs }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="flex:1;height:40px;border:0;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;background:{{ c.bg }};color:{{ c.fg }}">{{ c.label }}</button></sc-for>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center">
+<button onClick="{{ calNav }}" aria-label="Previous" style="width:44px;height:44px;border:1px solid #E2D6C2;border-radius:10px;background:#FFFFFF;font-size:18px;cursor:pointer">‹</button>
+<span style="font-size:18px;font-weight:700">{{ calTitle }}</span>
+<button onClick="{{ calNav }}" aria-label="Next" style="width:44px;height:44px;border:1px solid #E2D6C2;border-radius:10px;background:#FFFFFF;font-size:18px;cursor:pointer">›</button>
+</div>
+<button onClick="{{ goOngoing }}" style="display:flex;justify-content:space-between;align-items:center;min-height:48px;padding:0 14px;border-radius:10px;border:0;background:#DCE7EE;font-size:16px;cursor:pointer;text-align:left"><span><strong>Regular</strong> · {{ ongoingCount }} roles run every week</span><span style="font-weight:700">View</span></button>
+</div>
+
+<sc-if value="{{ calMonth }}" hint-placeholder-val="{{ false }}">
+<div style="padding:0 12px 12px">
+<div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;text-align:center;font-size:13px;font-weight:700;color:#4B6476;padding-bottom:6px"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+<div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px">
+<sc-for list="{{ cells }}" as="c" hint-placeholder-count="35">
+<button onClick="{{ c.onClick }}" aria-label="{{ c.aria }}" style="height:50px;border-radius:10px;border:1.5px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;padding:0">
+<span style="font-size:16px;font-weight:700">{{ c.n }}</span>
+<span style="display:flex;gap:3px;height:6px"><sc-for list="{{ c.dots }}" as="dt" hint-placeholder-count="0"><span style="width:6px;height:6px;border-radius:3px;background:{{ c.dot }}"></span></sc-for></span>
+</button>
+</sc-for>
+</div>
+</div>
+<div style="flex:1;padding:16px;display:flex;flex-direction:column;gap:12px;background:#F8F3EA">
+<h2 style="margin:0;padding:0 4px;font-size:20px">{{ dayLabel }}</h2>
+<sc-for list="{{ dayCards }}" as="o" hint-placeholder-count="1"><dc-import name="OppCard" item="{{ o }}" variant="{{ cardVariant }}" hint-size="100%,128px"></dc-import></sc-for>
+<sc-if value="{{ dayEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:16px;border:1px dashed #C9B99F;border-radius:14px;background:#FFFFFF;font-size:16px;color:#4B6476">No volunteer slots on this day. Tap a day with a dot.</div></sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ calWeek }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;padding:0 16px 16px;display:flex;flex-direction:column">
+<sc-for list="{{ weekRows }}" as="w" hint-placeholder-count="7">
+<div style="display:grid;grid-template-columns:52px 1fr;gap:12px;padding:12px 0;border-top:1px solid #E2D6C2;align-items:start">
+<div style="display:flex;flex-direction:column;align-items:center"><span style="font-size:13px;font-weight:700;color:#4B6476">{{ w.dow }}</span><span style="font-size:22px;font-weight:700">{{ w.n }}</span></div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ w.items }}" as="o" hint-placeholder-count="0">
+<button onClick="{{ o.open }}" style="text-align:left;border:0;border-left:4px solid #C8541C;background:#FBE3D4;border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;cursor:pointer"><span style="font-size:16px;font-weight:700">{{ o.title }}</span><span style="font-size:14px">{{ o.time }} · {{ o.suburb }}</span></button>
+</sc-for>
+<sc-if value="{{ w.empty }}" hint-placeholder-val="{{ true }}"><span style="font-size:15px;color:#4B6476;padding-top:6px">No slots</span></sc-if>
+</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ calList }}" hint-placeholder-val="{{ true }}">
+<div style="flex:1;padding:16px;display:flex;flex-direction:column;gap:12px;background:#F8F3EA">
+<sc-for list="{{ listGroups }}" as="lg" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:10px">
+<h2 style="margin:8px 0 0;padding:0 4px;font-size:18px">{{ lg.label }}</h2>
+<sc-for list="{{ lg.items }}" as="o" hint-placeholder-count="1"><dc-import name="OppCard" item="{{ o }}" variant="{{ cardVariant }}" hint-size="100%,128px"></dc-import></sc-for>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ sc.onb }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;min-height:100%">
+<div style="padding:4px 12px 0;display:flex;align-items:center;gap:8px">
+<button onClick="{{ onbBack }}" style="height:44px;padding:0 10px;border:0;background:none;font-size:17px;font-weight:700;cursor:pointer">← Back</button>
+<span style="margin-left:auto;padding-right:8px;font-size:15px;color:#4B6476">{{ onbStepLabel }}</span>
+</div>
+<div style="margin:6px 20px 0;height:6px;border-radius:3px;background:#F2E8D8;overflow:hidden"><div style="height:100%;background:#0E3A53;width:{{ onbPct }};transition:width .2s"></div></div>
+<div style="flex:1;padding:20px;display:flex;flex-direction:column;gap:18px">
+
+<sc-if value="{{ onb1 }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:18px">
+<h1 style="margin:0;font-size:28px;line-height:1.15">About you</h1>
+<p style="margin:-8px 0 0;font-size:16px;line-height:1.5;color:#4B6476">This takes under 2 minutes. No passwords. We email you a sign-in link.</p>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700">Display name<span style="font-weight:400;font-size:15px;color:#4B6476">First name and last initial, like Sam T.</span><input onChange="{{ setName }}" value="{{ onbv.name }}" style="height:52px;border:2px solid #C9B99F;border-radius:10px;padding:0 14px;font-size:17px;background:#FFFFFF"></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700">Email<input type="email" onChange="{{ setEmail }}" value="{{ onbv.email }}" style="height:52px;border:2px solid #C9B99F;border-radius:10px;padding:0 14px;font-size:17px;background:#FFFFFF"></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700">Suburb<select onChange="{{ setSuburb }}" value="{{ onbv.suburb }}" style="height:52px;border:2px solid #C9B99F;border-radius:10px;padding:0 12px;font-size:17px;background:#FFFFFF"><sc-for list="{{ suburbs }}" as="sb" hint-placeholder-count="0"><option value="{{ sb.v }}">{{ sb.v }}</option></sc-for></select><span style="font-weight:400;font-size:15px;color:#4B6476">Here for summer or Grand Prix week? Choose "Visiting the Island".</span></label>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:16px;font-weight:700">Your age</span>
+<div style="display:flex;gap:8px"><sc-for list="{{ ageChips }}" as="c" hint-placeholder-count="2"><button onClick="{{ c.onClick }}" style="flex:1;min-height:48px;border-radius:10px;border:2px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};font-size:16px;font-weight:700;cursor:pointer">{{ c.label }}</button></sc-for></div>
+</div>
+<sc-if value="{{ onbIsMinor }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:12px;background:#F2E8D8">
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700">Birth month and year<span style="font-weight:400;font-size:15px">So your account switches to adult at 18. We don't store your full date of birth.</span><input placeholder="" onChange="{{ setBm }}" value="{{ onbv.bm }}" style="height:52px;border:2px solid #C9B99F;border-radius:10px;padding:0 14px;font-size:17px;background:#FFFFFF"></label>
+<span style="font-size:15px;line-height:1.45">You'll see posts open to under 18s only, and a guardian approves your account and each shift.</span>
+</div>
+</sc-if>
+<sc-if value="{{ onbErr }}" hint-placeholder-val="{{ false }}"><div role="alert" style="font-size:16px;font-weight:700;color:#A8440F">{{ onbErrText }}</div></sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ onb2 }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:16px">
+<h1 style="margin:0;font-size:28px;line-height:1.15">What interests you?</h1>
+<p style="margin:-6px 0 0;font-size:16px;color:#4B6476">Pick as many as you like. We use these for matches and alerts.</p>
+<div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ interestChips }}" as="c" hint-placeholder-count="12"><button onClick="{{ c.onClick }}" style="min-height:44px;padding:8px 14px;border-radius:999px;border:1.5px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};font-size:16px;font-weight:700;cursor:pointer;text-align:left">{{ c.label }}</button></sc-for></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ onb3 }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:16px">
+<h1 style="margin:0;font-size:28px;line-height:1.15">When are you free?</h1>
+<div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ availChips }}" as="c" hint-placeholder-count="5"><button onClick="{{ c.onClick }}" style="min-height:44px;padding:8px 14px;border-radius:999px;border:1.5px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};font-size:16px;font-weight:700;cursor:pointer">{{ c.label }}</button></sc-for></div>
+<h2 style="margin:10px 0 0;font-size:20px">Checks you hold <span style="font-weight:400;font-size:16px;color:#4B6476">(optional)</span></h2>
+<p style="margin:-6px 0 0;font-size:15px;line-height:1.5;color:#4B6476">We store yes or no and the expiry month. Never the number. Groups check these with you directly.</p>
+<div style="display:flex;flex-direction:column;gap:8px"><sc-for list="{{ checkRows }}" as="c" hint-placeholder-count="5">
+<button onClick="{{ c.onClick }}" role="checkbox" aria-checked="{{ c.on }}" style="display:flex;align-items:center;gap:12px;min-height:52px;padding:8px 14px;border-radius:10px;border:1.5px solid {{ c.bd }};background:#FFFFFF;font-size:16px;text-align:left;cursor:pointer">
+<span style="flex:none;width:24px;height:24px;border-radius:6px;border:2px solid #0E3A53;background:{{ c.box }};color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700">{{ c.tick }}</span>
+<span style="flex:1">{{ c.label }}</span><span style="font-size:14px;color:#4B6476">{{ c.exp }}</span>
+</button>
+</sc-for></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ onb4 }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:16px">
+<h1 style="margin:0;font-size:28px;line-height:1.15">You control what's shared</h1>
+<div style="padding:16px;border-radius:14px;background:#F2E8D8;display:flex;flex-direction:column;gap:10px;font-size:16px;line-height:1.45">
+<div><strong>Nothing is visible to a group</strong> until you tap "I'm interested" on one of their posts.</div>
+<div>{{ shareSummary }}</div>
+<div>Your phone is only shared if you tick it for that post.</div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #E2D6C2">
+<div style="display:flex;flex-direction:column"><span style="font-size:16px;font-weight:700">Email me new matches</span><span style="font-size:15px;color:#4B6476">Weekly, for the categories you picked</span></div>
+<button onClick="{{ swOnbAlerts.onClick }}" role="switch" aria-label="Email me new matches" style="width:52px;height:44px;border:0;background:none;padding:0;cursor:pointer;display:flex;align-items:center;flex:none"><span style="position:relative;width:48px;height:28px;border-radius:14px;background:{{ swOnbAlerts.track }};display:block"><span style="position:absolute;top:2px;left:{{ swOnbAlerts.left }};width:24px;height:24px;border-radius:12px;background:#FFFFFF;transition:left .15s"></span></span></button>
+</div>
+<p style="margin:0;font-size:15px;line-height:1.5;color:#4B6476">By continuing you agree to the <a href="#">volunteer terms</a> and <a href="#">privacy policy</a>. You can delete your account at any time. It's fully removed within 7 days.</p>
+</div>
+</sc-if>
+
+<sc-if value="{{ onbG }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:16px">
+<h1 style="margin:0;font-size:28px;line-height:1.15">Add a parent or guardian</h1>
+<p style="margin:-6px 0 0;font-size:16px;line-height:1.5">They confirm your account by email, approve each volunteer slot, and get a copy of every message from a group. Your account stays inactive until they confirm.</p>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700">Guardian's email<input type="email" onChange="{{ setGEmail }}" value="{{ onbv.gEmail }}" style="height:52px;border:2px solid #C9B99F;border-radius:10px;padding:0 14px;font-size:17px;background:#FFFFFF"></label>
+<sc-if value="{{ onbErr }}" hint-placeholder-val="{{ false }}"><div role="alert" style="font-size:16px;font-weight:700;color:#A8440F">{{ onbErrText }}</div></sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ onbWait }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:16px;align-items:flex-start">
+<div style="width:100%;height:150px;border-radius:14px;background:repeating-linear-gradient(135deg,#F2E8D8 0 10px,#F8F3EA 10px 20px);display:flex;align-items:center;justify-content:center;font:12px ui-monospace,Menlo,monospace;color:#4B6476">ILLUSTRATION · waiting</div>
+<h1 style="margin:0;font-size:28px;line-height:1.15">Waiting for your guardian</h1>
+<p style="margin:0;font-size:16px;line-height:1.5">We emailed <strong>{{ gEmailShown }}</strong> a link to confirm your account. You can browse posts while you wait, but you can't express interest until they confirm.</p>
+<button onClick="{{ resendGuardian }}" style="height:48px;padding:0 16px;border:2px solid #0E3A53;border-radius:12px;background:#FFFFFF;font-size:17px;font-weight:700;cursor:pointer">Resend the email</button>
+<button onClick="{{ goGuardian }}" style="background:none;border:0;padding:0;min-height:44px;font-size:16px;font-weight:700;color:#C8541C;text-decoration:underline;cursor:pointer">Open the guardian's view (demo)</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ onbDone }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:16px;align-items:flex-start">
+<div style="width:100%;height:150px;border-radius:14px;background:repeating-linear-gradient(135deg,#F2E8D8 0 10px,#F8F3EA 10px 20px);display:flex;align-items:center;justify-content:center;font:12px ui-monospace,Menlo,monospace;color:#4B6476">ILLUSTRATION · email sent</div>
+<h1 style="margin:0;font-size:28px;line-height:1.15">Check your email</h1>
+<p style="margin:0;font-size:16px;line-height:1.5">We sent a sign-in link to <strong>{{ emailShown }}</strong>. Tap it on this phone and you're in.</p>
+<button onClick="{{ finishOnb }}" style="height:52px;padding:0 20px;border:0;border-radius:12px;background:#0E3A53;color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer">I've tapped the link (demo)</button>
+</div>
+</sc-if>
+</div>
+<sc-if value="{{ onbShowNext }}" hint-placeholder-val="{{ true }}">
+<div style="position:sticky;bottom:0;padding:12px 20px 20px;background:#FFFFFF;border-top:1px solid #E2D6C2"><button onClick="{{ onbNext }}" style="width:100%;height:56px;border:0;border-radius:12px;background:#C8541C;color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer" style-hover="background:#A8440F">{{ onbNextLabel }}</button></div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ sc.dash }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;min-height:100%">
+<div style="padding:4px 20px 14px;display:flex;flex-direction:column;gap:4px">
+<h1 style="margin:0;font-size:26px">Hi {{ firstName }}</h1>
+<span style="font-size:16px;color:#4B6476">{{ meLine }}</span>
+</div>
+<div style="display:flex;gap:4px;margin:0 20px 4px;background:#F2E8D8;border-radius:10px;padding:3px">
+<sc-for list="{{ dashTabs }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="flex:1;height:40px;border:0;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;background:{{ c.bg }};color:{{ c.fg }}">{{ c.label }}</button></sc-for>
+</div>
+
+<sc-if value="{{ dtShifts }}" hint-placeholder-val="{{ true }}">
+<div style="flex:1;padding:16px;display:flex;flex-direction:column;gap:14px;background:#FFFFFF">
+<sc-for list="{{ confirmed }}" as="o" hint-placeholder-count="1">
+<div style="border:2px solid #0E3A53;border-radius:16px;overflow:hidden">
+<div style="padding:16px;background:#0E3A53;color:#FFFFFF;display:flex;flex-direction:column;gap:4px">
+<span style="font-size:14px;font-weight:700;color:#F2E8D8">Confirmed by {{ o.orgShort }}</span>
+<span style="font-size:20px;font-weight:700;line-height:1.2">{{ o.title }}</span>
+<span style="font-size:16px">{{ o.when }}</span>
+<span style="font-size:16px">{{ o.venueLine }}</span>
+</div>
+<div style="padding:16px;display:flex;flex-direction:column;gap:14px">
+<div style="font-size:16px;line-height:1.45"><strong>Bring:</strong> {{ o.bring }}</div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:15px;font-weight:700">Add to calendar</span>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+<button onClick="{{ calGoogle }}" style="height:48px;border:1.5px solid #0E3A53;border-radius:10px;background:#FFFFFF;font-size:15px;font-weight:700;cursor:pointer">Google</button>
+<button onClick="{{ calOutlook }}" style="height:48px;border:1.5px solid #0E3A53;border-radius:10px;background:#FFFFFF;font-size:15px;font-weight:700;cursor:pointer">Outlook</button>
+<button onClick="{{ calApple }}" style="height:48px;border:1.5px solid #0E3A53;border-radius:10px;background:#FFFFFF;font-size:15px;font-weight:700;cursor:pointer">Apple .ics</button>
+</div></div>
+<div style="display:flex;flex-direction:column;border-top:1px solid #E2D6C2">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #E2D6C2"><span style="font-size:16px">Email reminder 48 hours before</span>
+<button onClick="{{ sw48.onClick }}" role="switch" aria-label="48 hour reminder" style="width:52px;height:44px;border:0;background:none;padding:0;cursor:pointer;display:flex;align-items:center"><span style="position:relative;width:48px;height:28px;border-radius:14px;background:{{ sw48.track }};display:block"><span style="position:absolute;top:2px;left:{{ sw48.left }};width:24px;height:24px;border-radius:12px;background:#FFFFFF;transition:left .15s"></span></span></button></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #E2D6C2"><span style="font-size:16px">Email reminder 2 hours before</span>
+<button onClick="{{ sw2.onClick }}" role="switch" aria-label="2 hour reminder" style="width:52px;height:44px;border:0;background:none;padding:0;cursor:pointer;display:flex;align-items:center"><span style="position:relative;width:48px;height:28px;border-radius:14px;background:{{ sw2.track }};display:block"><span style="position:absolute;top:2px;left:{{ sw2.left }};width:24px;height:24px;border-radius:12px;background:#FFFFFF;transition:left .15s"></span></span></button></div>
+</div>
+<sc-if value="{{ cancelAsk }}" hint-placeholder-val="{{ false }}">
+<div style="padding:14px;border-radius:12px;background:#FBE3D4;display:flex;flex-direction:column;gap:10px"><span style="font-size:16px;line-height:1.45">We'll tell {{ o.orgShort }} and reopen your spot. This can't be undone.</span>
+<div style="display:flex;gap:8px"><button onClick="{{ cancelShift }}" style="height:48px;padding:0 16px;border:0;border-radius:10px;background:#A8440F;color:#FFFFFF;font-size:16px;font-weight:700;cursor:pointer">Yes, I can't make it</button><button onClick="{{ cancelNo }}" style="height:48px;padding:0 16px;border:1.5px solid #0E3A53;border-radius:10px;background:#FFFFFF;font-size:16px;font-weight:700;cursor:pointer">Keep my spot</button></div></div>
+</sc-if>
+<sc-if value="{{ cancelIdle }}" hint-placeholder-val="{{ true }}"><button onClick="{{ cancelOpen }}" style="align-self:flex-start;background:none;border:0;padding:0;min-height:44px;font-size:16px;font-weight:700;color:#A8440F;text-decoration:underline;cursor:pointer">Can't make it</button></sc-if>
+</div>
+</div>
+</sc-for>
+<sc-if value="{{ noConfirmed }}" hint-placeholder-val="{{ false }}"><div style="padding:16px;border:1px dashed #C9B99F;border-radius:14px;font-size:16px;color:#4B6476">No confirmed volunteer slots yet. When a group confirms you, it shows here with calendar buttons.</div></sc-if>
+<h2 style="margin:8px 0 0;font-size:20px">My expressions of interest</h2>
+<div style="display:flex;flex-direction:column;border-top:1px solid #E2D6C2">
+<sc-for list="{{ exRows }}" as="o" hint-placeholder-count="2">
+<button onClick="{{ o.open }}" style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border:0;border-bottom:1px solid #E2D6C2;background:none;text-align:left;cursor:pointer">
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;font-weight:700">{{ o.title }}</span><span style="font-size:14px;color:#4B6476">{{ o.org }} · {{ o.shortWhen }}</span></div>
+<span style="flex:none;padding:3px 10px;border-radius:999px;font-size:13px;font-weight:700;background:{{ o.stBg }};color:{{ o.stFg }}">{{ o.statusLabel }}</span>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ dtMatches }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;padding:16px;display:flex;flex-direction:column;gap:12px;background:#F8F3EA">
+<p style="margin:0 4px;font-size:15px;color:#4B6476">Based on your interests: {{ meInterests }}</p>
+<sc-for list="{{ matchCards }}" as="o" hint-placeholder-count="3"><dc-import name="OppCard" item="{{ o }}" variant="{{ cardVariant }}" hint-size="100%,128px"></dc-import></sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ dtSettings }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;padding:16px 20px 24px;display:flex;flex-direction:column;gap:22px">
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+<div style="display:flex;flex-direction:column"><span style="font-size:17px;font-weight:700">Private calendar feed</span><span style="font-size:15px;color:#4B6476">Only your confirmed shifts. Off by default.</span></div>
+<button onClick="{{ swFeed.onClick }}" role="switch" aria-label="Private calendar feed" style="width:52px;height:44px;border:0;background:none;padding:0;cursor:pointer;display:flex;align-items:center;flex:none"><span style="position:relative;width:48px;height:28px;border-radius:14px;background:{{ swFeed.track }};display:block"><span style="position:absolute;top:2px;left:{{ swFeed.left }};width:24px;height:24px;border-radius:12px;background:#FFFFFF;transition:left .15s"></span></span></button>
+</div>
+<sc-if value="{{ feedOn }}" hint-placeholder-val="{{ false }}">
+<div style="padding:12px;border-radius:10px;background:#F2E8D8;display:flex;flex-direction:column;gap:10px">
+<code style="font:14px/1.4 ui-monospace,Menlo,monospace;word-break:break-all">{{ feedUrl }}</code>
+<div style="display:flex;gap:8px"><button onClick="{{ copyFeed }}" style="height:44px;padding:0 14px;border:0;border-radius:10px;background:#0E3A53;color:#FFFFFF;font-size:15px;font-weight:700;cursor:pointer">Copy link</button><button onClick="{{ revokeFeed }}" style="height:44px;padding:0 14px;border:1.5px solid #0E3A53;border-radius:10px;background:#FFFFFF;font-size:15px;font-weight:700;cursor:pointer">Revoke and make new</button></div>
+</div>
+</sc-if>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<span style="font-size:17px;font-weight:700">Email alerts by category</span>
+<div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ alertChips }}" as="c" hint-placeholder-count="12"><button onClick="{{ c.onClick }}" style="min-height:40px;padding:6px 12px;border-radius:999px;border:1.5px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};font-size:15px;font-weight:700;cursor:pointer">{{ c.label }}</button></sc-for></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;padding:14px;border:1px solid #E2D6C2;border-radius:12px">
+<span style="font-size:17px;font-weight:700">Profile</span>
+<span style="font-size:16px">{{ profileLine }}</span>
+<span style="font-size:15px;color:#4B6476">{{ checksLine }}</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;padding-top:12px;border-top:1px solid #E2D6C2">
+<span style="font-size:17px;font-weight:700">Delete account</span>
+<span style="font-size:15px;line-height:1.5;color:#4B6476">Everything is permanently deleted within 7 days. Groups you've shared with are told you've withdrawn.</span>
+<sc-if value="{{ delIdle }}" hint-placeholder-val="{{ true }}"><button onClick="{{ delOpen }}" style="align-self:flex-start;height:48px;padding:0 16px;border:2px solid #A8440F;border-radius:10px;background:#FFFFFF;color:#A8440F;font-size:16px;font-weight:700;cursor:pointer">Delete my account</button></sc-if>
+<sc-if value="{{ delAsk }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:8px;flex-wrap:wrap"><button onClick="{{ delSend }}" style="height:48px;padding:0 16px;border:0;border-radius:10px;background:#A8440F;color:#FFFFFF;font-size:16px;font-weight:700;cursor:pointer">Email me the confirmation link</button><button onClick="{{ delCancel }}" style="height:48px;padding:0 16px;border:1.5px solid #0E3A53;border-radius:10px;background:#FFFFFF;font-size:16px;font-weight:700;cursor:pointer">Cancel</button></div></sc-if>
+<sc-if value="{{ delSent }}" hint-placeholder-val="{{ false }}"><div style="padding:12px;border-radius:10px;background:#FBE3D4;font-size:16px">Check your email. Your account is deleted once you confirm.</div></sc-if>
+</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ sc.guardian }}" hint-placeholder-val="{{ false }}">
+<div style="padding:20px;display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;flex-direction:column;gap:4px"><h1 style="margin:0;font-size:26px">Mia's account</h1><span style="font-size:16px;color:#4B6476">You're the guardian · j.rogers@example.com</span></div>
+<div style="border:2px solid {{ gAcctBd }};border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px">
+<span style="font-size:14px;font-weight:700;color:#4B6476">Step 1 · Account</span>
+<span style="font-size:18px;font-weight:700">{{ gAcctTitle }}</span>
+<span style="font-size:16px;line-height:1.45">Groups will see Mia's first name, the age bracket 15 to 17, her interests and your email as the only contact. Never her email, phone or bio.</span>
+<sc-if value="{{ gAcctPending }}" hint-placeholder-val="{{ true }}"><button onClick="{{ gApproveAcct }}" style="height:52px;border:0;border-radius:12px;background:#C8541C;color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer">Approve Mia's account</button></sc-if>
+</div>
+<div style="border:2px solid {{ gShiftBd }};border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px">
+<span style="font-size:14px;font-weight:700;color:#4B6476">Volunteer slot to approve · confirmed by Landcare</span>
+<span style="font-size:18px;font-weight:700">Coastal weeding morning</span>
+<div style="display:flex;flex-direction:column;gap:4px;font-size:16px;line-height:1.45">
+<span>Sun 1 Nov · 9:00am–12:00pm</span><span>Rhyll Inlet boardwalk car park</span>
+<span><strong>Supervision:</strong> always with a named adult holding a WWCC</span>
+<span><strong>Parent may attend:</strong> yes</span>
+</div>
+<sc-if value="{{ gShiftPending }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;gap:8px"><button onClick="{{ gApproveShift }}" style="flex:1;height:52px;border:0;border-radius:12px;background:#0E3A53;color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer">Approve</button><button onClick="{{ gDeclineShift }}" style="flex:1;height:52px;border:2px solid #0E3A53;border-radius:12px;background:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer">Decline</button></div>
+<span style="font-size:15px;color:#4B6476">{{ gShiftHint }}</span>
+</sc-if>
+<sc-if value="{{ gShiftDone }}" hint-placeholder-val="{{ false }}"><div style="padding:12px;border-radius:10px;background:#F2E8D8;font-size:16px;font-weight:700">{{ gShiftResult }}</div></sc-if>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<h2 style="margin:0;font-size:20px">Upcoming</h2>
+<div style="display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid #E2D6C2;border-bottom:1px solid #E2D6C2;font-size:16px"><span>Twilight market set-up · Fri 13 Nov</span><span style="color:#4B6476">Interested</span></div>
+<p style="margin:0;font-size:15px;line-height:1.5;color:#4B6476">You get a copy of every message and reminder a group sends Mia. Groups can't message her privately.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid #E2D6C2">
+<span style="font-size:17px;font-weight:700">Withdraw consent</span>
+<span style="font-size:15px;line-height:1.5;color:#4B6476">Closes Mia's account and deletes her data within 7 days.</span>
+<button onClick="{{ gClose }}" style="align-self:flex-start;height:48px;padding:0 16px;border:2px solid #A8440F;border-radius:10px;background:#FFFFFF;color:#A8440F;font-size:16px;font-weight:700;cursor:pointer">Close Mia's account</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sc.orgDash }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column">
+<div style="padding:16px 20px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h1 style="margin:0;font-size:24px">Your posts</h1><button onClick="{{ goOrgNew }}" style="height:48px;padding:0 16px;border:0;border-radius:12px;background:#C8541C;color:#FFFFFF;font-size:17px;font-weight:700;cursor:pointer">New post</button></div>
+<sc-if value="{{ orgCS }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ goOrgCS }}" style="text-align:left;padding:12px 14px;border-radius:12px;border:0;background:#F2E8D8;display:flex;flex-direction:column;gap:4px;cursor:pointer"><span style="font-size:15px;font-weight:700">Child Safe evidence provided (reviewed Nov 2025)</span><span style="font-size:15px">Expires Nov 2026. Renew now to keep under-18 posts open →</span></button>
+</sc-if>
+<sc-if value="{{ orgNoCS }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ goOrgCS }}" style="text-align:left;padding:12px 14px;border-radius:12px;border:0;background:#FBE3D4;display:flex;flex-direction:column;gap:4px;cursor:pointer"><span style="font-size:15px;font-weight:700">Under-18 posts are off</span><span style="font-size:15px">Provide Child Safe evidence to open posts to 15 to 17 year olds →</span></button>
+</sc-if>
+</div>
+<div style="display:flex;gap:4px;margin:0 20px;background:#F2E8D8;border-radius:10px;padding:3px">
+<sc-for list="{{ orgTabs }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="flex:1;height:40px;border:0;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;background:{{ c.bg }};color:{{ c.fg }}">{{ c.label }}</button></sc-for>
+</div>
+<div style="padding:12px 20px;display:flex;flex-direction:column">
+<sc-for list="{{ orgRows }}" as="r" hint-placeholder-count="3">
+<div style="padding:14px 0;border-bottom:1px solid #E2D6C2;display:flex;flex-direction:column;gap:8px">
+<button onClick="{{ r.open }}" style="text-align:left;border:0;background:none;padding:0;display:flex;flex-direction:column;gap:3px;cursor:pointer">
+<span style="font-size:17px;font-weight:700">{{ r.title }}</span>
+<span style="font-size:15px;color:#4B6476">{{ r.when }}</span>
+</button>
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+<span style="font-size:15px"><strong>{{ r.conf }}</strong> of {{ r.need }} confirmed</span>
+<sc-if value="{{ r.hasInt }}" hint-placeholder-val="{{ false }}"><span style="padding:2px 9px;border-radius:999px;font-size:13px;font-weight:700;background:#C8541C;color:#FFFFFF">{{ r.intLabel }}</span></sc-if>
+<sc-if value="{{ r.u18 }}" hint-placeholder-val="{{ false }}"><span style="padding:1px 8px;border-radius:999px;font-size:13px;font-weight:700;border:1.5px solid #0E3A53">Under 18s OK</span></sc-if>
+<button onClick="{{ r.clone }}" style="margin-left:auto;height:40px;padding:0 12px;border:1.5px solid #0E3A53;border-radius:8px;background:#FFFFFF;font-size:15px;font-weight:700;cursor:pointer">Clone</button>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="margin:8px 20px 24px;padding:14px;border-radius:12px;border:1px solid #E2D6C2;font-size:15px;line-height:1.5"><strong>Checks are declared, not verified.</strong> Verify a WWCC yourself with the online status check or by scanning the digital card's QR code in the Service Victoria app.</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sc.orgPost }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column">
+<div style="padding:4px 12px"><button onClick="{{ back }}" style="height:44px;padding:0 10px;border:0;background:none;font-size:17px;font-weight:700;cursor:pointer">← Posts</button></div>
+<div style="padding:0 20px 14px;display:flex;flex-direction:column;gap:6px">
+<h1 style="margin:0;font-size:24px">Coastal weeding morning</h1>
+<span style="font-size:16px;color:#4B6476">Sun 1 Nov · 9:00am–12:00pm · Rhyll</span>
+<span style="font-size:16px"><strong>{{ wConf }}</strong> of 10 confirmed · {{ wInt }} waiting on you</span>
+</div>
+<div style="padding:0 16px;display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ volRows }}" as="v" hint-placeholder-count="4">
+<div style="border:1px solid #E2D6C2;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-size:17px;font-weight:700">{{ v.name }} <span style="font-weight:400;color:#4B6476">· {{ v.meta }}</span></span><span style="flex:none;padding:2px 9px;border-radius:999px;font-size:13px;font-weight:700;background:{{ v.stBg }};color:{{ v.stFg }}">{{ v.stLabel }}</span></div>
+<span style="font-size:15px">{{ v.email }}</span>
+<sc-if value="{{ v.hasPhone }}" hint-placeholder-val="{{ false }}"><span style="font-size:15px">Phone shared for this post: {{ v.phone }}</span></sc-if>
+<span style="font-size:15px;color:#4B6476">{{ v.checks }}</span>
+<sc-if value="{{ v.canConfirm }}" hint-placeholder-val="{{ false }}"><button onClick="{{ v.confirm }}" style="align-self:flex-start;height:44px;padding:0 18px;border:0;border-radius:10px;background:#0E3A53;color:#FFFFFF;font-size:16px;font-weight:700;cursor:pointer">Confirm</button></sc-if>
+</div>
+</sc-for>
+</div>
+<div style="padding:20px 16px 24px;display:flex;flex-direction:column;gap:10px">
+<button onClick="{{ closeThank }}" style="height:52px;border:2px solid #0E3A53;border-radius:12px;background:#FFFFFF;font-size:17px;font-weight:700;cursor:pointer">Close post and thank everyone</button>
+<span style="font-size:15px;line-height:1.5;color:#4B6476">Use volunteer details for this shift only. No marketing, no passing them on.</span>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sc.orgNew }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column">
+<div style="padding:4px 12px"><button onClick="{{ back }}" style="height:44px;padding:0 10px;border:0;background:none;font-size:17px;font-weight:700;cursor:pointer">← Cancel</button></div>
+<div style="padding:0 20px 20px;display:flex;flex-direction:column;gap:18px">
+<h1 style="margin:0;font-size:26px">New post</h1>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700">Title<input onChange="{{ npTitle }}" value="{{ np.title }}" style="height:52px;border:2px solid {{ npTitleBd }};border-radius:10px;padding:0 14px;font-size:17px;background:#FFFFFF"></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700">Category<select style="height:52px;border:2px solid #C9B99F;border-radius:10px;padding:0 12px;font-size:17px;background:#FFFFFF"><sc-for list="{{ catOpts }}" as="c" hint-placeholder-count="0"><option>{{ c.v }}</option></sc-for></select></label>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:16px;font-weight:700">Type</span>
+<div style="display:flex;gap:8px"><sc-for list="{{ npTypes }}" as="c" hint-placeholder-count="2"><button onClick="{{ c.onClick }}" style="flex:1;min-height:48px;border-radius:10px;border:2px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};font-size:16px;font-weight:700;cursor:pointer">{{ c.label }}</button></sc-for></div></div>
+<sc-if value="{{ npShift }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<label style="grid-column:1/-1;display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700">Date<input type="date" value="2026-11-21" style="height:52px;border:2px solid #C9B99F;border-radius:10px;padding:0 14px;font-size:17px;background:#FFFFFF"></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700">Start<input type="time" value="09:00" style="height:52px;border:2px solid #C9B99F;border-radius:10px;padding:0 10px;font-size:17px;background:#FFFFFF"></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700">End<input type="time" value="13:00" style="height:52px;border:2px solid #C9B99F;border-radius:10px;padding:0 10px;font-size:17px;background:#FFFFFF"></label>
+</div>
+</sc-if>
+<sc-if value="{{ npOngoing }}" hint-placeholder-val="{{ false }}">
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700">Hours per week<input type="number" value="3" style="height:52px;border:2px solid #C9B99F;border-radius:10px;padding:0 14px;font-size:17px;background:#FFFFFF"></label>
+</sc-if>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700">Suburb<select style="height:52px;border:2px solid #C9B99F;border-radius:10px;padding:0 12px;font-size:17px;background:#FFFFFF"><option>Rhyll</option><option>Cowes</option><option>Newhaven</option></select></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700">People needed<input type="number" value="15" style="height:52px;border:2px solid #C9B99F;border-radius:10px;padding:0 14px;font-size:17px;background:#FFFFFF"></label>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:16px;font-weight:700">Requirements</span><span style="font-size:15px;color:#4B6476;margin-top:-4px">Volunteers declare they hold these. You verify directly.</span>
+<sc-for list="{{ npReqs }}" as="c" hint-placeholder-count="7">
+<button onClick="{{ c.onClick }}" role="checkbox" aria-checked="{{ c.on }}" style="display:flex;align-items:center;gap:12px;min-height:48px;padding:6px 12px;border-radius:10px;border:1.5px solid {{ c.bd }};background:#FFFFFF;font-size:16px;text-align:left;cursor:pointer">
+<span style="flex:none;width:24px;height:24px;border-radius:6px;border:2px solid #0E3A53;background:{{ c.box }};color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700">{{ c.tick }}</span><span>{{ c.label }}</span>
+</button>
+</sc-for></div>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700">What you provide<input value="Gloves, tools, morning tea" style="height:52px;border:2px solid #C9B99F;border-radius:10px;padding:0 14px;font-size:17px;background:#FFFFFF"></label>
+<div style="display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:12px;background:{{ u18Bg }}">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+<div style="display:flex;flex-direction:column"><span style="font-size:16px;font-weight:700;color:{{ u18Fg }}">Open to under 18s</span><span style="font-size:15px;color:{{ u18Fg }}">{{ u18Hint }}</span></div>
+<button onClick="{{ swU18.onClick }}" disabled="{{ u18Disabled }}" role="switch" aria-label="Open to under 18s" style="width:52px;height:44px;border:0;background:none;padding:0;cursor:pointer;display:flex;align-items:center;flex:none;opacity:{{ u18Op }}"><span style="position:relative;width:48px;height:28px;border-radius:14px;background:{{ swU18.track }};display:block"><span style="position:absolute;top:2px;left:{{ swU18.left }};width:24px;height:24px;border-radius:12px;background:#FFFFFF;transition:left .15s"></span></span></button>
+</div>
+<sc-if value="{{ u18Disabled }}" hint-placeholder-val="{{ false }}"><button onClick="{{ goOrgCS }}" style="align-self:flex-start;background:none;border:0;padding:0;min-height:40px;font-size:16px;font-weight:700;text-decoration:underline;cursor:pointer">How to provide Child Safe evidence</button></sc-if>
+<sc-if value="{{ np.u18 }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:10px">
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700">Minimum age<select style="height:48px;border:2px solid #C9B99F;border-radius:10px;padding:0 12px;font-size:17px;background:#FFFFFF"><option>15</option><option>16</option><option>17</option></select></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700">Supervision arrangement<input value="Always with a named adult holding a WWCC" style="height:48px;border:2px solid #C9B99F;border-radius:10px;padding:0 14px;font-size:16px;background:#FFFFFF"></label>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:16px;font-weight:700">Parent may attend</span><div style="display:flex;gap:8px"><sc-for list="{{ parentChips }}" as="c" hint-placeholder-count="2"><button onClick="{{ c.onClick }}" style="flex:1;min-height:44px;border-radius:10px;border:2px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};font-size:16px;font-weight:700;cursor:pointer">{{ c.label }}</button></sc-for></div></div>
+<span style="font-size:15px">Under-18 volunteer slots must finish by 9:00pm.</span>
+</div>
+</sc-if>
+</div>
+<button onClick="{{ publish }}" style="height:56px;border:0;border-radius:12px;background:#C8541C;color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer" style-hover="background:#A8440F">Publish</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sc.orgPosted }}" hint-placeholder-val="{{ false }}">
+<div style="padding:20px;display:flex;flex-direction:column;gap:16px">
+<div style="width:100%;height:120px;border-radius:14px;background:repeating-linear-gradient(135deg,#F2E8D8 0 10px,#F8F3EA 10px 20px);display:flex;align-items:center;justify-content:center;font:12px ui-monospace,Menlo,monospace;color:#4B6476">ILLUSTRATION · posted</div>
+<h1 style="margin:0;font-size:26px">Your post is live</h1>
+<p style="margin:-6px 0 0;font-size:16px;line-height:1.5">Most Island volunteers find posts through community Facebook groups. Share it there and link back here.</p>
+<div style="border:1px solid #E2D6C2;border-radius:12px;overflow:hidden">
+<div style="aspect-ratio:1.91/1;background:#0E3A53;color:#FFFFFF;padding:16px;display:flex;flex-direction:column;justify-content:space-between">
+<span style="font:11px ui-monospace,Menlo,monospace;color:#F2E8D8">OPEN GRAPH IMAGE · 1200×630</span>
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:13px;font-weight:700;color:#F2E8D8">{{ postedWhen }}</span><span style="font-size:21px;font-weight:700;line-height:1.15">{{ postedTitle }}</span><span style="font-size:14px">Phillip Island Landcare · Rhyll</span></div>
+</div>
+<div style="padding:10px 12px;font-size:14px;color:#4B6476;background:#F8F3EA">pi-volunteers.org.au · 15 people needed</div>
+</div>
+<button onClick="{{ shareFb }}" style="height:52px;border:0;border-radius:12px;background:#0E3A53;color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer">Share to Facebook</button>
+<div style="display:flex;gap:8px"><button onClick="{{ copyLink }}" style="flex:1;height:48px;border:2px solid #0E3A53;border-radius:12px;background:#FFFFFF;font-size:16px;font-weight:700;cursor:pointer">Copy link</button><button onClick="{{ printPdf }}" style="flex:1;height:48px;border:2px solid #0E3A53;border-radius:12px;background:#FFFFFF;font-size:16px;font-weight:700;cursor:pointer">Noticeboard PDF</button></div>
+<button onClick="{{ goOrgDash }}" style="background:none;border:0;padding:0;min-height:44px;font-size:16px;font-weight:700;text-decoration:underline;cursor:pointer;align-self:flex-start">Back to your posts</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ sc.orgCS }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column">
+<div style="padding:4px 12px"><button onClick="{{ back }}" style="height:44px;padding:0 10px;border:0;background:none;font-size:17px;font-weight:700;cursor:pointer">← Back</button></div>
+<sc-if value="{{ csForm }}" hint-placeholder-val="{{ true }}">
+<div style="padding:0 20px 24px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:column;gap:6px"><h1 style="margin:0;font-size:26px;line-height:1.15">Child Safe evidence</h1><p style="margin:0;font-size:16px;line-height:1.5;color:#4B6476">Needed before you can open posts to 15 to 17 year olds. An admin reviews it within 5 working days. It lasts 12 months.</p></div>
+<div style="display:flex;flex-direction:column;gap:10px"><h2 style="margin:0;font-size:18px">1 · Documents</h2>
+<sc-for list="{{ csDocs }}" as="d" hint-placeholder-count="3">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;border:1.5px solid {{ d.bd }}">
+<div style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:16px;font-weight:700">{{ d.label }}</span><span style="font-size:14px;color:#4B6476;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ d.file }}</span></div>
+<button onClick="{{ d.onClick }}" style="flex:none;height:44px;padding:0 14px;border:1.5px solid #0E3A53;border-radius:10px;background:{{ d.btnBg }};color:{{ d.btnFg }};font-size:15px;font-weight:700;cursor:pointer">{{ d.btn }}</button>
+</div>
+</sc-for></div>
+<div style="display:flex;flex-direction:column;gap:10px"><h2 style="margin:0;font-size:18px">2 · Child safety contact</h2>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700">Role<input onChange="{{ csRole }}" value="{{ cs.role }}" style="height:52px;border:2px solid #C9B99F;border-radius:10px;padding:0 14px;font-size:17px;background:#FFFFFF"></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700">Role email<span style="font-weight:400;font-size:15px;color:#4B6476">A role inbox, not a personal phone.</span><input type="email" onChange="{{ csEmail }}" value="{{ cs.email }}" style="height:52px;border:2px solid #C9B99F;border-radius:10px;padding:0 14px;font-size:17px;background:#FFFFFF"></label>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px"><h2 style="margin:0;font-size:18px">3 · Attestations</h2>
+<sc-for list="{{ csAtt }}" as="c" hint-placeholder-count="3">
+<button onClick="{{ c.onClick }}" role="checkbox" aria-checked="{{ c.on }}" style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:10px;border:1.5px solid {{ c.bd }};background:#FFFFFF;font-size:16px;line-height:1.45;text-align:left;cursor:pointer">
+<span style="flex:none;width:24px;height:24px;border-radius:6px;border:2px solid #0E3A53;background:{{ c.box }};color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700">{{ c.tick }}</span><span>{{ c.label }}</span>
+</button>
+</sc-for></div>
+<button onClick="{{ csSubmit }}" style="height:56px;border:0;border-radius:12px;background:{{ csBtnBg }};color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer">{{ csBtnLabel }}</button>
+</div>
+</sc-if>
+<sc-if value="{{ cs.submitted }}" hint-placeholder-val="{{ false }}">
+<div style="padding:0 20px 24px;display:flex;flex-direction:column;gap:14px">
+<h1 style="margin:0;font-size:26px">Submitted for review</h1>
+<div style="padding:16px;border-radius:14px;background:#F2E8D8;display:flex;flex-direction:column;gap:8px;font-size:16px;line-height:1.5">
+<span><strong>Target:</strong> reviewed within 5 working days</span>
+<span><strong>When approved:</strong> your org page shows "Child Safe evidence provided (reviewed Oct 2026)"</span>
+<span><strong>Expires:</strong> 12 months after approval. We remind you at 11 months.</span>
+</div>
+<p style="margin:0;font-size:15px;line-height:1.5;color:#4B6476">If a child safety concern is reported, your under-18 posts pause until an admin reviews it.</p>
+<button onClick="{{ goAdmin }}" style="background:none;border:0;padding:0;min-height:44px;font-size:16px;font-weight:700;color:#C8541C;text-decoration:underline;cursor:pointer;align-self:flex-start">See it in the admin queue (demo)</button>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ sc.admin }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column">
+<div style="padding:16px 20px 12px;display:flex;flex-direction:column;gap:4px"><h1 style="margin:0;font-size:24px">Queues</h1><span style="font-size:15px;color:#4B6476">Clear within 48 hours · 2 admins on roster</span></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 20px 14px">
+<sc-for list="{{ stats }}" as="st" hint-placeholder-count="4"><div style="padding:12px;border-radius:12px;background:#F8F3EA;display:flex;flex-direction:column;gap:2px"><span style="font-size:22px;font-weight:700">{{ st.v }}</span><span style="font-size:14px;color:#4B6476">{{ st.k }}</span></div></sc-for>
+</div>
+<div style="display:flex;gap:6px;overflow-x:auto;padding:0 20px 12px">
+<sc-for list="{{ admTabs }}" as="c" hint-placeholder-count="4"><button onClick="{{ c.onClick }}" style="flex:none;min-height:44px;padding:0 14px;border-radius:999px;border:1.5px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};font-size:15px;font-weight:700;cursor:pointer">{{ c.label }}</button></sc-for>
+</div>
+<div style="padding:0 16px 24px;display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ admItems }}" as="a" hint-placeholder-count="2">
+<div style="border:1.5px solid {{ a.bd }};border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px">
+<sc-if value="{{ a.urgent }}" hint-placeholder-val="{{ false }}"><span style="align-self:flex-start;padding:2px 9px;border-radius:999px;font-size:13px;font-weight:700;background:#A8440F;color:#FFFFFF">Top priority</span></sc-if>
+<span style="font-size:17px;font-weight:700;line-height:1.3">{{ a.title }}</span>
+<span style="font-size:15px;line-height:1.45;color:#4B6476">{{ a.meta }}</span>
+<sc-if value="{{ a.open }}" hint-placeholder-val="{{ true }}"><div style="display:flex;gap:8px"><button onClick="{{ a.yes }}" style="height:44px;padding:0 16px;border:0;border-radius:10px;background:#0E3A53;color:#FFFFFF;font-size:15px;font-weight:700;cursor:pointer">{{ a.yesLabel }}</button><button onClick="{{ a.no }}" style="height:44px;padding:0 16px;border:1.5px solid #0E3A53;border-radius:10px;background:#FFFFFF;font-size:15px;font-weight:700;cursor:pointer">{{ a.noLabel }}</button></div></sc-if>
+<sc-if value="{{ a.done }}" hint-placeholder-val="{{ false }}"><span style="align-self:flex-start;padding:4px 10px;border-radius:999px;font-size:14px;font-weight:700;background:#F2E8D8">{{ a.doneLabel }}</span></sc-if>
+</div>
+</sc-for>
+<sc-if value="{{ admEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:16px;border:1px dashed #C9B99F;border-radius:14px;font-size:16px;color:#4B6476">Queue clear.</div></sc-if>
+</div>
+</div>
+</sc-if>
+
+</div>
+
+<sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}">
+<div style="flex:none;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid #E2D6C2;background:#FFFFFF;padding:4px 8px 22px">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.onClick }}" style="height:52px;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:{{ t.fg }}"><span style="width:22px;height:3px;border-radius:2px;background:{{ t.bar }}"></span><span style="font-size:15px;font-weight:700">{{ t.label }}</span></button></sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ sheet }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end">
+<button aria-label="Close filters" onClick="{{ closeSheet }}" style="position:absolute;inset:0;background:rgba(9,40,56,.5);border:0;cursor:pointer"></button>
+<div role="dialog" aria-label="Filters" style="position:relative;background:#FFFFFF;border-radius:22px 22px 0 0;max-height:84%;overflow-y:auto;padding:10px 20px 24px;display:flex;flex-direction:column;gap:18px">
+<span style="align-self:center;width:40px;height:5px;border-radius:3px;background:#C9B99F"></span>
+<div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0;font-size:22px">Filters</h2><button onClick="{{ clearFilters }}" style="height:44px;border:0;background:none;font-size:16px;font-weight:700;text-decoration:underline;cursor:pointer">Clear all</button></div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:16px;font-weight:700">Category</span><div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ catChips }}" as="c" hint-placeholder-count="12"><button onClick="{{ c.onClick }}" style="min-height:40px;padding:6px 12px;border-radius:999px;border:1.5px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};font-size:15px;font-weight:700;cursor:pointer">{{ c.label }}</button></sc-for></div></div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:16px;font-weight:700">Time of day</span><div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ todChips }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="min-height:40px;padding:6px 12px;border-radius:999px;border:1.5px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};font-size:15px;font-weight:700;cursor:pointer">{{ c.label }}</button></sc-for></div></div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:16px;font-weight:700">When</span><div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ rangeChips }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="min-height:40px;padding:6px 12px;border-radius:999px;border:1.5px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};font-size:15px;font-weight:700;cursor:pointer">{{ c.label }}</button></sc-for></div></div>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700">Suburb<select style="height:48px;border:2px solid #C9B99F;border-radius:10px;padding:0 12px;font-size:16px;background:#FFFFFF"><option>Anywhere on the Island</option><sc-for list="{{ suburbs }}" as="sb" hint-placeholder-count="0"><option>{{ sb.v }}</option></sc-for></select></label>
+<div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;flex-direction:column"><span style="font-size:16px;font-weight:700">Requirements I meet</span><span style="font-size:15px;color:#4B6476">Hide posts needing checks you haven't declared</span></div>
+<button onClick="{{ swReqs.onClick }}" role="switch" aria-label="Requirements I meet" style="width:52px;height:44px;border:0;background:none;padding:0;cursor:pointer;display:flex;align-items:center;flex:none"><span style="position:relative;width:48px;height:28px;border-radius:14px;background:{{ swReqs.track }};display:block"><span style="position:absolute;top:2px;left:{{ swReqs.left }};width:24px;height:24px;border-radius:12px;background:#FFFFFF;transition:left .15s"></span></span></button></div>
+<button onClick="{{ closeSheet }}" style="height:56px;border:0;border-radius:12px;background:#C8541C;color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer">{{ showResultsLabel }}</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ consent }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end">
+<button aria-label="Cancel" onClick="{{ closeConsent }}" style="position:absolute;inset:0;background:rgba(9,40,56,.5);border:0;cursor:pointer"></button>
+<div role="dialog" aria-modal="true" aria-label="Share your details" style="position:relative;background:#FFFFFF;border-radius:22px 22px 0 0;padding:22px 20px 28px;display:flex;flex-direction:column;gap:16px">
+<h2 style="margin:0;font-size:22px;line-height:1.2">Share your details with {{ o.org }}?</h2>
+<p style="margin:0;font-size:16px;line-height:1.45;color:#4B6476">They see this, and only for "{{ o.title }}":</p>
+<div style="display:flex;flex-direction:column;border-top:1px solid #E2D6C2">
+<sc-for list="{{ shareRows }}" as="r" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:120px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid #E2D6C2;font-size:16px"><span style="color:#4B6476">{{ r.k }}</span><span style="font-weight:700">{{ r.v }}</span></div></sc-for>
+</div>
+<sc-if value="{{ phoneOption }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ togglePhone }}" role="checkbox" aria-checked="{{ sharePhone }}" style="display:flex;align-items:center;gap:12px;min-height:48px;padding:0;border:0;background:none;font-size:16px;text-align:left;cursor:pointer">
+<span style="flex:none;width:24px;height:24px;border-radius:6px;border:2px solid #0E3A53;background:{{ phoneBox }};color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700">{{ phoneTick }}</span><span>Also share my phone (0412 555 019) for this post</span>
+</button>
+</sc-if>
+<p style="margin:0;font-size:15px;line-height:1.45;color:#4B6476">{{ consentNote }}</p>
+<button onClick="{{ sendInterest }}" style="height:56px;border:0;border-radius:12px;background:#C8541C;color:#FFFFFF;font-size:18px;font-weight:700;cursor:pointer" style-hover="background:#A8440F">Share and send interest</button>
+<button onClick="{{ closeConsent }}" style="height:48px;border:0;background:none;font-size:17px;font-weight:700;cursor:pointer">Cancel</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+<div role="status" style="position:absolute;left:16px;right:16px;bottom:92px;z-index:30;background:#0E3A53;color:#FFFFFF;border-radius:12px;padding:14px 16px;font-size:16px;line-height:1.4;box-shadow:0 8px 24px rgba(9,40,56,.3)">{{ toastMsg }}</div>
+</sc-if>
+</div>
+</div>
+
+<aside style="width:280px;display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;flex-direction:column;gap:8px">
+<div style="font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#4B6476">This screen</div>
+<h2 style="margin:0;font-size:22px">{{ note.t }}</h2>
+<p style="margin:0;font-size:16px;line-height:1.5;text-wrap:pretty">{{ note.b }}</p>
+<span style="font-size:14px;color:#4B6476">{{ note.r }}</span>
+</div>
+<sc-if value="{{ note.hasVar }}" hint-placeholder-val="{{ false }}"><div style="padding:12px 14px;border-radius:12px;background:#FFFFFF;font-size:15px;line-height:1.5">{{ note.v }}</div></sc-if>
+<div style="display:flex;flex-direction:column;gap:8px;padding-top:16px;border-top:1px solid #C9B99F">
+<div style="font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#4B6476">Open decisions (brief §12)</div>
+<sc-for list="{{ decisions }}" as="d" hint-placeholder-count="6"><div style="display:flex;flex-direction:column;gap:2px;font-size:15px;line-height:1.4"><strong>{{ d.k }}</strong><span style="color:#4B6476">{{ d.v }}</span></div></sc-for>
+</div>
+<a href="Pi-Volunteers Tokens.dc.html" style="font-size:16px;font-weight:700">Design tokens and component specs →</a>
+</aside>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;homeVariant&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Shift-first&quot;,&quot;Search-led&quot;,&quot;This week&quot;],&quot;default&quot;:&quot;Shift-first&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Variations&quot;},&quot;cardVariant&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Row&quot;,&quot;Date block&quot;,&quot;Ticket&quot;],&quot;default&quot;:&quot;Date block&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Variations&quot;},&quot;detailVariant&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Sticky action bar&quot;,&quot;Key facts card&quot;],&quot;default&quot;:&quot;Sticky action bar&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Variations&quot;},&quot;orgChildSafe&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Org state&quot;}}">
+const CATS=['Environment and wildlife','Events and festivals','Sport and clubs','Emergency services','Aged care and social support','Arts and culture','Op shops and retail','Food and hospitality','Admin and committee','Youth and education','Animals','Trades and maintenance'];
+const ABBR=['ENV','EVT','SPT','EMG','AGE','ART','OPS','FOD','ADM','YTH','ANI','TRD'];
+const SUBURBS=['Cowes','Rhyll','Newhaven','Cape Woolamai','Ventnor','Smiths Beach','Surf Beach','San Remo','Silverleaves','Wimbledon Heights','Summerlands','Visiting the Island'];
+const AVAIL=['Weekdays','Weekends','Evenings','School holidays only','Summer only'];
+const CHECKS=['Working with Children Check','RSA','First Aid','Driver licence','Police check'];
+const REQFULL={WWCC:'Working with Children Check',RSA:'RSA (serving alcohol)','First Aid':'First Aid certificate',Licence:'Driver licence','Police check':'Police check','18+':'Over 18'};
+const OPPS=[
+{id:'penguin',title:'Penguin Parade visitor host',org:'Phillip Island Nature Parks',orgShort:'Nature Parks',cat:'Environment and wildlife',type:'Shift',day:'Sat',date:31,mon:'Oct',key:'Oct31',when:'Sat 31 Oct · 6:30–9:00pm',time:'6:30–9:00pm',suburb:'Summerlands',venue:'Penguin Parade visitor centre',need:4,have:1,reqs:[],provides:'Training on the night, uniform, dinner',u18:true,finish:'9:00pm',tod:'Evening',bring:'Warm layers, closed shoes, a torch',desc:'Welcome visitors as they arrive, point people to the viewing stands and explain the no-photos rule before the penguins come ashore. You work alongside a ranger all evening.',access:'Mostly standing on boardwalks. Seating available on breaks.',orgAbout:'Runs the Penguin Parade, Churchill Island and the Nobbies.',orgRoles:3},
+{id:'weeding',title:'Coastal weeding morning',org:'Phillip Island Landcare',orgShort:'Landcare',cat:'Environment and wildlife',type:'Shift',day:'Sun',date:1,mon:'Nov',key:'Nov1',when:'Sun 1 Nov · 9:00am–12:00pm',time:'9:00am–12:00pm',suburb:'Rhyll',venue:'Rhyll Inlet boardwalk car park',need:10,have:6,reqs:[],provides:'Gloves, tools, morning tea',u18:true,finish:'12:00pm',tod:'Morning',bring:'Sun hat, water bottle, long sleeves',desc:'Pull boneseed and sea spurge along the inlet track. No experience needed. A team leader shows you which plants to pull.',access:'Uneven sandy ground. Not suitable for wheelchairs.',orgAbout:'Volunteer group restoring Island bushland and coast.',orgRoles:3},
+{id:'kitchen',title:'Community dinner kitchen and bar',org:'Island Community Kitchen',orgShort:'Community Kitchen',cat:'Food and hospitality',type:'Shift',day:'Thu',date:5,mon:'Nov',key:'Nov5',when:'Thu 5 Nov · 4:30–8:00pm',time:'4:30–8:00pm',suburb:'Cowes',venue:'Cowes Cultural Centre',need:5,have:2,reqs:['RSA','18+'],provides:'Dinner',u18:false,tod:'Evening',bring:'Black shirt, closed shoes',desc:'Help serve the free Thursday community dinner. Two people run the drinks table and three help in the kitchen.',access:'Ground floor, step-free entry.',orgAbout:'Free weekly dinners for anyone on the Island.',orgRoles:1},
+{id:'gp',title:'Grand Prix week car park marshal',org:'Island Lions Club',orgShort:'Lions Club',cat:'Events and festivals',type:'Shift',day:'Sat',date:7,mon:'Nov',key:'Nov7',when:'Sat 7 Nov · 7:00am–1:00pm',time:'7:00am–1:00pm',suburb:'Ventnor',venue:'Back Beach Road, gate 3',need:12,have:3,reqs:['18+','Licence'],provides:'Hi-vis, radio, lunch',u18:false,tod:'Morning',bring:'Sunscreen, hat, water',desc:'Direct cars into the public car park during Grand Prix week. You work in pairs with a radio. Funds raised go to Lions community projects.',access:'Standing for long periods, on grass.',orgAbout:'Service club running Island fundraisers and events.',orgRoles:2},
+{id:'market',title:'Twilight market set-up',org:'Cowes Night Market Committee',orgShort:'Night Market',cat:'Events and festivals',type:'Shift',day:'Fri',date:13,mon:'Nov',key:'Nov13',when:'Fri 13 Nov · 4:00–7:00pm',time:'4:00–7:00pm',suburb:'Cowes',venue:'Cowes foreshore',need:6,have:0,reqs:[],provides:'Market voucher, snacks',u18:true,finish:'7:00pm',tod:'Afternoon',bring:'Comfortable shoes',desc:'Put up gazebos, run power leads and set out bins before the first summer twilight market.',access:'Lifting up to 10kg. A seated role at the info table is available.',orgAbout:'Runs the summer twilight markets on the Cowes foreshore.',orgRoles:1},
+{id:'surf',title:'Beach patrol support',org:'Woolamai Beach SLSC',orgShort:'Woolamai SLSC',cat:'Emergency services',type:'Ongoing',hrs:4,when:'4 hrs/week · weekends Nov–Mar',suburb:'Cape Woolamai',venue:'Woolamai Beach clubhouse',need:8,have:5,reqs:['First Aid','WWCC'],provides:'Training, uniform',u18:false,bring:'Swimmers, sunscreen',desc:'Support patrols with first aid, radio and beach set-up. The club runs the training.',access:'Soft sand and stairs to the clubhouse.',orgAbout:'Surf life saving club patrolling Woolamai Beach.',orgRoles:2},
+{id:'opshop',title:'Op shop sorting and till',org:'Cowes Community Op Shop',orgShort:'Op Shop',cat:'Op shops and retail',type:'Ongoing',hrs:3,when:'3 hrs/week · weekdays',suburb:'Cowes',venue:'Thompson Avenue',need:3,have:1,reqs:[],provides:'Training, morning tea',u18:false,bring:'Nothing',desc:'Sort donations out the back or run the till. Pick a regular weekday morning or afternoon.',access:'Step-free shop floor. Seated till.',orgAbout:'Community op shop funding local groups.',orgRoles:1},
+{id:'social',title:'Seniors social morning helper',org:'Newhaven Seniors Social Club',orgShort:'Seniors Club',cat:'Aged care and social support',type:'Ongoing',hrs:2,when:'2 hrs/week · Tuesday mornings',suburb:'Newhaven',venue:'Newhaven Public Hall',need:2,have:0,reqs:['Police check'],provides:'Morning tea',u18:false,bring:'Nothing',desc:'Set up tables, make tea and chat with members. Some weeks there is a guest speaker or card games.',access:'Step-free hall with accessible toilet.',orgAbout:'Weekly social mornings for older Island residents.',orgRoles:1}
+];
+const ME={name:'Sam T.',email:'sam.t@example.com',suburb:'Cowes',interests:['Environment and wildlife','Events and festivals','Op shops and retail'],has:['First Aid','18+'],avail:'Weekends, evenings'};
+const POSTS=[
+{id:'weeding',title:'Coastal weeding morning',when:'Sun 1 Nov · 9:00am–12:00pm',status:'Open',need:10,u18:true},
+{id:'saltmarsh',title:'Saltmarsh planting day',when:'Sat 21 Nov · 9:00am–1:00pm',status:'Open',conf:0,need:15,int:2},
+{id:'nursery',title:'Nursery propagation helper',when:'Ongoing · 3 hrs/week · Wednesdays',status:'Open',conf:2,need:4,int:1},
+{id:'winter',title:'Winter tree planting',when:'Sun 26 Jul',status:'Filled',conf:20,need:20,int:0},
+{id:'plover',title:'Hooded plover nest fencing',when:'Sat 12 Sep',status:'Closed',conf:8,need:8,int:0}
+];
+const VOLS=[
+{id:'priya',name:'Priya K.',meta:'Ventnor',email:'priya.k@example.com',phone:'0412 555 381',checks:'Declares First Aid (exp 03/2027)'},
+{id:'sam',name:'Sam T.',meta:'Cowes',email:'sam.t@example.com',checks:'Declares First Aid (exp 08/2027)'},
+{id:'doug',name:'Doug W.',meta:'Rhyll',email:'doug.w@example.com',checks:'Declares WWCC (exp 03/2028) · Police check (exp 11/2026)'},
+{id:'mia',name:'Mia',meta:'15 to 17',email:'Contact via guardian: j.rogers@example.com',checks:'Interests: Environment and wildlife, Animals',minor:true}
+];
+const NOTES={
+home:['Home','One-line promise, two actions, live count, upcoming volunteer slots, category tiles, 3 steps, partner logos. No modal and no cookie banner on first visit. 2 taps from here to expressing interest.','Brief §7.1'],
+list:['Opportunities','Filters open as a bottom sheet on mobile. Default sort is soonest volunteer slot first, then newest ongoing. Requirement badges are placeholders for the icon set.','Brief §3 Search, §7.2'],
+detail:['Opportunity detail','Full post, org snippet, under-18 details where relevant, report link. "I\'m interested" opens the share-consent sheet.','Brief §7.3'],
+calendar:['Public calendar','Month, week and list views of open posts, no login. Ongoing roles sit in a single "Regular" band, not on every day. Shows posts only, never volunteer data.','Brief §3 Calendar, §7.3a'],
+onb:['Volunteer onboarding','4 screens. Choosing 15 to 17 adds a guardian email step and a waiting screen. Visitor volunteers pick "Visiting the Island" instead of a suburb.','Brief §3 Volunteer profile, §7.6'],
+dash:['My dashboard','Confirmed slots unlock add-to-calendar and reminders. Private feed is off by default and revocable. Delete account is a hard delete within 7 days.','Brief §3 Calendar, §7.7'],
+guardian:['Guardian portal','Approve the account, approve each volunteer slot, see upcoming slots, close the account. Approving the slot here updates the org\'s interested list.','Brief §3 Minors, §7.6a'],
+orgDash:['Org dashboard','Open, filled and closed posts with interested counts and one-tap Clone. WWCC verification guidance sits on the dashboard as the brief requires.','Brief §3 Org portal, §7.9'],
+orgPost:['Interested volunteers','Only volunteers who expressed interest appear. Minors show first name, age bracket and guardian email only. Confirming a minor waits for guardian approval.','Brief §3 Minors, §7.9'],
+orgNew:['New post','Type switches the date fields. "Open to under 18s" is greyed unless Child Safe evidence is current, and adds the required supervision fields when on.','Brief §3 Org portal, §3 Minors'],
+orgPosted:['Post published','Share-to-Facebook is the main action, with a per-post Open Graph image. A noticeboard PDF covers offline reach.','Brief §8, §11.6, §11.7'],
+orgCS:['Child Safe evidence','Documents, a role-based contact and 3 attestations. Submitting adds it to the admin review queue. Badge wording never says verified or compliant.','Brief §6a'],
+admin:['Admin queues','Child safety concerns first, then Child Safe evidence, org approvals with ABN or CAV result, and reports. Basic stats match the success measures.','Brief §7.10, §10, §11.9']
+};
+const DECISIONS=[
+{k:'Name and domain',v:'Pi-Volunteers used here. Domain shown as pi-volunteers.org.au, not yet registered.'},
+{k:'Owning entity',v:'Undecided. Affects terms, privacy policy and insurance.'},
+{k:'Platform Child Safe obligations',v:'Legal advice needed before minors can sign up.'},
+{k:'Under 15s with a parent',v:'Out of v1. Decide for v2.'},
+{k:'Visitor volunteers',v:'Included as "Visiting the Island" in onboarding.'},
+{k:'Admins named',v:'2 needed before launch.'}
+];
+const DOW=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+class Component extends DCLogic {
+  state = {
+    screen:'home', hist:[], opp:'penguin', sheet:false,
+    f:{cat:null,type:'All',match:false,reqs:false,tod:null,range:'Any time'},
+    cal:'month', calDay:'Nov1', homeDay:'Oct31', consent:false, sharePhone:false, toast:null,
+    ex:{penguin:'confirmed',surf:'interested'}, rem:{h48:true,h2:true}, dashTab:'shifts',
+    feed:false, token:'k7Qx2mLp9vR4', alerts:['Environment and wildlife','Events and festivals'], del:'idle', cancelAsk:false,
+    isMinor:false, onbStep:1, onbErr:null, onbAlerts:true,
+    onb:{name:'',email:'',suburb:'Cowes',age:'adult',bm:'',interests:[],avail:[],checks:[],gEmail:''},
+    g:{acct:false,shift:'pending'},
+    orgTab:'Open', vols:{priya:'confirmed',sam:'interested',doug:'interested',mia:'guardian'},
+    np:{type:'Shift',reqs:[],u18:false,title:'',parent:'Yes',err:false},
+    cs:{policy:false,coc:false,complaints:false,role:'Child safety officer',email:'',a1:false,a2:false,a3:false,submitted:false},
+    adm:'concerns', admDone:{}
+  };
+  scrollRef = React.createRef();
+  componentDidUpdate(pp, ps) { if (ps.screen !== this.state.screen && this.scrollRef.current) this.scrollRef.current.scrollTop = 0; }
+  go = (screen, extra = {}) => this.setState(s => ({ screen, hist: [...s.hist, s.screen].slice(-20), sheet:false, consent:false, ...extra }));
+  back = () => this.setState(s => { const h=[...s.hist]; const p=h.pop()||'home'; return { screen:p, hist:h, consent:false, sheet:false }; });
+  toast = m => { clearTimeout(this._t); this.setState({ toast:m }); this._t = setTimeout(() => this.setState({ toast:null }), 3000); };
+  upd = (k, patch) => this.setState(s => ({ [k]: { ...s[k], ...patch } }));
+  tog = (arr, v) => arr.includes(v) ? arr.filter(x => x !== v) : [...arr, v];
+  chip = (label, on, fn) => ({ label, onClick:fn, on, bg:on?'#0E3A53':'#FFFFFF', fg:on?'#FFFFFF':'#0E3A53', bd:on?'#0E3A53':'#C9B99F' });
+  seg = (label, on, fn) => ({ label, onClick:fn, bg:on?'#FFFFFF':'transparent', fg:'#0E3A53' });
+  sw = (on, fn) => ({ onClick:fn, track:on?'#0E3A53':'#B4A68E', left:on?'22px':'2px' });
+  box = (label, on, fn, extra={}) => ({ label, on, onClick:fn, box:on?'#0E3A53':'#FFFFFF', tick:on?'✓':'', bd:on?'#0E3A53':'#E2D6C2', ...extra });
+  card = o => {
+    const st = this.state.ex[o.id];
+    const SL = { interested:['Interest sent','#F2E8D8','#0E3A53'], confirmed:['Confirmed','#0E3A53','#FFFFFF'], cancelled:['Cancelled','#E6E1D8','#4B6476'] };
+    const shift = o.type === 'Shift';
+    return { ...o, open:() => this.go('detail', { opp:o.id }), typeLabel:shift?'Volunteer slot':'Ongoing', typeBg:shift?'#FBE3D4':'#DCE7EE', typeFg:shift?'#8A3510':'#0E3A53',
+      reqList:o.reqs.map(r => ({ r })), left:`${o.need-o.have} of ${o.need} spots left`,
+      d1:shift?o.day:'Weekly', d2:shift?o.date:o.hrs, d3:shift?o.mon:'hrs', shortWhen:shift?`${o.day} ${o.date} ${o.mon}`:'Regular',
+      hasStatus:!!st && st!=='cancelled', canExpress:!st || st==='cancelled', statusLabel:st?SL[st][0]:'', stBg:st?SL[st][1]:'', stFg:st?SL[st][2]:'',
+      statusLong: st==='confirmed' ? 'Confirmed. See My slots for calendar and reminders.' : 'Interest sent. Waiting for the group to confirm.',
+      venueLine: `${o.venue}, ${o.suburb}`, pct: `${Math.round(o.have/o.need*100)}%` };
+  };
+  renderVals() {
+    const s = this.state, p = this.props;
+    const hv = p.homeVariant ?? 'Shift-first', cv = p.cardVariant ?? 'Date block', dv = p.detailVariant ?? 'Sticky action bar', orgCS = p.orgChildSafe ?? true;
+    const f = s.f;
+    const has = s.isMinor ? [] : ME.has;
+    const base = s.isMinor ? OPPS.filter(o => o.u18) : OPPS;
+    const vis = base.filter(o => (!f.cat||o.cat===f.cat) && (f.type==='All'||o.type===f.type) && (!f.match||ME.interests.includes(o.cat)) && (!f.reqs||o.reqs.every(r=>has.includes(r))) && (!f.tod||o.type==='Ongoing'||o.tod===f.tod));
+    const visCards = vis.map(this.card);
+    const filterCount = [f.cat, f.match, f.reqs, f.tod, f.range!=='Any time'].filter(Boolean).length;
+    const setF = patch => this.upd('f', patch);
+    const scr = s.screen;
+    const isOnb = scr.startsWith('onb');
+    const sc = { home:scr==='home', list:scr==='list', detail:scr==='detail', calendar:scr==='calendar', onb:isOnb, dash:scr==='dash', guardian:scr==='guardian', orgDash:scr==='orgDash', orgPost:scr==='orgPost', orgNew:scr==='orgNew', orgPosted:scr==='orgPosted', orgCS:scr==='orgCS', admin:scr==='admin' };
+    const portal = ['guardian','orgDash','orgPost','orgNew','orgPosted','orgCS','admin'].includes(scr);
+    const portalLabel = scr==='guardian' ? 'Guardian' : scr==='admin' ? 'Admin' : 'Phillip Island Landcare';
+    const shifts = base.filter(o => o.type==='Shift').map(this.card);
+    const ongoing = base.filter(o => o.type==='Ongoing').map(this.card);
+
+    // home C strip: Wed 28 Oct to Fri 6 Nov
+    const stripDays = []; for (let i=0;i<10;i++){ const d=28+i; const inOct=d<=31; const n=inOct?d:d-31; const mon=inOct?'Oct':'Nov'; stripDays.push({ key:mon+n, n, mon, dow:DOW[(2+i)%7] }); }
+    const strip = stripDays.map(d => { const c = shifts.filter(o=>o.key===d.key).length; const on = s.homeDay===d.key;
+      return { ...d, count:c?`${c} slot${c>1?'s':''}`:'—', onClick:()=>this.setState({homeDay:d.key}), bg:on?'#0E3A53':'#FFFFFF', fg:on?'#FFFFFF':'#0E3A53', bd:on?'#0E3A53':'#E2D6C2' }; });
+    const sd = stripDays.find(d=>d.key===s.homeDay);
+    const stripCards = shifts.filter(o=>o.key===s.homeDay);
+
+    // calendar
+    const cells = [];
+    for (let i=0;i<42;i++){ let n, mon, muted=false; if(i<6){n=26+i;mon='Oct';muted=true;} else if(i-5<=30){n=i-5;mon='Nov';} else {n=i-35;mon='Dec';muted=true;}
+      const key=mon+n; const evs=visCards.filter(o=>o.key===key); const on=s.calDay===key;
+      cells.push({ n, aria:`${DOW[i%7]} ${n} ${mon}, ${evs.length} shifts`, dots:evs.map(()=>({})), onClick:()=>this.setState({calDay:key}), bg:on?'#0E3A53':(evs.length?'#FBE3D4':'#FFFFFF'), fg:on?'#FFFFFF':(muted?'#8A9BA8':'#0E3A53'), bd:on?'#0E3A53':'#E2D6C2', dot:on?'#FFFFFF':'#C8541C' }); }
+    const cdIdx = cells.findIndex((c,i)=>(i<6?'Oct':i-5<=30?'Nov':'Dec')+c.n===s.calDay);
+    const dayCards = visCards.filter(o=>o.key===s.calDay);
+    const weekRows = [2,3,4,5,6,7,8].map((n,i)=>{ const items=visCards.filter(o=>o.key==='Nov'+n); return { n, dow:DOW[i], items, empty:!items.length }; });
+    const groups = {}; visCards.filter(o=>o.type==='Shift').forEach(o=>{ const k=`${o.day} ${o.date} ${o.mon}`; (groups[k]=groups[k]||[]).push(o); });
+    const listGroups = Object.keys(groups).map(k=>({label:k,items:groups[k]}));
+    const ongVis = visCards.filter(o=>o.type==='Ongoing'); if (ongVis.length) listGroups.push({ label:'Regular roles', items:ongVis });
+
+    // detail
+    const o = this.card(OPPS.find(x=>x.id===s.opp));
+    o.facts = [{k:'When',v:o.when},{k:'Where',v:o.venueLine},{k:'Spots',v:o.left},{k:'Provided',v:o.provides}];
+    o.reqFull = o.reqs.map(r=>({r, full:REQFULL[r]}));
+    o.reqNote = o.reqs.length ? 'You declare you hold these. The group checks them with you directly.' : 'No checks needed for this role.';
+    const shareRows = s.isMinor
+      ? [{k:'First name',v:(s.onb.name||'Mia').split(' ')[0]},{k:'Age',v:'15 to 17'},{k:'Interests',v:s.onb.interests.slice(0,2).join(', ')||'Environment and wildlife'},{k:'Contact',v:'Your guardian\'s email only'}]
+      : [{k:'Display name',v:ME.name},{k:'Email',v:ME.email},{k:'Declared checks',v:'First Aid (exp 08/2027)'}];
+
+    // onboarding
+    const stepMap = { onb1:1, onb2:2, onb3:3, onb4:4, onbG:5, onbWait:6, onbDone:6 };
+    const step = stepMap[scr] || 1;
+    const onbIsMinor = s.onb.age==='minor';
+    const total = onbIsMinor ? 5 : 4;
+    const ob = s.onb;
+    const onbNext = () => {
+      if (scr==='onb1') { if (!ob.name.trim() || !ob.email.includes('@')) return this.setState({onbErr:'Add a display name and a valid email to continue.'}); if (onbIsMinor && !ob.bm.trim()) return this.setState({onbErr:'Add your birth month and year.'}); this.setState({onbErr:null}); return this.go('onb2'); }
+      if (scr==='onb2') return this.go('onb3');
+      if (scr==='onb3') return this.go('onb4');
+      if (scr==='onb4') return onbIsMinor ? this.go('onbG') : this.go('onbDone');
+      if (scr==='onbG') { if (!ob.gEmail.includes('@')) return this.setState({onbErr:'Add your guardian\'s email.'}); this.setState({onbErr:null, isMinor:true, g:{acct:false,shift:'pending'}}); return this.go('onbWait'); }
+    };
+    const setOnb = k => e => this.upd('onb', { [k]: e.target.value });
+
+    // dash
+    const confirmed = OPPS.filter(x=>s.ex[x.id]==='confirmed' && x.type==='Shift').map(this.card);
+    const exRows = Object.keys(s.ex).map(id=>this.card(OPPS.find(x=>x.id===id)));
+    const matchCards = base.filter(x=>ME.interests.includes(x.cat)).map(this.card);
+
+    // org
+    const vConf = Object.values(s.vols).filter(v=>v==='confirmed').length;
+    const vInt = Object.values(s.vols).filter(v=>v==='interested').length;
+    const orgRows = POSTS.filter(r=>r.status===s.orgTab).map(r=>{ const isW=r.id==='weeding'; const conf=isW?5+vConf:r.conf; const int=isW?vInt:r.int;
+      return { ...r, conf, hasInt:int>0, intLabel:`${int} interested`, u18:!!r.u18 && orgCS,
+        open:()=> isW ? this.go('orgPost') : this.toast('Demo: the interested list is built for Coastal weeding morning.'),
+        clone:()=>{ this.setState({np:{...s.np,title:r.title,err:false}}); this.go('orgNew'); this.toast(`Copied "${r.title}". Change the date and publish.`); } }; });
+    const VS = { interested:['Interested','#F2E8D8','#0E3A53'], confirmed:['Confirmed','#0E3A53','#FFFFFF'], guardian:['Awaiting guardian','#FBE3D4','#8A3510'] };
+    const volRows = VOLS.map(v=>{ const st=s.vols[v.id]; return { ...v, hasPhone:!!v.phone, stLabel:VS[st][0], stBg:VS[st][1], stFg:VS[st][2], canConfirm:st==='interested',
+      confirm:()=>{ this.upd('vols',{[v.id]:v.minor?'guardian':'confirmed'}); this.toast(v.minor?'Sent to Mia\'s guardian for approval.':`${v.name} confirmed. They get an email with calendar buttons.`); } }; });
+    const np = s.np;
+    const u18Disabled = !orgCS;
+
+    // child safe
+    const cs = s.cs;
+    const csReady = cs.policy && cs.coc && cs.complaints && cs.role.trim() && cs.email.includes('@') && cs.a1 && cs.a2 && cs.a3;
+    const doc = (k,label,file) => ({ label, file:cs[k]?file:'Upload a PDF or paste a link', btn:cs[k]?'Remove':'Upload', btnBg:cs[k]?'#FFFFFF':'#0E3A53', btnFg:cs[k]?'#0E3A53':'#FFFFFF', bd:cs[k]?'#0E3A53':'#E2D6C2', onClick:()=>this.upd('cs',{[k]:!cs[k]}) });
+
+    // admin
+    const AD = {
+      concerns:[{id:'c1',urgent:true,title:'Concern raised on "Junior nippers helper" (Smiths Beach Boardriders)',meta:'Reported 2 hours ago. Under-18 posts paused automatically until reviewed.',yesLabel:'Open review',noLabel:'Assign',yesDone:'In review'}],
+      cs:[...(cs.submitted?[{id:'cs0',title:'Phillip Island Landcare · renewal',meta:'Submitted just now. 3 documents, 3 of 3 attestations. Due in 5 working days.',yesLabel:'Approve',noLabel:'Request changes',yesDone:'Approved · badge reads reviewed Oct 2026'}]:[]),
+        {id:'cs1',title:'San Remo Junior Football Club',meta:'New submission. 3 documents, 3 of 3 attestations. Due in 3 working days.',yesLabel:'Approve',noLabel:'Request changes',yesDone:'Approved'}],
+      orgs:[{id:'o1',title:'Cowes Night Market Committee',meta:'Incorporated association · A0098712X · Consumer Affairs Victoria: registered, name matches.',yesLabel:'Approve',noLabel:'Ask for info',yesDone:'Approved · can post'},
+        {id:'o2',title:'Island Men\'s Shed',meta:'Incorporated association · ABN 41 555 019 223 · ABR: active, name matches.',yesLabel:'Approve',noLabel:'Ask for info',yesDone:'Approved · can post'}],
+      reports:[{id:'r1',title:'Post "Garden tidy-up, cash paid" flagged as paid work',meta:'Reported by a volunteer 1 day ago.',yesLabel:'Remove post',noLabel:'Dismiss',yesDone:'Removed · org notified'}]
+    };
+    const admLabels = { concerns:'Child safety concerns', cs:'Child Safe evidence', orgs:'Org approvals', reports:'Reports' };
+    const admTabs = Object.keys(AD).map(k=>{ const n=AD[k].filter(a=>!s.admDone[a.id]).length; const on=s.adm===k; return { label:`${admLabels[k]} (${n})`, onClick:()=>this.setState({adm:k}), bg:on?'#0E3A53':'#FFFFFF', fg:on?'#FFFFFF':'#0E3A53', bd:on?'#0E3A53':'#C9B99F' }; });
+    const admItems = AD[s.adm].map(a=>{ const d=s.admDone[a.id]; return { ...a, bd:a.urgent?'#A8440F':'#E2D6C2', open:!d, done:!!d, doneLabel:d, yes:()=>this.upd('admDone',{[a.id]:a.yesDone}), no:()=>this.upd('admDone',{[a.id]:a.noLabel==='Dismiss'?'Dismissed':'Sent to org'}) }; });
+
+    // nav
+    const activeKey = isOnb ? 'onb1' : scr==='orgPosted' ? 'orgNew' : scr;
+    const navItem = (label, key, fn) => ({ label, onClick:fn||(()=>this.go(key)), bg:activeKey===key?'#0E3A53':'transparent', fg:activeKey===key?'#FFFFFF':'#0E3A53' });
+    const nav = [
+      { label:'Public', items:[navItem('Home','home'), navItem('Opportunities','list'), navItem('Opportunity detail','detail'), navItem('Calendar','calendar')] },
+      { label:'Volunteer', items:[navItem('Onboarding','onb1',()=>this.go('onb1',{onbErr:null})), navItem('My dashboard','dash')] },
+      { label:'Guardian', items:[navItem('Guardian portal','guardian')] },
+      { label:'Organisation', items:[navItem('Org dashboard','orgDash'), navItem('Interested volunteers','orgPost'), navItem('New post','orgNew'), navItem('Child Safe evidence','orgCS')] },
+      { label:'Platform admin', items:[navItem('Admin queues','admin')] }
+    ];
+    const noteKey = isOnb ? 'onb' : scr;
+    const nt = NOTES[noteKey] || NOTES.home;
+    const varText = scr==='home' ? `Showing home "${hv}" with "${cv}" cards. Other options in Tweaks.` : ['list','calendar'].includes(scr) ? `Showing "${cv}" cards. Row and Ticket are in Tweaks.` : scr==='detail' ? `Showing "${dv}". The other option is in Tweaks.` : '';
+    const tabKey = scr==='list'?'list':scr==='calendar'?'calendar':scr==='dash'?'dash':'home';
+    const tabs = [['Home','home'],['Find','list'],['Calendar','calendar'],['Me','dash']].map(([l,k])=>({ label:l, onClick:()=>this.go(k), fg:tabKey===k?'#0E3A53':'#4B6476', bar:tabKey===k?'#C8541C':'transparent' }));
+    const firstName = s.isMinor ? (s.onb.name||'Mia').split(' ')[0] : 'Sam';
+
+    return {
+      sc, nav, scrollRef:this.scrollRef, cardVariant:cv,
+      showHeader:['home','list','calendar','dash'].includes(scr), showPortal:portal, portalLabel,
+      showNav:['home','list','calendar','dash'].includes(scr),
+      statusBg:portal?'#0E3A53':'#FFFFFF', statusFg:portal?'#FFFFFF':'#0E3A53',
+      initials:s.isMinor?(firstName[0]||'M'):'ST',
+      goHome:()=>this.go('home'), goMe:()=>this.go('dash'), goList:()=>this.go('list'), goOrgNew:()=>this.go('orgNew'), goOrgDash:()=>this.go('orgDash'), goOrgCS:()=>this.go('orgCS'), goAdmin:()=>this.go('admin'), goGuardian:()=>this.go('guardian'),
+      goOngoing:()=>{ setF({type:'Ongoing'}); this.go('list'); }, back:this.back,
+      hA:hv==='Shift-first', hB:hv==='Search-led', hC:hv==='This week',
+      openCount:base.length, shiftCount:shifts.length,
+      featured:shifts.slice(0,6), weekend:shifts.filter(x=>['Oct31','Nov1'].includes(x.key)), ongoing,
+      quick:[['This weekend',{type:'Shift'}],['Volunteer slots',{type:'Shift'}],['Ongoing',{type:'Ongoing'}],['Evenings',{tod:'Evening'}],['Matches me',{match:true}]].map(([l,pt])=>({label:l,onClick:()=>{ setF(pt); this.go('list'); }})),
+      strip, stripLabel:`${sd.dow} ${sd.n} ${sd.mon}`, stripCards, stripEmpty:!stripCards.length,
+      catTiles:CATS.map((c,i)=>({label:c,abbr:ABBR[i],onClick:()=>{ setF({cat:c}); this.go('list'); }})),
+      steps:[{n:'1',t:'Tell us what you like',b:'Pick interests and when you\'re free. Under 2 minutes, no password.'},{n:'2',t:'Tap "I\'m interested"',b:'You choose what the group sees. Nothing is shared before that.'},{n:'3',t:'Get confirmed',b:'The group confirms you. Add it to your calendar and we remind you.'}],
+      footerLinks:['About','Privacy','Volunteer terms','Org terms','Child safety','Contact','Report a problem'].map(l=>({label:l,onClick:()=>this.toast(`${l} page: plain-English copy pending legal review.`)})),
+      visCards, visCount:vis.length, noResults:!vis.length, isMinor:s.isMinor,
+      filterLabel: filterCount ? `Filters · ${filterCount}` : 'Filters',
+      typeChips:['All','Shift','Ongoing'].map(t=>this.seg(t==='Shift'?'Slots':t, f.type===t, ()=>setF({type:t}))),
+      swMatch:this.sw(f.match,()=>setF({match:!f.match})), swReqs:this.sw(f.reqs,()=>setF({reqs:!f.reqs})),
+      openSheet:()=>this.setState({sheet:true}), closeSheet:()=>this.setState({sheet:false}), sheet:s.sheet,
+      clearFilters:()=>this.setState({f:{cat:null,type:'All',match:false,reqs:false,tod:null,range:'Any time'}}),
+      catChips:CATS.map(c=>this.chip(c,f.cat===c,()=>setF({cat:f.cat===c?null:c}))),
+      todChips:['Morning','Afternoon','Evening'].map(t=>this.chip(t,f.tod===t,()=>setF({tod:f.tod===t?null:t}))),
+      rangeChips:['This week','Next 2 weeks','Any time'].map(t=>this.chip(t,f.range===t,()=>setF({range:t}))),
+      showResultsLabel:`Show ${vis.length} result${vis.length===1?'':'s'}`,
+      suburbs:SUBURBS.map(v=>({v})),
+      o, dA:dv==='Sticky action bar', dB:dv==='Key facts card',
+      openConsent:()=>{ if (s.isMinor && !s.g.acct) return this.toast('Your guardian needs to confirm your account first.'); this.setState({consent:true,sharePhone:false}); },
+      closeConsent:()=>this.setState({consent:false}), consent:s.consent, shareRows,
+      phoneOption:!s.isMinor, sharePhone:s.sharePhone, togglePhone:()=>this.setState({sharePhone:!s.sharePhone}), phoneBox:s.sharePhone?'#0E3A53':'#FFFFFF', phoneTick:s.sharePhone?'✓':'',
+      consentNote: s.isMinor ? 'Your guardian gets a copy of every message. The group cannot message you privately.' : 'Nothing else is shared. You can withdraw from My dashboard at any time.',
+      sendInterest:()=>{ this.upd('ex',{[o.id]:'interested'}); this.setState({consent:false}); this.toast(`Interest sent to ${o.orgShort}. They'll confirm by email.`); },
+      sharePost:()=>this.toast('Link copied. It shares to Facebook groups with a preview image.'),
+      reportPost:()=>this.toast('Report sent to the platform admins. We review within 48 hours.'),
+      calTabs:[['Month','month'],['Week','week'],['List','list']].map(([l,k])=>this.seg(l,s.cal===k,()=>this.setState({cal:k}))),
+      calMonth:s.cal==='month', calWeek:s.cal==='week', calList:s.cal==='list',
+      calTitle:s.cal==='week'?'2–8 November 2026':'November 2026', calNav:()=>this.toast('Demo data covers late October and November.'),
+      ongoingCount:ongoing.length, cells, dayCards, dayEmpty:!dayCards.length,
+      dayLabel: cdIdx>=0 ? `${DOW[cdIdx%7]} ${cells[cdIdx].n} ${s.calDay.slice(0,3)}` : '',
+      weekRows, listGroups,
+      onb1:scr==='onb1', onb2:scr==='onb2', onb3:scr==='onb3', onb4:scr==='onb4', onbG:scr==='onbG', onbWait:scr==='onbWait', onbDone:scr==='onbDone',
+      onbShowNext:['onb1','onb2','onb3','onb4','onbG'].includes(scr),
+      onbNextLabel: scr==='onb4' ? (onbIsMinor?'Continue':'Create my profile') : scr==='onbG' ? 'Send to my guardian' : 'Continue',
+      onbStepLabel: step<=total ? `Step ${step} of ${total}` : 'Almost done',
+      onbPct: `${Math.min(100,Math.round(step/total*100))}%`,
+      onbBack:()=>{ this.setState({onbErr:null}); scr==='onb1'?this.go('home'):this.back(); }, onbNext,
+      onbv:ob, onbIsMinor, onbErr:!!s.onbErr, onbErrText:s.onbErr||'',
+      setName:setOnb('name'), setEmail:setOnb('email'), setSuburb:setOnb('suburb'), setBm:setOnb('bm'), setGEmail:setOnb('gEmail'),
+      ageChips:[['18 or over','adult'],['15 to 17','minor']].map(([l,k])=>this.chip(l,ob.age===k,()=>this.upd('onb',{age:k}))),
+      interestChips:CATS.map(c=>this.chip(c,ob.interests.includes(c),()=>this.upd('onb',{interests:this.tog(ob.interests,c)}))),
+      availChips:AVAIL.map(c=>this.chip(c,ob.avail.includes(c),()=>this.upd('onb',{avail:this.tog(ob.avail,c)}))),
+      checkRows:CHECKS.filter(c=>!onbIsMinor||c!=='RSA').map(c=>this.box(c,ob.checks.includes(c),()=>this.upd('onb',{checks:this.tog(ob.checks,c)}),{exp:ob.checks.includes(c)?'Expiry: MM/YYYY':''})),
+      shareSummary: onbIsMinor ? 'Then the group sees your first name, the age bracket 15 to 17, your interests and your guardian\'s email. Never your email, phone or bio.' : 'Then the group sees your display name, email and declared checks.',
+      swOnbAlerts:this.sw(s.onbAlerts,()=>this.setState({onbAlerts:!s.onbAlerts})),
+      gEmailShown:ob.gEmail||'your guardian', emailShown:ob.email||'your email',
+      resendGuardian:()=>this.toast('Sent again. Links expire after 7 days.'),
+      finishOnb:()=>{ this.setState({isMinor:false}); this.go('dash'); this.toast('Signed in. Welcome to Pi-Volunteers.'); },
+      firstName, meLine: s.isMinor ? 'Account type: 15 to 17 · guardian linked' : `${ME.suburb} · ${ME.avail}`,
+      meInterests:ME.interests.join(', '),
+      dashTabs:[['My slots','shifts'],['Matches','matches'],['Settings','settings']].map(([l,k])=>this.seg(l,s.dashTab===k,()=>this.setState({dashTab:k}))),
+      dtShifts:s.dashTab==='shifts', dtMatches:s.dashTab==='matches', dtSettings:s.dashTab==='settings',
+      confirmed, noConfirmed:!confirmed.length, exRows, matchCards,
+      calGoogle:()=>this.toast('Opening Google Calendar with the slot filled in.'),
+      calOutlook:()=>this.toast('Opening Outlook with the slot filled in.'),
+      calApple:()=>this.toast('Downloaded penguin-parade-visitor-host.ics'),
+      sw48:this.sw(s.rem.h48,()=>this.upd('rem',{h48:!s.rem.h48})), sw2:this.sw(s.rem.h2,()=>this.upd('rem',{h2:!s.rem.h2})),
+      cancelAsk:s.cancelAsk, cancelIdle:!s.cancelAsk, cancelOpen:()=>this.setState({cancelAsk:true}), cancelNo:()=>this.setState({cancelAsk:false}),
+      cancelShift:()=>{ const c=confirmed[0]; if(!c) return; this.upd('ex',{[c.id]:'cancelled'}); this.setState({cancelAsk:false}); this.toast(`${c.orgShort} has been told. Your spot is open again.`); },
+      swFeed:this.sw(s.feed,()=>this.setState({feed:!s.feed})), feedOn:s.feed, feedUrl:`webcal://pi-volunteers.org.au/feed/${s.token}`,
+      copyFeed:()=>this.toast('Feed link copied. Keep it private.'),
+      revokeFeed:()=>{ this.setState({token:Math.random().toString(36).slice(2,14)}); this.toast('Old link revoked. Re-subscribe with the new one.'); },
+      alertChips:CATS.map(c=>this.chip(c,s.alerts.includes(c),()=>this.setState({alerts:this.tog(s.alerts,c)}))),
+      profileLine:`${ME.name} · ${ME.suburb} · ${ME.email}`, checksLine:'Declares First Aid (exp 08/2027). Phone saved, shared only when you tick it.',
+      delIdle:s.del==='idle', delAsk:s.del==='ask', delSent:s.del==='sent',
+      delOpen:()=>this.setState({del:'ask'}), delCancel:()=>this.setState({del:'idle'}), delSend:()=>this.setState({del:'sent'}),
+      gAcctPending:!s.g.acct, gAcctTitle:s.g.acct?'Account approved':'Mia wants to join Pi-Volunteers', gAcctBd:s.g.acct?'#E2D6C2':'#C8541C',
+      gApproveAcct:()=>{ this.upd('g',{acct:true}); this.toast('Approved. Mia can now express interest in under-18 posts.'); },
+      gShiftPending:s.g.shift==='pending', gShiftDone:s.g.shift!=='pending', gShiftBd:s.g.shift==='pending'?'#0E3A53':'#E2D6C2',
+      gShiftHint: s.g.acct ? 'Landcare sees Mia as confirmed only after you approve.' : 'Approve the account first.',
+      gShiftResult: s.g.shift==='approved' ? 'Approved. Reminders go to you and Mia.' : 'Declined. Landcare has been told.',
+      gApproveShift:()=>{ if(!s.g.acct) return this.toast('Approve Mia\'s account first.'); this.upd('g',{shift:'approved'}); this.upd('vols',{mia:'confirmed'}); this.toast('Slot approved. Landcare now sees Mia as confirmed.'); },
+      gDeclineShift:()=>{ this.upd('g',{shift:'declined'}); this.upd('vols',{mia:'interested'}); },
+      gClose:()=>this.toast('We\'ve emailed you a link to confirm closing the account.'),
+      orgCS, orgNoCS:!orgCS,
+      orgTabs:['Open','Filled','Closed'].map(t=>this.seg(t,s.orgTab===t,()=>this.setState({orgTab:t}))),
+      orgRows, volRows, wConf:5+vConf, wInt:vInt,
+      closeThank:()=>this.toast('Thank-you email sent to confirmed volunteers. Post closed.'),
+      np, npTitle:e=>this.upd('np',{title:e.target.value,err:false}), npTitleBd:np.err?'#A8440F':'#C9B99F',
+      catOpts:CATS.map(v=>({v})),
+      npTypes:['Shift','Ongoing'].map(t=>this.chip(t==='Shift'?'Volunteer slot':t,np.type===t,()=>this.upd('np',{type:t}))),
+      npShift:np.type==='Shift', npOngoing:np.type==='Ongoing',
+      npReqs:['Working with Children Check','RSA','First Aid','Driver licence','Police check','Over 18','Physical capability note'].map(r=>this.box(r,np.reqs.includes(r),()=>this.upd('np',{reqs:this.tog(np.reqs,r)}))),
+      swU18:this.sw(np.u18&&orgCS,()=>orgCS&&this.upd('np',{u18:!np.u18})), u18Disabled, u18Op:orgCS?'1':'0.45',
+      u18Bg:orgCS?'#F2E8D8':'#EEEAE3', u18Fg:orgCS?'#0E3A53':'#4B6476',
+      u18Hint:orgCS?'Child Safe evidence current until Nov 2026':'Needs approved Child Safe evidence',
+      parentChips:['Yes','No'].map(t=>this.chip(t,np.parent===t,()=>this.upd('np',{parent:t}))),
+      publish:()=>{ if(!np.title.trim()){ this.upd('np',{err:true}); return this.toast('Add a title to publish.'); } this.go('orgPosted'); },
+      postedTitle:np.title||'Saltmarsh planting day', postedWhen:np.type==='Shift'?'SAT 21 NOV · 9:00AM–1:00PM':'ONGOING · 3 HRS/WEEK',
+      shareFb:()=>this.toast('Opening Facebook share with the post link and preview image.'),
+      copyLink:()=>this.toast('Link copied.'), printPdf:()=>this.toast('This week\'s open volunteer slots PDF is ready for the noticeboard.'),
+      cs, csForm:!cs.submitted,
+      csDocs:[doc('policy','Child safety and wellbeing policy','landcare-child-safety-policy-2026.pdf'),doc('coc','Code of conduct','landcare-code-of-conduct.pdf'),doc('complaints','Complaints process','landcarepi.org.au/complaints')],
+      csRole:e=>this.upd('cs',{role:e.target.value}), csEmail:e=>this.upd('cs',{email:e.target.value}),
+      csAtt:[['a1','We comply with the 11 Victorian Child Safe Standards.'],['a2','Every adult supervising minors holds a current WWCC that we have checked online.'],['a3','We will report concerns to the right authority as required.']].map(([k,l])=>this.box(l,cs[k],()=>this.upd('cs',{[k]:!cs[k]}))),
+      csBtnBg:csReady?'#C8541C':'#9AA8B2', csBtnLabel:csReady?'Submit for review':'Complete all 3 steps to submit',
+      csSubmit:()=>{ if(!csReady) return this.toast('Add all 3 documents, a role email and tick each attestation.'); this.upd('cs',{submitted:true}); this.setState({adm:'cs'}); this.toast('Submitted. Target review time is 5 working days.'); },
+      stats:[{v:'23',k:'Posts this month'},{v:'3.4',k:'Expressions per post'},{v:'9 hrs',k:'Median to first expression'},{v:'14',k:'Roles filled'}],
+      admTabs, admItems, admEmpty:!admItems.length,
+      tabs, hasToast:!!s.toast, toastMsg:s.toast||'',
+      note:{ t:nt[0], b:nt[1], r:nt[2], v:varText, hasVar:!!varText }, decisions:DECISIONS
+    };
+  }
+}
+</script>
+</body>
+</html>

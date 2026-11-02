@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+/* Tokens lifted from docs/design/Pi-Volunteers Website v3.dc.html (sunrise palette). */
+@theme {
+  --font-sans: var(--font-atkinson), system-ui, sans-serif;
+
+  --color-navy: #13294b;
+  --color-navy-deep: #0c1c36;
+  --color-orange: #d2601a;
+  --color-orange-deep: #b14e12;
+  --color-amber: #f7a24b;
+  --color-sand: #f3e6d3;
+  --color-sand-line: #e2d3bd;
+  --color-sand-strong: #c9b595;
+  --color-paper: #fbf8f3;
+  --color-cream: #f8f2e8;
+  --color-peach: #fce3cc;
+  --color-rust: #8a3b0e;
+  --color-slate: #4a5a72;
+  --color-sky-tint: #dce6f0;
+
+  --radius-card: 22px;
+  --radius-panel: 28px;
+  --radius-hero: 32px;
+}
+
+/* In the base layer so utilities like text-white on a Link can override them. */
+@layer base {
+  body {
+    background: var(--color-paper);
+    color: var(--color-navy);
+  }
+  a { color: var(--color-navy); }
+  a:hover { color: var(--color-orange); }
+  :focus-visible { outline: 3px solid var(--color-orange); outline-offset: 2px; }
+}

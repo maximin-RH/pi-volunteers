@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<sc-if value="{{ row }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ item.open }}" style="width:100%;text-align:left;background:#FFFFFF;border:1px solid #E2D3BD;border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px;cursor:pointer;color:#13294B;font-family:inherit" style-hover="border-color:#13294B">
+<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+<span style="padding:3px 10px;border-radius:999px;font-size:14px;font-weight:700;background:{{ item.typeBg }};color:{{ item.typeFg }}">{{ item.typeLabel }}</span>
+<sc-if value="{{ item.u18 }}" hint-placeholder-val="{{ false }}"><span style="padding:2px 9px;border-radius:999px;font-size:14px;font-weight:700;border:1.5px solid #13294B">Under 18s OK</span></sc-if>
+<sc-if value="{{ item.hasStatus }}" hint-placeholder-val="{{ false }}"><span style="padding:3px 10px;border-radius:999px;font-size:14px;font-weight:700;background:{{ item.stBg }};color:{{ item.stFg }}">{{ item.statusLabel }}</span></sc-if>
+</div>
+<div style="font-size:18px;font-weight:700;line-height:1.25">{{ item.title }}</div>
+<div style="font-size:15px;color:#4A5A72">{{ item.org }}</div>
+<div style="font-size:16px;line-height:1.4">{{ item.when }} · {{ item.suburb }}</div>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+<div style="display:flex;gap:4px;flex-wrap:wrap"><sc-for list="{{ item.reqList }}" as="q" hint-placeholder-count="0"><span style="border:1.5px solid #13294B;border-radius:6px;padding:1px 6px;font-size:13px;font-weight:700">{{ q.r }}</span></sc-for></div>
+<span style="font-size:14px;color:#4A5A72">{{ item.left }}</span>
+</div>
+</button>
+</sc-if>
+<sc-if value="{{ block }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ item.open }}" style="width:100%;text-align:left;background:#FFFFFF;border:1px solid #E2D3BD;border-radius:14px;padding:14px;display:flex;gap:14px;cursor:pointer;color:#13294B;font-family:inherit" style-hover="border-color:#13294B">
+<div style="flex:none;width:64px;border-radius:10px;background:{{ item.typeBg }};color:{{ item.typeFg }};display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px;gap:2px">
+<span style="font-size:13px;font-weight:700">{{ item.d1 }}</span>
+<span style="font-size:26px;font-weight:700;line-height:1">{{ item.d2 }}</span>
+<span style="font-size:13px;font-weight:700">{{ item.d3 }}</span>
+</div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px">
+<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+<span style="padding:2px 9px;border-radius:999px;font-size:13px;font-weight:700;background:{{ item.typeBg }};color:{{ item.typeFg }}">{{ item.typeLabel }}</span>
+<sc-if value="{{ item.u18 }}" hint-placeholder-val="{{ false }}"><span style="padding:1px 8px;border-radius:999px;font-size:13px;font-weight:700;border:1.5px solid #13294B">Under 18s OK</span></sc-if>
+<sc-if value="{{ item.hasStatus }}" hint-placeholder-val="{{ false }}"><span style="padding:2px 9px;border-radius:999px;font-size:13px;font-weight:700;background:{{ item.stBg }};color:{{ item.stFg }}">{{ item.statusLabel }}</span></sc-if>
+</div>
+<div style="font-size:18px;font-weight:700;line-height:1.25">{{ item.title }}</div>
+<div style="font-size:15px;color:#4A5A72">{{ item.org }} · {{ item.suburb }}</div>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:2px">
+<div style="display:flex;gap:4px;flex-wrap:wrap"><sc-for list="{{ item.reqList }}" as="q" hint-placeholder-count="0"><span style="border:1.5px solid #13294B;border-radius:6px;padding:1px 6px;font-size:13px;font-weight:700">{{ q.r }}</span></sc-for></div>
+<span style="font-size:14px;color:#4A5A72">{{ item.left }}</span>
+</div>
+</div>
+</button>
+</sc-if>
+<sc-if value="{{ ticket }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ item.open }}" style="width:100%;text-align:left;background:#FFFFFF;border:1px solid #E2D3BD;border-radius:14px;padding:0;overflow:hidden;position:relative;cursor:pointer;color:#13294B;font-family:inherit;display:flex;flex-direction:column" style-hover="border-color:#13294B">
+<div style="background:#13294B;color:#FFFFFF;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:8px">
+<span style="font-size:16px;font-weight:700">{{ item.when }}</span>
+<span style="padding:2px 9px;border-radius:999px;font-size:13px;font-weight:700;background:{{ item.typeBg }};color:{{ item.typeFg }}">{{ item.typeLabel }}</span>
+</div>
+<div style="position:relative;height:0;border-top:2px dashed #E2D3BD">
+<span style="position:absolute;left:-9px;top:-9px;width:16px;height:16px;border-radius:8px;background:#F8F2E8;border-right:1px solid #E2D3BD"></span>
+<span style="position:absolute;right:-9px;top:-9px;width:16px;height:16px;border-radius:8px;background:#F8F2E8;border-left:1px solid #E2D3BD"></span>
+</div>
+<div style="padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px">
+<div style="font-size:19px;font-weight:700;line-height:1.25">{{ item.title }}</div>
+<div style="font-size:15px;color:#4A5A72">{{ item.org }} · {{ item.suburb }}</div>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:4px">
+<div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center">
+<sc-if value="{{ item.u18 }}" hint-placeholder-val="{{ false }}"><span style="padding:1px 8px;border-radius:999px;font-size:13px;font-weight:700;border:1.5px solid #13294B">Under 18s OK</span></sc-if>
+<sc-if value="{{ item.hasStatus }}" hint-placeholder-val="{{ false }}"><span style="padding:2px 9px;border-radius:999px;font-size:13px;font-weight:700;background:{{ item.stBg }};color:{{ item.stFg }}">{{ item.statusLabel }}</span></sc-if>
+<sc-for list="{{ item.reqList }}" as="q" hint-placeholder-count="0"><span style="border:1.5px solid #13294B;border-radius:6px;padding:1px 6px;font-size:13px;font-weight:700">{{ q.r }}</span></sc-for>
+</div>
+<span style="font-size:14px;font-weight:700;color:#D2601A">{{ item.left }}</span>
+</div>
+</div>
+</button>
+</sc-if>
+<sc-if value="{{ modern }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ item.open }}" style="width:100%;height:100%;text-align:left;background:#FFFFFF;border:1px solid #ECDFCB;border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:14px;cursor:pointer;color:#13294B;font-family:inherit;box-shadow:0 1px 2px rgba(19,41,75,.05),0 8px 24px -12px rgba(19,41,75,.12);transition:box-shadow .2s,transform .2s,border-color .2s" style-hover="box-shadow:0 2px 4px rgba(19,41,75,.06),0 20px 40px -16px rgba(19,41,75,.22);transform:translateY(-2px);border-color:#E2D3BD">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+<span style="padding:6px 12px;border-radius:999px;font-size:14px;font-weight:700;background:{{ item.typeBg }};color:{{ item.typeFg }}">{{ item.typeLabel }}</span>
+<span style="font-size:14px;font-weight:700;color:#D2601A">{{ item.left }}</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;flex:1">
+<div style="font-size:21px;font-weight:700;line-height:1.2;letter-spacing:-0.015em;text-wrap:balance">{{ item.title }}</div>
+<div style="font-size:15px;color:#4A5A72">{{ item.org }}</div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;padding-top:14px;border-top:1px solid #F4EADB">
+<div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+<span style="font-size:15px;font-weight:700">{{ item.when }}</span>
+<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span style="font-size:14px;color:#4A5A72">{{ item.suburb }}</span>
+<sc-if value="{{ item.u18 }}" hint-placeholder-val="{{ false }}"><span style="padding:1px 8px;border-radius:999px;font-size:13px;font-weight:700;background:#F3E6D3">Under 18s OK</span></sc-if>
+<sc-if value="{{ item.hasStatus }}" hint-placeholder-val="{{ false }}"><span style="padding:1px 8px;border-radius:999px;font-size:13px;font-weight:700;background:#13294B;color:#FFFFFF">{{ item.statusLabel }}</span></sc-if>
+<sc-for list="{{ item.reqList }}" as="q" hint-placeholder-count="0"><span style="padding:1px 8px;border-radius:999px;font-size:13px;font-weight:700;background:#F3E6D3">{{ q.r }}</span></sc-for></div>
+</div>
+<span style="flex:none;width:40px;height:40px;border-radius:20px;background:#13294B;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:18px">→</span>
+</div>
+</button>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:358,&quot;height&quot;:160},&quot;item&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;object&quot;},&quot;variant&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Row&quot;,&quot;Date block&quot;,&quot;Ticket&quot;,&quot;Modern&quot;],&quot;default&quot;:&quot;Date block&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const v = this.props.variant ?? 'Date block';
+    return { row: v === 'Row', block: v === 'Date block', ticket: v === 'Ticket', modern: v === 'Modern' };
+  }
+}
+</script>
+</body>
+</html>

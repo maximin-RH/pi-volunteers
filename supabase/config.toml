@@ -1,0 +1,38 @@
+project_id = "pi-volunteers"
+
+[api]
+port = 54321
+
+[db]
+port = 54322
+major_version = 15
+
+[studio]
+port = 54323
+
+[inbucket]
+# Local email catcher: magic links appear at http://localhost:54324
+port = 54324
+
+[auth]
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["http://localhost:3000/auth/callback"]
+jwt_expiry = 3600
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = false
+
+[auth.sms]
+enable_signup = true
+enable_confirmations = false
+template = "Your Pi-Volunteers code is {{ .Code }}"
+
+# Local testing without Twilio: sign in with this number and code.
+[auth.sms.test_otp]
+61400000000 = "123456"
+
+[storage]
+file_size_limit = "10MiB"
