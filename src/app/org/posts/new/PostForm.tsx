@@ -10,10 +10,24 @@ export type PostInit = {
   description?: string; provides?: string; requirements: string[]; imagePath?: string;
   contactName?: string; contactEmail?: string; contactPhone?: string;
   onsiteSame: boolean; onsiteName?: string; onsitePhone?: string; shareConsent: boolean;
+  reminderHours: number[]; reminderChannels: string[];
 };
+
+export const REMINDER_HOURS: [number, string][] = [[168, "1 week before"], [48, "2 days before"], [24, "1 day before"], [2, "2 hours before"]];
+const CHANNELS: [string, string][] = [["email", "Email"], ["sms", "Text message"]];
 
 const input = "h-12 rounded-xl border-[1.5px] border-sand-line bg-white px-3.5 text-[17px] font-normal w-full";
 const label = "flex flex-col gap-1.5 font-bold min-w-0";
+
+/** A checkbox styled as a pill, like the "Checks needed" choices. */
+function Chip({ name, value, on, toggle, children }: { name: string; value: string; on: boolean; toggle: () => void; children: React.ReactNode }) {
+  return (
+    <label className={"min-h-11 px-3.5 flex items-center rounded-full border-[1.5px] font-bold text-[15px] cursor-pointer has-[:focus-visible]:outline has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-orange " + (on ? "bg-navy text-white border-navy" : "bg-white border-sand-strong")}>
+      <input type="checkbox" name={name} value={value} checked={on} onChange={toggle} className="sr-only" />
+      {children}
+    </label>
+  );
+}
 
 function fmt(date?: string, start?: string, end?: string) {
   if (!date) return "Date to be set";
@@ -152,6 +166,33 @@ export function PostForm({ orgId, orgName, orgLogo, init, categories, suburbs, r
             <span>I have permission from these people to share their names and contact details with volunteers who register for this role. <span className="text-slate">Needed to publish.</span></span>
           </label>
         </fieldset>
+        {f.kind === "slot" && (
+          <fieldset className="flex flex-col gap-3 border-0 p-0 m-0">
+            <legend className="font-bold mb-1">Reminders to confirmed volunteers</legend>
+            <div className="flex gap-1.5 flex-wrap">
+              {REMINDER_HOURS.map(([h, text]) => (
+                <Chip key={h} name="reminderHours" value={String(h)} on={f.reminderHours.includes(h)}
+                  toggle={() => setF({ ...f, reminderHours: f.reminderHours.includes(h) ? f.reminderHours.filter((x) => x !== h) : [...f.reminderHours, h] })}>
+                  {text}
+                </Chip>
+              ))}
+            </div>
+            <div className="flex gap-1.5 flex-wrap items-center">
+              <span className="text-[15px] font-bold mr-1">Send by</span>
+              {CHANNELS.map(([c, text]) => (
+                <Chip key={c} name="reminderChannels" value={c} on={f.reminderChannels.includes(c)}
+                  toggle={() => setF({ ...f, reminderChannels: f.reminderChannels.includes(c) ? f.reminderChannels.filter((x) => x !== c) : [...f.reminderChannels, c] })}>
+                  {text}
+                </Chip>
+              ))}
+            </div>
+            <span className="text-sm text-slate">
+              {f.reminderHours.length && f.reminderChannels.length
+                ? "Sent automatically. Each includes the date, time, meeting point and who to ask for on the day. Volunteers can turn reminders off, and texts only go to those who add a mobile."
+                : "No reminders will be sent."}
+            </span>
+          </fieldset>
+        )}
         <p className="m-0 text-[15px] text-slate">All roles are 18+ at launch.</p>
         {state.error && <p role="alert" className="m-0 text-rust font-bold">{state.error}</p>}
         <div className="flex gap-2.5 flex-wrap pt-2 border-t border-sand-line">
@@ -170,7 +211,7 @@ export function PostForm({ orgId, orgName, orgLogo, init, categories, suburbs, r
           <div className="px-3.5 py-2.5 bg-[#F0F2F5] flex flex-col gap-0.5">
             <span className="text-xs text-[#65676B] uppercase">{(process.env.NEXT_PUBLIC_SITE_URL ?? "").replace(/^https?:\/\//, "") || "your-domain"}</span>
             <span className="text-base font-bold text-[#050505] leading-tight">{(f.title || "What you need help with") + " · " + orgName}</span>
-            <span className="text-sm text-[#65676B]">{fmt(f.date, f.start, f.end)}{f.venue ? " · " + f.venue : ""}{f.suburb ? " · " + f.suburb : ""}. {f.peopleNeeded} people needed.</span>
+            <span className="text-sm text-[#65676B]">{fmt(f.date, f.start, f.end)}{f.venue ? " · " + f.venue : ""}{f.suburb ? " · " + f.suburb : ""}. {f.peopleNeeded} {Number(f.peopleNeeded) === 1 ? "person" : "people"} needed.</span>
           </div>
         </div>
       </aside>

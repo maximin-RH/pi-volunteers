@@ -6,6 +6,8 @@ import { fullDate, timeRange } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
 import { roleImage } from "@/lib/images";
 import { ContactDetails, type Contacts } from "@/components/ContactDetails";
+import { AddToCalendar } from "@/components/AddToCalendar";
+import { roleUrl } from "@/lib/calendar";
 import { InterestForm } from "./InterestForm";
 
 type P = { params: Promise<{ id: string }> };
@@ -14,7 +16,9 @@ type P = { params: Promise<{ id: string }> };
 export async function generateMetadata({ params }: P): Promise<Metadata> {
   const o = await getOpportunity((await params).id);
   if (!o) return {};
-  const desc = [fullDate(o.starts_at), timeRange(o.starts_at, o.ends_at), o.venue, o.suburb].filter(Boolean).join(" · ") + ". " + (o.people_needed - o.confirmed_count) + " people needed.";
+  const left = Math.max(0, o.people_needed - o.confirmed_count);
+  const desc = [fullDate(o.starts_at), timeRange(o.starts_at, o.ends_at), o.venue, o.suburb].filter(Boolean).join(" · ") + ". "
+    + (left ? left + (left === 1 ? " person" : " people") + " needed." : "Full for now.");
   return { title: o.title, description: desc, openGraph: { title: o.title + " · " + o.org_name, description: desc, images: [roleImage(o).src] } };
 }
 
@@ -79,6 +83,13 @@ export default async function Role({ params }: P) {
             status={existing?.status ?? null}
             full={!left}
           />
+          {registered && o.starts_at && o.ends_at && (
+            <AddToCalendar e={{
+              id: o.id, title: o.title + " · " + o.org_name, start: o.starts_at, end: o.ends_at,
+              location: [o.venue, o.suburb, "Phillip Island VIC"].filter(Boolean).join(", "),
+              description: o.description ?? undefined, url: roleUrl(o.id),
+            }} />
+          )}
           {contacts ? (
             <ContactDetails c={contacts as Contacts} />
           ) : (

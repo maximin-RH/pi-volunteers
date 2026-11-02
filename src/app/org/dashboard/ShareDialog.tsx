@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { copyToClipboard } from "@/lib/clipboard";
 
 export type SharePost = {
   id: string; title: string; orgName: string; orgSlug: string;
@@ -11,25 +12,7 @@ export type SharePost = {
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
 const clip = (s: string, n: number) => (s.length > n ? s.slice(0, n).replace(/\s+\S*$/, "") + "…" : s);
 
-/** Copies by selecting off-screen content. Keeps formatting when html is given. */
-function legacyCopy(text: string, html?: string) {
-  const el = document.createElement("div");
-  if (html) el.innerHTML = html; else el.textContent = text;
-  el.style.cssText = "position:fixed;left:-9999px;top:0;white-space:pre-wrap";
-  document.body.appendChild(el);
-  const sel = window.getSelection();
-  const range = document.createRange();
-  range.selectNodeContents(el);
-  sel?.removeAllRanges();
-  sel?.addRange(range);
-  let ok = false;
-  try { ok = document.execCommand("copy"); } catch { ok = false; }
-  sel?.removeAllRanges();
-  el.remove();
-  return ok;
-}
-
-const pill ="min-h-11 px-3.5 whitespace-nowrap rounded-full border-[1.5px] border-sand-line bg-white font-bold text-[15px] flex items-center justify-center gap-2 no-underline hover:border-navy";
+const pill = "min-h-11 px-3.5 whitespace-nowrap rounded-full border-[1.5px] border-sand-line bg-white font-bold text-[15px] flex items-center justify-center gap-2 no-underline hover:border-navy";
 const section = "flex flex-col gap-2.5 pt-4 border-t border-sand-line";
 
 export function ShareDialog({ post }: { post: SharePost }) {
@@ -57,21 +40,7 @@ export function ShareDialog({ post }: { post: SharePost }) {
     `<a href="${esc(url)}" style="display:inline-block;padding:12px 24px;border-radius:999px;background:#D2601A;color:#ffffff;font-weight:bold;text-decoration:none">Volunteer: ${esc(post.title)}</a>`;
 
   async function copy(key: string, text: string, html?: string) {
-    try {
-      // With html, rich editors (Mailchimp, Gmail, Word) paste it formatted; plain fields get the text.
-      if (html && typeof ClipboardItem !== "undefined") {
-        await navigator.clipboard.write([new ClipboardItem({
-          "text/plain": new Blob([text], { type: "text/plain" }),
-          "text/html": new Blob([html], { type: "text/html" }),
-        })]);
-      } else {
-        await navigator.clipboard.writeText(text);
-      }
-      setCopied(key);
-    } catch {
-      // In-app browsers (Facebook, Instagram) often block the Clipboard API but allow the older method.
-      setCopied(legacyCopy(text, html) ? key : "failed");
-    }
+    setCopied((await copyToClipboard(text, html)) ? key : "failed");
   }
   const label = (key: string, text: string) => (copied === key ? "Copied" : text);
 

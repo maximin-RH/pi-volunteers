@@ -16,7 +16,9 @@ Stack: **Next.js 15 (App Router) · Supabase (Postgres, Auth, Storage) · Tailwi
 | Org dashboard: Live / Draft / Past, confirm or decline | Working |
 | Post editor with "Start from last year" clone | Working |
 | Sharing: copy link, Facebook, WhatsApp, email, text message, newsletter text, website link and button (Open Graph preview on every role page) | Working |
-| About, Calendar, emails, admin screen, noticeboard PDF | To do. See `docs/ROADMAP.md` |
+| Calendars: My volunteering and org dashboard month view; add to Apple, Google, Outlook, Microsoft 365; private subscription feeds with reminders | Working |
+| Reminders: orgs choose 1 week / 2 days / 1 day / 2 hours before, by email and/or text; volunteers can opt out | Working. Needs the scheduler, Resend and (for texts) Twilio set up in production, see Go live |
+| About, public calendar of all roles, confirmation emails, admin screen, noticeboard PDF | To do. See `docs/ROADMAP.md` |
 
 Design reference: `docs/design/Pi-Volunteers Website v3.dc.html`. Open it in a browser to compare.
 
@@ -32,9 +34,13 @@ npx supabase db reset       # runs migrations + seed (Island Voice, Carols by th
 npm run dev                 # http://localhost:3000
 ```
 
-- Magic-link emails land in the local inbox at http://localhost:54324.
-- SMS test login: mobile `0400 000 000`, code `123456`.
+- Magic-link and reminder emails land in the local inbox at http://localhost:54324.
+- SMS login is off locally (no SMS provider), so sign in with email.
 - Database admin: http://localhost:54323.
+- Reminders locally: put any long random string in `CRON_SECRET` in `.env.local`, store the same value with
+  `insert into app_secrets (name, value) values ('cron_secret', 'THE-SAME-VALUE');` in Studio's SQL editor, then send due reminders with
+  `curl -X POST -H "Authorization: Bearer THE-SAME-VALUE" http://localhost:3000/api/reminders/run`.
+  Text reminders are logged as skipped until Twilio is set up.
 
 ## 2. Push to GitHub
 
@@ -58,7 +64,7 @@ git push -u origin main
    Run `supabase/seed.sql` once in the SQL editor.
 2. **Make yourself admin**: sign in once on the live site, then in the SQL editor run
    `update profiles set is_admin = true where id = (select id from auth.users where email = 'you@example.com');`
-3. **Vercel**: import the GitHub repo, add the 3 env vars from `.env.example`, deploy.
+3. **Vercel**: import the GitHub repo, add the env vars from `.env.example` (Supabase, site URL, `CRON_SECRET`, SMTP, and Twilio if using texts), deploy.
 4. **Supabase → Auth → URL configuration**: set Site URL to `https://www.pi-volunteers.com` and add `https://www.pi-volunteers.com/auth/callback` to redirect URLs.
 5. **Email**: Supabase's built-in email allows only a few messages an hour. Add Resend as custom SMTP (Auth → SMTP settings).
 6. **SMS**: Auth → Providers → Phone → Twilio. Needs a Twilio account and an Australian sender.
@@ -67,6 +73,20 @@ git push -u origin main
    - At the domain registrar, point each domain's DNS at Vercel as Vercel shows (an A record for the bare domain, a CNAME for `www`).
    - Set `NEXT_PUBLIC_SITE_URL=https://www.pi-volunteers.com` in Vercel.
    - `next.config.ts` also redirects the singular domain, keeping the path, in case the Vercel setting is missed.
+8. **Reminders**: they're sent by `/api/reminders/run`, which the database calls every 15 minutes.
+   - Email: in Vercel set `SMTP_HOST=smtp.resend.com`, `SMTP_PORT=465`, `SMTP_USER=resend`, `SMTP_PASS=` your Resend API key, and `SMTP_FROM`. Verify the `pi-volunteers.com` domain in Resend first.
+   - Texts (optional): `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM` (an Australian number or approved sender ID).
+   - In the Supabase SQL editor, store the secret and start the schedule (use the same value as `CRON_SECRET` in Vercel):
+     ```sql
+     insert into app_secrets (name, value) values ('cron_secret', 'YOUR-CRON-SECRET');
+     select cron.schedule('pi-volunteers-reminders', '*/15 * * * *', $$
+       select net.http_post(
+         url := 'https://www.pi-volunteers.com/api/reminders/run',
+         headers := jsonb_build_object('Authorization', 'Bearer YOUR-CRON-SECRET')
+       );
+     $$);
+     ```
+   - Check it's working: `select status, count(*) from reminder_log group by status;`
 
 ## Running costs (estimate, check current pricing)
 
@@ -75,10 +95,10 @@ git push -u origin main
 | Vercel | Hobby (free) | $0. Hobby is for non-commercial use; a free community noticeboard should qualify, check the terms. |
 | Supabase | Free | $0. Free projects pause after 7 days with no traffic. Move to Pro (about US$25) at launch. |
 | Resend | Free (3,000 emails) | $0 |
-| Twilio SMS | Pay per message | Roughly A$0.08–0.10 per sign-in code |
+| Twilio SMS | Pay per message | Roughly A$0.08–0.10 per sign-in code or text reminder. 100 confirmed volunteers a month with 2 text reminders each is about A$16–20. |
 | Domains (pi-volunteers.com, pi-volunteer.com) | Yearly | About A$3–5 a month for both |
 
-With Supabase Pro this comes to about A$45–50 a month plus SMS. To stay well under A$50, make email the main sign-in and SMS the backup.
+With Supabase Pro this comes to about A$45–50 a month plus SMS. To stay well under A$50, make email the main sign-in and SMS the backup, and keep text reminders optional (the default for new posts is email only).
 
 ## Approving an organisation
 

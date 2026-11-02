@@ -41,6 +41,18 @@ function melbourneOffsetMs(at: number) {
   return Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second) - Math.floor(at / 1000) * 1000;
 }
 
+/** Australian landline or mobile, with or without +61, spaces, brackets or dashes. */
+export const phoneOk = (s: string) => /^\+?\d{8,12}$/.test(s.replace(/[\s()-]/g, ""));
+
+/** E.164 for SMS: "0412 345 678" → "+61412345678". */
+export function toE164(s: string) {
+  const d = s.replace(/[\s()-]/g, "");
+  if (d.startsWith("+")) return d;
+  if (d.startsWith("61")) return "+" + d;
+  if (d.startsWith("0")) return "+61" + d.slice(1);
+  return "+61" + d;
+}
+
 export function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 60);
 }

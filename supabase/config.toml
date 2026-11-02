@@ -11,8 +11,10 @@ major_version = 15
 port = 54323
 
 [inbucket]
-# Local email catcher: magic links appear at http://localhost:54324
+# Local email catcher: magic links and reminder emails appear at http://localhost:54324
 port = 54324
+# SMTP for the app's own emails (reminders). Matches SMTP_PORT in .env.local.
+smtp_port = 54335
 
 [auth]
 site_url = "http://localhost:3000"

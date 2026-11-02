@@ -5,20 +5,24 @@ import { currentOrg } from "@/lib/org";
 import { fullDate, timeRange } from "@/lib/format";
 import { markAttendance, setInterestStatus } from "../actions";
 import { ShareDialog } from "./ShareDialog";
+import { MonthCalendar, monthParam } from "@/components/MonthCalendar";
+import { SubscribePanel } from "@/components/SubscribePanel";
+import { subscribeLinks } from "@/lib/calendar";
 
 export const metadata = { title: "Organisation dashboard" };
 
-const TABS = [["live", "Live"], ["draft", "Draft"], ["closed", "Past"]] as const;
+const TABS = [["live", "Live"], ["draft", "Draft"], ["closed", "Past"], ["calendar", "Calendar"]] as const;
 
-export default async function Dashboard({ searchParams }: { searchParams: Promise<{ tab?: string; share?: string }> }) {
+export default async function Dashboard({ searchParams }: { searchParams: Promise<{ tab?: string; share?: string; month?: string }> }) {
   const sp = await searchParams;
   const { org } = await currentOrg();
   if (!org) redirect("/org/register");
 
   const supabase = await createClient();
-  const [{ data: posts }, { data: ints }] = await Promise.all([
+  const [{ data: posts }, { data: ints }, { data: calToken }] = await Promise.all([
     supabase.from("opportunities").select("id,title,status,kind,starts_at,ends_at,people_needed,suburb,venue,provides,image_path,description").eq("org_id", org.id).order("starts_at", { ascending: false }),
     supabase.from("interests").select("id,status,display_name,shared_email,shared_phone,note,attended,opportunity_id,opportunities!inner(title,org_id)").eq("opportunities.org_id", org.id).order("created_at"),
+    sp.tab === "calendar" ? supabase.rpc("my_calendar_token", { p_org: org.id }) : Promise.resolve({ data: null }),
   ]);
 
   const now = Date.now();
@@ -66,12 +70,12 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
             <nav className="flex gap-1 rounded-full bg-sand p-1">
               {TABS.map(([k, l]) => (
                 <Link key={k} href={"?tab=" + k} className={"h-[38px] px-4 flex items-center rounded-full font-bold text-[15px] no-underline " + (tab === k ? "bg-white" : "")}>
-                  {l} ({allPosts.filter((p) => p.bucket === k).length})
+                  {l}{k !== "calendar" && " (" + allPosts.filter((p) => p.bucket === k).length + ")"}
                 </Link>
               ))}
             </nav>
           </div>
-          {shown.length === 0 && <p className="m-0 p-6 rounded-card bg-cream text-lg text-slate">Nothing here yet.</p>}
+          {tab !== "calendar" && shown.length === 0 && <p className="m-0 p-6 rounded-card bg-cream text-lg text-slate">Nothing here yet.</p>}
           {shown.map((p) => (
             <div key={p.id} className="rounded-card bg-white border border-sand-line px-5 py-4.5 flex flex-wrap gap-4 items-center">
               <div className="flex-[1_1_260px] min-w-0 flex flex-col gap-1.5">
@@ -115,6 +119,19 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
               )}
             </div>
           ))}
+          {tab === "calendar" && (
+            <>
+              <MonthCalendar
+                month={monthParam(sp.month)}
+                monthHref={(m) => "?tab=calendar&month=" + m}
+                items={allPosts.filter((p) => p.status === "live" && p.kind === "slot" && p.starts_at).map((p) => ({
+                  id: p.id, title: p.title, start: p.starts_at!, end: p.ends_at, href: "/org/posts/new?edit=" + p.id,
+                  tone: "org", sub: p.confirmed + " of " + p.people_needed + " confirmed",
+                }))}
+              />
+              {calToken && <SubscribePanel links={subscribeLinks(calToken as string, "Pi-Volunteers: " + org.name)} what={org.name + "'s volunteer slots"} />}
+            </>
+          )}
         </section>
 
         <aside className="flex-[1_1_340px] min-w-0 flex flex-col gap-3.5">

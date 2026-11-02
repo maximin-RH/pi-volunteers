@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { melbourneToIso, slugify } from "@/lib/format";
+import { melbourneToIso, phoneOk, slugify } from "@/lib/format";
 import { IMAGE_TYPES, imageProblem } from "@/lib/images";
 
 export type RegState = { ok?: boolean; error?: string };
@@ -101,9 +101,6 @@ const PostSchema = z.object({
   intent: z.enum(["draft", "live"]),
 });
 
-/** Australian landline or mobile, with or without +61, spaces, brackets or dashes. */
-const phoneOk = (s: string) => /^\+?\d{8,12}$/.test(s.replace(/[\s()-]/g, ""));
-
 /** Contact checks. Drafts only need valid formats; publishing needs the full set and permission. */
 function contactProblem(v: z.infer<typeof PostSchema>): string | null {
   if (v.contactPhone && !phoneOk(v.contactPhone)) return "Check the point person's phone number.";
@@ -117,7 +114,8 @@ function contactProblem(v: z.infer<typeof PostSchema>): string | null {
 }
 
 export async function savePost(_: RegState, form: FormData): Promise<RegState> {
-  const p = PostSchema.safeParse(Object.fromEntries([...form].filter(([k]) => k !== "requirements" && k !== "image")));
+  const multi = ["requirements", "image", "reminderHours", "reminderChannels"];
+  const p = PostSchema.safeParse(Object.fromEntries([...form].filter(([k]) => !multi.includes(k))));
   if (!p.success) return { error: p.error.issues[0].message };
   const v = p.data;
   const contactError = contactProblem(v);
@@ -162,6 +160,9 @@ export async function savePost(_: RegState, form: FormData): Promise<RegState> {
     status: v.intent,
     cloned_from: v.clonedFrom || null,
     image_path,
+    // Only the offered choices; the database checks the same lists.
+    reminder_hours: form.getAll("reminderHours").map(Number).filter((h) => [168, 48, 24, 2].includes(h)),
+    reminder_channels: form.getAll("reminderChannels").map(String).filter((c) => c === "email" || c === "sms"),
   };
 
   const q = v.id

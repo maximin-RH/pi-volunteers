@@ -5,7 +5,7 @@
 2. **Admin screen** at `/admin`: approve or reject organisations, view Child Safe PDFs (signed URLs) and logos, suspend posts.
 3. ~~Role images~~ Done: optional event photo in the post editor, falling back to the org logo (required at registration). Still to do: let orgs change their logo after registering.
 4. **About page.** Port from the design file, but update its sharing copy ("share it to your Facebook group", "Share-ready for Facebook"): posts can be shared on Facebook, WhatsApp, email, text, newsletters and the group's own website.
-5. **Calendar view** (month / week / list) from the design file.
+5. **Public calendar of all roles** (month / week / list) from the design file. Personal and org calendars, add-to-calendar and subscription feeds are done; reuse `MonthCalendar`.
 6. **Privacy policy and volunteer terms.** Needs real wording. Not legal advice in this repo. Must cover: role contacts shared with registered volunteers, and organisations recording attendance (`interests.attended`).
 7. **Generate types** (`npm run db:types`) and replace the `as unknown as` casts.
 8. **Accessibility pass.** Keyboard, focus order, screen reader labels, contrast.
@@ -15,7 +15,8 @@
 - Under-18 volunteers (15–17) with guardian approval, as prototyped in `Pi-Volunteers.dc.html`. Needs a `guardian_consents` table, an email/SMS approval link, and the min-age rule in the interest policy.
 - Noticeboard PDF with QR code.
 - Multiple members per organisation, invites.
-- Reminder SMS the day before a confirmed slot.
+- ~~Reminder SMS the day before a confirmed slot~~ Done: org-chosen email/text reminders (`/api/reminders/run`). Later: let orgs see which reminders went out; a "reset my calendar link" button.
+- Mobile header: at phone width the header's nav and "My volunteering" button are clipped.
 - Mobile app (or install as a web app first).
 
 ## Later: volunteer recognition (decided 2026-11-02, not yet built)

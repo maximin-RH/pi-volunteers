@@ -21,6 +21,8 @@ Australian English (organisation, programme). Sentence case. Numerals for quanti
 - Mutations are Server Actions in `actions.ts` files, validated with zod.
 - All data access goes through Supabase with RLS. **Never use the service-role key in app code.** If a feature seems to need it, write a `security definer` SQL function instead.
 - Schema changes: add a new file in `supabase/migrations/`, never edit `0001_init.sql` after it's been pushed.
+- Server jobs without a user session (reminders) follow the same rule: `security definer` functions guarded by a secret in `app_secrets`, called with the anon key. See `claim_due_reminders`.
+- Calendar feeds are read by token through `calendar_feed_events`; org feeds carry counts only, never volunteer names.
 - Times are stored as UTC `timestamptz` and shown in `Australia/Melbourne` (see `src/lib/format.ts`).
 - Personal data: organisations only see a volunteer's display name plus what the volunteer ticked to share. In the other direction, a role's contacts (`opportunity_contacts`) are only visible to volunteers registered for that role, and only once the org has ticked permission to share. Never add them to `opportunity_listing`.
 - Domain: `https://www.pi-volunteers.com`. `pi-volunteer.com` (singular) redirects to it.

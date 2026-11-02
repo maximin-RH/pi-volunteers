@@ -38,6 +38,7 @@ export default async function NewPost({ searchParams }: { searchParams: Promise<
   let init: PostInit = {
     kind: "slot", peopleNeeded: 6, start: "09:00", end: "12:00", requirements: [],
     contactName: org.contact_name, contactEmail: org.contact_email, onsiteSame: true, shareConsent: false,
+    reminderHours: [24], reminderChannels: ["email"],
   };
   if (source) {
     const s = source.starts_at ? (sp.clone ? nextYear(source.starts_at) : new Date(source.starts_at)) : null;
@@ -55,6 +56,7 @@ export default async function NewPost({ searchParams }: { searchParams: Promise<
       onsiteName: contacts?.onsite_name ?? "", onsitePhone: contacts?.onsite_phone ?? "",
       // A copy from last year must be re-confirmed: the people or their permission may have changed.
       shareConsent: sp.edit ? !!contacts?.share_consent : false,
+      reminderHours: source.reminder_hours ?? [24], reminderChannels: source.reminder_channels ?? ["email"],
     };
   }
 
