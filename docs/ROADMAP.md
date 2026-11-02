@@ -4,7 +4,7 @@
 1. **Emails (Resend).** Org gets an email when someone is interested. Volunteer gets one when confirmed, with an `.ics` calendar invite and the role's contacts (`opportunity_contacts`). Admins get one when a new org registers.
 2. **Admin screen** at `/admin`: approve or reject organisations, view Child Safe PDFs (signed URLs) and logos, suspend posts.
 3. ~~Role images~~ Done: optional event photo in the post editor, falling back to the org logo (required at registration). Still to do: let orgs change their logo after registering.
-4. **About page.** Port from the design file.
+4. **About page.** Port from the design file, but update its sharing copy ("share it to your Facebook group", "Share-ready for Facebook"): posts can be shared on Facebook, WhatsApp, email, text, newsletters and the group's own website.
 5. **Calendar view** (month / week / list) from the design file.
 6. **Privacy policy and volunteer terms.** Needs real wording. Not legal advice in this repo. Must cover: role contacts shared with registered volunteers, and organisations recording attendance (`interests.attended`).
 7. **Generate types** (`npm run db:types`) and replace the `as unknown as` casts.

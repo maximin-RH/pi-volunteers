@@ -103,7 +103,7 @@ export function PostForm({ orgId, orgName, orgLogo, init, categories, suburbs, r
             <div className="flex flex-col gap-1.5 min-w-0 flex-[1_1_240px]">
               <input key={fileKey} name="image" type="file" accept={IMAGE_ACCEPT} onChange={pickPhoto} className="text-[15px]" aria-label="Event photo" />
               <span className="text-sm text-slate">
-                {hasPhoto ? "This photo shows on the role and on Facebook." : orgLogo ? "No photo yet, so your logo will show instead." : "No photo yet, so an Island photo will show instead."}
+                {hasPhoto ? "This photo shows on the role and in the preview when you share it." : orgLogo ? "No photo yet, so your logo will show instead." : "No photo yet, so an Island photo will show instead."}
                 {" "}JPG, PNG or WebP, up to {MAX_IMAGE_MB} MB. Wide photos work best.
               </span>
               {picked.error && <span role="alert" className="text-sm text-rust">{picked.error}</span>}
@@ -161,7 +161,10 @@ export function PostForm({ orgId, orgName, orgLogo, init, categories, suburbs, r
       </form>
 
       <aside className="flex-[2_1_360px] min-w-0 flex flex-col gap-3.5 sticky top-24">
-        <span className="font-bold text-slate">How it looks on Facebook</span>
+        <span className="flex flex-col gap-0.5">
+          <span className="font-bold text-slate">How it looks when shared</span>
+          <span className="text-sm text-slate">Facebook, WhatsApp, text messages and most email apps show this preview.</span>
+        </span>
         <div className="border border-[#DADDE1] rounded-[10px] overflow-hidden bg-white font-[system-ui]">
           <div className={"w-full aspect-[1.91/1] bg-center bg-no-repeat " + (previewIsLogo ? "bg-white bg-contain bg-origin-content p-6" : "bg-navy bg-cover")} style={{ backgroundImage: "url(" + preview + ")" }} />
           <div className="px-3.5 py-2.5 bg-[#F0F2F5] flex flex-col gap-0.5">

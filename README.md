@@ -1,6 +1,6 @@
 # Pi-Volunteers
 
-Volunteer roles from Phillip Island groups, in one place. Volunteers browse and say they're interested; organisations post roles, confirm volunteers and share to Facebook.
+Volunteer roles from Phillip Island groups, in one place. Volunteers browse and say they're interested; organisations post roles, confirm volunteers and share them on Facebook, WhatsApp, email, text, newsletters and their own websites.
 
 Stack: **Next.js 15 (App Router) · Supabase (Postgres, Auth, Storage) · Tailwind CSS 4 · Vercel**.
 

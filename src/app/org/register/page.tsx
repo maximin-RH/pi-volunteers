@@ -11,7 +11,7 @@ const label = "flex flex-col gap-1.5 font-bold min-w-0";
 const STEPS = [
   ["01", "We check your details", "ABN or incorporation number against the public register."],
   ["02", "An admin approves", "Usually within 48 hours. We email you either way."],
-  ["03", "Post and share", "Your first post goes live and gets a Facebook-ready preview."],
+  ["03", "Post and share", "Your post goes live with a link to share on Facebook, WhatsApp, email, text, your newsletter or your website."],
 ];
 
 export default function RegisterOrg() {

@@ -76,7 +76,8 @@ export default async function Home() {
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(12,28,54,.92)_0%,rgba(12,28,54,.7)_60%,rgba(12,28,54,.45)_100%)]" />
         <div className="relative mx-auto max-w-[1240px] px-6 py-16 flex flex-col gap-4 max-w-[640px]">
           <span className="font-bold text-amber">For Island groups</span>
-          <h2 className="m-0 text-[clamp(32px,4vw,48px)] leading-none font-bold tracking-tight">Post a need in 3 minutes. Share it to Facebook in one tap.</h2>
+          <h2 className="m-0 text-[clamp(32px,4vw,48px)] leading-none font-bold tracking-tight">Post a need in 3 minutes. Share it wherever your community looks.</h2>
+          <p className="m-0 text-lg text-sand max-w-[52ch]">Every post comes with a link and a preview ready for Facebook, WhatsApp, email and text, wording for your newsletter, and a link for your own website.</p>
           <Link href="/org/register" className="self-start h-14 px-7 flex items-center rounded-full bg-orange hover:bg-orange-deep text-white hover:text-white text-lg font-bold no-underline">Register your group</Link>
         </div>
       </section>

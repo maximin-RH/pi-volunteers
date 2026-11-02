@@ -25,7 +25,7 @@ export function RoleCard({ o }: { o: Listing }) {
         <span className="text-sm font-bold text-orange">{o.org_name}</span>
         <span className="text-lg font-bold leading-tight">{o.title}</span>
         <span className="text-[15px] text-slate">
-          {[timeRange(o.starts_at, o.ends_at), o.suburb, left ? left + " spots left" : "Full"].filter(Boolean).join(" · ")}
+          {[timeRange(o.starts_at, o.ends_at), o.suburb, left ? left + (left === 1 ? " spot left" : " spots left") : "Full"].filter(Boolean).join(" · ")}
         </span>
       </span>
     </Link>

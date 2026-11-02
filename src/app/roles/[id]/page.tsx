@@ -10,7 +10,7 @@ import { InterestForm } from "./InterestForm";
 
 type P = { params: Promise<{ id: string }> };
 
-// Drives the Facebook / link preview card.
+// Drives the link preview card in Facebook, WhatsApp, messages and email apps.
 export async function generateMetadata({ params }: P): Promise<Metadata> {
   const o = await getOpportunity((await params).id);
   if (!o) return {};
@@ -68,7 +68,7 @@ export default async function Role({ params }: P) {
           )}
         </article>
         <aside className="flex-[2_1_340px] min-w-0 sticky top-24 rounded-panel bg-white border border-sand-line p-7 flex flex-col gap-4">
-          <span className="text-2xl font-bold">{left ? left + " of " + o.people_needed + " spots left" : "This role is full"}</span>
+          <span className="text-2xl font-bold">{left ? left + " of " + o.people_needed + (o.people_needed === 1 ? " spot left" : " spots left") : "This role is full"}</span>
           <InterestForm
             opportunityId={o.id}
             signedIn={!!user}
