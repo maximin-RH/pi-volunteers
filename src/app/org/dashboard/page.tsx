@@ -8,6 +8,7 @@ import { ShareDialog } from "./ShareDialog";
 import { MonthCalendar, monthParam } from "@/components/MonthCalendar";
 import { SubscribePanel } from "@/components/SubscribePanel";
 import { subscribeLinks } from "@/lib/calendar";
+import { resetCalendarLink } from "@/app/me/actions";
 
 export const metadata = { title: "Organisation dashboard" };
 
@@ -56,7 +57,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
             <h1 className="m-0 text-[clamp(32px,4vw,48px)] leading-none font-bold tracking-tight">{org.name}</h1>
             <span className="text-sand">
               {org.status === "approved" ? "Approved" : "Waiting for approval. You can draft posts now."}
-              {org.child_safe_doc_path ? " · Child Safe evidence on file" : ""}
+              {org.has_child_safe ? " · Child Safe evidence on file" : ""}
             </span>
           </div>
           <Link href="/org/posts/new" className="h-14 px-7 flex items-center rounded-full bg-orange hover:bg-orange-deep text-white hover:text-white text-lg font-bold no-underline">+ New post</Link>
@@ -129,7 +130,10 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
                   tone: "org", sub: p.confirmed + " of " + p.people_needed + " confirmed",
                 }))}
               />
-              {calToken && <SubscribePanel links={subscribeLinks(calToken as string, "Pi-Volunteers: " + org.name)} what={org.name + "'s volunteer slots"} />}
+              {calToken && (
+                <SubscribePanel key={calToken as string} links={subscribeLinks(calToken as string, "Pi-Volunteers: " + org.name)}
+                  what={org.name + "'s volunteer slots"} onReset={resetCalendarLink.bind(null, org.id)} />
+              )}
             </>
           )}
         </section>

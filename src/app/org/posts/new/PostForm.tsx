@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import { savePost, type RegState } from "../../actions";
 import { IMAGE_ACCEPT, MAX_IMAGE_MB, imageProblem, publicImage } from "@/lib/images";
+import { SMS_ENABLED } from "@/lib/features";
 
 export type PostInit = {
   id?: string; clonedFrom?: string; title?: string; category?: string; kind: "slot" | "ongoing";
@@ -14,7 +15,7 @@ export type PostInit = {
 };
 
 export const REMINDER_HOURS: [number, string][] = [[168, "1 week before"], [48, "2 days before"], [24, "1 day before"], [2, "2 hours before"]];
-const CHANNELS: [string, string][] = [["email", "Email"], ["sms", "Text message"]];
+const CHANNELS: [string, string][] = SMS_ENABLED ? [["email", "Email"], ["sms", "Text message"]] : [["email", "Email"]];
 
 const input = "h-12 rounded-xl border-[1.5px] border-sand-line bg-white px-3.5 text-[17px] font-normal w-full";
 const label = "flex flex-col gap-1.5 font-bold min-w-0";
@@ -119,6 +120,7 @@ export function PostForm({ orgId, orgName, orgLogo, init, categories, suburbs, r
               <span className="text-sm text-slate">
                 {hasPhoto ? "This photo shows on the role and in the preview when you share it." : orgLogo ? "No photo yet, so your logo will show instead." : "No photo yet, so an Island photo will show instead."}
                 {" "}JPG, PNG or WebP, up to {MAX_IMAGE_MB} MB. Wide photos work best.
+                {" "}Only use photos where everyone shown has agreed to appear, and no photos of children.
               </span>
               {picked.error && <span role="alert" className="text-sm text-rust">{picked.error}</span>}
               {hasPhoto && <button type="button" onClick={removePhoto} className="self-start min-h-11 px-4 rounded-full border-[1.5px] border-sand-line bg-white font-bold text-[15px] hover:border-navy">Remove photo</button>}
@@ -177,19 +179,24 @@ export function PostForm({ orgId, orgName, orgLogo, init, categories, suburbs, r
                 </Chip>
               ))}
             </div>
-            <div className="flex gap-1.5 flex-wrap items-center">
-              <span className="text-[15px] font-bold mr-1">Send by</span>
-              {CHANNELS.map(([c, text]) => (
-                <Chip key={c} name="reminderChannels" value={c} on={f.reminderChannels.includes(c)}
-                  toggle={() => setF({ ...f, reminderChannels: f.reminderChannels.includes(c) ? f.reminderChannels.filter((x) => x !== c) : [...f.reminderChannels, c] })}>
-                  {text}
-                </Chip>
-              ))}
-            </div>
+            {SMS_ENABLED ? (
+              <div className="flex gap-1.5 flex-wrap items-center">
+                <span className="text-[15px] font-bold mr-1">Send by</span>
+                {CHANNELS.map(([c, text]) => (
+                  <Chip key={c} name="reminderChannels" value={c} on={f.reminderChannels.includes(c)}
+                    toggle={() => setF({ ...f, reminderChannels: f.reminderChannels.includes(c) ? f.reminderChannels.filter((x) => x !== c) : [...f.reminderChannels, c] })}>
+                    {text}
+                  </Chip>
+                ))}
+              </div>
+            ) : (
+              <input type="hidden" name="reminderChannels" value="email" />
+            )}
             <span className="text-sm text-slate">
-              {f.reminderHours.length && f.reminderChannels.length
-                ? "Sent automatically. Each includes the date, time, meeting point and who to ask for on the day. Volunteers can turn reminders off, and texts only go to those who add a mobile."
-                : "No reminders will be sent."}
+              {!f.reminderHours.length
+                ? "No reminders will be sent."
+                : (SMS_ENABLED ? "Sent automatically." : "Sent automatically by email.") +
+                  " Each includes the date, time, meeting point and who to ask for on the day. Volunteers can turn reminders off."}
             </span>
           </fieldset>
         )}

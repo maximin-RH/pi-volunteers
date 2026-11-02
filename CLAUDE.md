@@ -5,6 +5,12 @@ Volunteer noticeboard for Phillip Island (Victoria, Australia). Two account type
 Launch scope: website with accounts. **Volunteers must be 18+**. Under-18 and guardian consent is phase 2.
 Launch organisations: Island Voice, Carols by the Bay. Their details in `supabase/seed.sql` are TODO placeholders. Never invent ABNs, addresses or contacts.
 
+## Cost
+Run on free tiers wherever possible; Supabase Pro (about US$25 a month) is the one planned cost. Before adding any paid service or per-use cost, say what it costs and offer the free or cheaper option. Text messages (SMS sign-in and text reminders) stay off (`NEXT_PUBLIC_SMS_ENABLED`) until funded.
+
+## Privacy
+Read `docs/PRIVACY-AND-SECURITY.md` before collecting or exposing any personal information. Collect the minimum, say why at the point of collection, keep it behind RLS, and update the data table in that doc when you add a field. RLS shares whole rows: never put private columns on a table with a public read policy (see `organisation_contacts`).
+
 ## Design source of truth
 `docs/design/Pi-Volunteers Website v3.dc.html` (open in a browser). Match its layout, copy and colours when building or porting a screen.
 Tokens live in `src/app/globals.css` (`@theme`). Use those Tailwind names (`bg-navy`, `text-orange`, `rounded-card`), never raw hex in components.

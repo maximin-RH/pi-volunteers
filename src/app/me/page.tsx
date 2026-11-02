@@ -9,6 +9,8 @@ import { AddToCalendar } from "@/components/AddToCalendar";
 import { MonthCalendar, monthParam } from "@/components/MonthCalendar";
 import { SubscribePanel } from "@/components/SubscribePanel";
 import { ReminderPrefs } from "./ReminderPrefs";
+import { DeleteAccount } from "./DeleteAccount";
+import { resetCalendarLink } from "./actions";
 
 export const metadata = { title: "My volunteering" };
 
@@ -102,9 +104,12 @@ export default async function Me({ searchParams }: { searchParams: Promise<{ vie
       )}
 
       <section className="flex flex-col gap-3">
-        <h2 className="m-0 text-2xl font-bold">Calendar and reminders</h2>
+        <h2 className="m-0 text-2xl font-bold">Calendar, reminders and account</h2>
         <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(min(100%,400px),1fr))]">
-          {token && <SubscribePanel links={subscribeLinks(token as string, "Pi-Volunteers")} what="your volunteering" />}
+          {token && (
+            <SubscribePanel key={token as string} links={subscribeLinks(token as string, "Pi-Volunteers")} what="your volunteering"
+              onReset={resetCalendarLink.bind(null, null)} />
+          )}
           <ReminderPrefs
             // Remount after saving so the form shows what was saved.
             key={[prefs?.reminder_email, prefs?.reminder_sms, prefs?.reminder_phone].join("|")}
@@ -112,6 +117,7 @@ export default async function Me({ searchParams }: { searchParams: Promise<{ vie
             init={{ email: prefs?.reminder_email ?? true, sms: prefs?.reminder_sms ?? false, phone: prefs?.reminder_phone ?? user.phone ?? "" }}
           />
         </div>
+        <DeleteAccount />
       </section>
     </div>
   );

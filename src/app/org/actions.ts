@@ -6,6 +6,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { melbourneToIso, phoneOk, slugify } from "@/lib/format";
 import { IMAGE_TYPES, imageProblem } from "@/lib/images";
+import { SMS_ENABLED } from "@/lib/features";
 
 export type RegState = { ok?: boolean; error?: string };
 
@@ -56,19 +57,26 @@ export async function registerOrg(_: RegState, form: FormData): Promise<RegState
     if (error) return { error: "The document didn't upload. Try again." };
   }
 
+  // Id made here so the private contact row can be added straight after (the public can't read it back).
+  const orgId = crypto.randomUUID();
   const { error } = await supabase.from("organisations").insert({
+    id: orgId,
     slug: slugify(v.name) + "-" + Math.random().toString(36).slice(2, 6),
     name: v.name,
     type: v.type,
     abn: v.abn || null,
-    contact_name: v.contactName,
-    contact_email: v.contactEmail,
     about: v.about || null,
     child_safe_doc_path: childSafePath,
     logo_path: logoPath,
     created_by: user.id,
   });
   if (error) return { error: "That didn't save. Try again." };
+
+  // The contact person is private to the group and admins (organisation_contacts).
+  const { error: contactError } = await supabase
+    .from("organisation_contacts")
+    .insert({ org_id: orgId, contact_name: v.contactName, contact_email: v.contactEmail });
+  if (contactError) return { error: "Your group was registered but the contact details didn't save. Contact us to fix it." };
 
   // TODO(phase 1): notify admins by email.
   revalidatePath("/org/dashboard");
@@ -162,7 +170,7 @@ export async function savePost(_: RegState, form: FormData): Promise<RegState> {
     image_path,
     // Only the offered choices; the database checks the same lists.
     reminder_hours: form.getAll("reminderHours").map(Number).filter((h) => [168, 48, 24, 2].includes(h)),
-    reminder_channels: form.getAll("reminderChannels").map(String).filter((c) => c === "email" || c === "sms"),
+    reminder_channels: form.getAll("reminderChannels").map(String).filter((c) => c === "email" || (c === "sms" && SMS_ENABLED)),
   };
 
   const q = v.id

@@ -37,6 +37,6 @@ export async function GET(_: Request, { params }: { params: Promise<{ file: stri
     { name: !rows.length ? "Pi-Volunteers" : isOrg ? "Pi-Volunteers: " + rows[0].org_name : "Pi-Volunteers: my volunteering", refreshHours: 3 },
   );
   return new Response(ics, {
-    headers: { "Content-Type": "text/calendar; charset=utf-8", "Cache-Control": "private, max-age=900" },
+    headers: { "Content-Type": "text/calendar; charset=utf-8", "Cache-Control": "private, no-store" },
   });
 }

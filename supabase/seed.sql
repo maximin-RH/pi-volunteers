@@ -22,8 +22,12 @@ on conflict do nothing;
 -- Launch organisations. Details marked TODO must be confirmed with each organisation before go-live.
 -- Inserted as approved by the seed (runs as superuser, so the status trigger's admin check is bypassed via session_replication_role).
 set session_replication_role = replica;
-insert into organisations (slug, name, type, about, contact_name, contact_email, status, approved_at, created_by) values
-  ('island-voice', 'Island Voice', 'incorporated_association', 'TODO: one-line description from Island Voice.', 'TODO', 'todo@example.org', 'approved', now(), null),
-  ('carols-by-the-bay', 'Carols by the Bay', 'informal_group', 'TODO: one-line description from Carols by the Bay.', 'TODO', 'todo@example.org', 'approved', now(), null)
+insert into organisations (slug, name, type, about, status, approved_at, created_by) values
+  ('island-voice', 'Island Voice', 'incorporated_association', 'TODO: one-line description from Island Voice.', 'approved', now(), null),
+  ('carols-by-the-bay', 'Carols by the Bay', 'informal_group', 'TODO: one-line description from Carols by the Bay.', 'approved', now(), null)
 on conflict (slug) do nothing;
+-- Contact person (private to the group and admins). TODO: real details from each organisation.
+insert into organisation_contacts (org_id, contact_name, contact_email)
+  select id, 'TODO', 'todo@example.org' from organisations where slug in ('island-voice', 'carols-by-the-bay')
+on conflict (org_id) do nothing;
 set session_replication_role = origin;

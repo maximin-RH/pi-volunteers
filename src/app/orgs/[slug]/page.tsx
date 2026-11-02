@@ -7,7 +7,7 @@ import { publicImage } from "@/lib/images";
 export default async function Org({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const supabase = await createClient();
-  const { data: org } = await supabase.from("organisations").select("id,name,about,website,child_safe_doc_path,logo_path").eq("slug", slug).eq("status", "approved").maybeSingle();
+  const { data: org } = await supabase.from("organisations").select("id,name,about,website,logo_path").eq("slug", slug).eq("status", "approved").maybeSingle();
   if (!org) notFound();
   const { data: opps } = await supabase.from("opportunity_listing").select("*").eq("org_id", org.id).order("starts_at");
 

@@ -9,7 +9,7 @@ Stack: **Next.js 15 (App Router) · Supabase (Postgres, Auth, Storage) · Tailwi
 | Area | Status |
 |---|---|
 | Home, Find a role, Role detail, Organisations, Org profile | Working, reads live data |
-| Sign in: email magic link + mobile SMS code | Working (SMS needs Twilio in production) |
+| Sign in: email magic link (mobile SMS code built but switched off to save costs) | Working |
 | Register interest (18+ only, choose what to share) | Working |
 | My volunteering (upcoming, past, withdraw) | Working |
 | Org registration (+ Child Safe PDF upload) | Working, admin approves in Supabase Studio |
@@ -17,7 +17,8 @@ Stack: **Next.js 15 (App Router) · Supabase (Postgres, Auth, Storage) · Tailwi
 | Post editor with "Start from last year" clone | Working |
 | Sharing: copy link, Facebook, WhatsApp, email, text message, newsletter text, website link and button (Open Graph preview on every role page) | Working |
 | Calendars: My volunteering and org dashboard month view; add to Apple, Google, Outlook, Microsoft 365; private subscription feeds with reminders | Working |
-| Reminders: orgs choose 1 week / 2 days / 1 day / 2 hours before, by email and/or text; volunteers can opt out | Working. Needs the scheduler, Resend and (for texts) Twilio set up in production, see Go live |
+| Reminders: orgs choose 1 week / 2 days / 1 day / 2 hours before, by email; volunteers can opt out (text reminders built, off until funded) | Working. Needs the scheduler and an email provider in production, see Go live |
+| Privacy controls: account deletion, calendar link reset, private org contacts, 90-day reminder log clean-up, security headers | Working. See `docs/PRIVACY-AND-SECURITY.md` for the launch checklist |
 | About, public calendar of all roles, confirmation emails, admin screen, noticeboard PDF | To do. See `docs/ROADMAP.md` |
 
 Design reference: `docs/design/Pi-Volunteers Website v3.dc.html`. Open it in a browser to compare.
@@ -66,16 +67,16 @@ git push -u origin main
    `update profiles set is_admin = true where id = (select id from auth.users where email = 'you@example.com');`
 3. **Vercel**: import the GitHub repo, add the env vars from `.env.example` (Supabase, site URL, `CRON_SECRET`, SMTP, and Twilio if using texts), deploy.
 4. **Supabase → Auth → URL configuration**: set Site URL to `https://www.pi-volunteers.com` and add `https://www.pi-volunteers.com/auth/callback` to redirect URLs.
-5. **Email**: Supabase's built-in email allows only a few messages an hour. Add Resend as custom SMTP (Auth → SMTP settings).
-6. **SMS**: Auth → Providers → Phone → Twilio. Needs a Twilio account and an Australian sender.
+5. **Email**: Supabase's built-in email allows only a few messages an hour. Add your email provider as custom SMTP (Auth → SMTP settings): Amazon SES in Sydney (onshore, about US$0.10 per 1,000) or Resend (free up to 3,000 a month, US-based). See `docs/PRIVACY-AND-SECURITY.md` section 4.
+6. **SMS (only once funded)**: Auth → Providers → Phone → Twilio, set the `TWILIO_*` vars and `NEXT_PUBLIC_SMS_ENABLED=true`.
 7. **Domains**: the site is `www.pi-volunteers.com`. `pi-volunteer.com` (singular) catches typos and forwards to it.
    - In Vercel → Project → Domains, add all four: `www.pi-volunteers.com` (primary), `pi-volunteers.com`, `www.pi-volunteer.com` and `pi-volunteer.com`. Set the last three to **Redirect to `www.pi-volunteers.com` (308 permanent)**.
    - At the domain registrar, point each domain's DNS at Vercel as Vercel shows (an A record for the bare domain, a CNAME for `www`).
    - Set `NEXT_PUBLIC_SITE_URL=https://www.pi-volunteers.com` in Vercel.
    - `next.config.ts` also redirects the singular domain, keeping the path, in case the Vercel setting is missed.
 8. **Reminders**: they're sent by `/api/reminders/run`, which the database calls every 15 minutes.
-   - Email: in Vercel set `SMTP_HOST=smtp.resend.com`, `SMTP_PORT=465`, `SMTP_USER=resend`, `SMTP_PASS=` your Resend API key, and `SMTP_FROM`. Verify the `pi-volunteers.com` domain in Resend first.
-   - Texts (optional): `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM` (an Australian number or approved sender ID).
+   - Email: in Vercel set `SMTP_HOST`, `SMTP_PORT=465`, `SMTP_USER`, `SMTP_PASS` and `SMTP_FROM` from your provider (SES Sydney: `email-smtp.ap-southeast-2.amazonaws.com` with SES SMTP credentials; Resend: `smtp.resend.com`, user `resend`, your API key). Verify the `pi-volunteers.com` domain with the provider first.
+   - Texts stay off until funded. When they're on: `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM` and `NEXT_PUBLIC_SMS_ENABLED=true`.
    - In the Supabase SQL editor, store the secret and start the schedule (use the same value as `CRON_SECRET` in Vercel):
      ```sql
      insert into app_secrets (name, value) values ('cron_secret', 'YOUR-CRON-SECRET');
@@ -94,12 +95,12 @@ git push -u origin main
 |---|---|---|
 | Vercel | Hobby (free) | $0. Hobby is for non-commercial use; a free community noticeboard should qualify, check the terms. |
 | Supabase | Free | $0. Free projects pause after 7 days with no traffic. Move to Pro (about US$25) at launch. |
-| Resend | Free (3,000 emails) | $0 |
-| Twilio SMS | Pay per message | Roughly A$0.08–0.10 per sign-in code or text reminder. 100 confirmed volunteers a month with 2 text reminders each is about A$16–20. |
+| Email | SES Sydney or Resend free tier | About $0 at our volume (SES about US$0.10 per 1,000) |
+| Twilio SMS | **Off until funded** | $0 now. If turned on: about A$0.08–0.10 per text; 100 volunteers with 2 text reminders each is about A$16–20 a month. |
 | Domains (pi-volunteers.com, pi-volunteer.com) | Yearly | About A$3–5 a month for both |
 
-With Supabase Pro this comes to about A$45–50 a month plus SMS. To stay well under A$50, make email the main sign-in and SMS the backup, and keep text reminders optional (the default for new posts is email only).
+With Supabase Pro this comes to about A$40–45 a month in total (Supabase Pro plus domains). Everything else stays on free tiers, and text messages are switched off until funded.
 
 ## Approving an organisation
 
-Until the admin screen is built: Supabase Studio → `organisations` → set `status` to `approved`. Child Safe PDFs are in Storage → `child-safe`.
+Until the admin screen is built: Supabase Studio → `organisations` → set `status` to `approved`. The group's contact person is in `organisation_contacts`. Child Safe PDFs are in Storage → `child-safe`.

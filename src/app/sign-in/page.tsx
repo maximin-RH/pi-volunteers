@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { SMS_ENABLED } from "@/lib/features";
 
 const input = "h-12 rounded-xl border-[1.5px] border-sand-line bg-white px-3.5 text-[17px] w-full";
 const btn = "h-14 px-7 rounded-full bg-orange hover:bg-orange-deep text-white text-lg font-bold disabled:opacity-60";
@@ -19,7 +20,9 @@ function toE164(raw: string) {
 function SignInInner() {
   const supabase = createClient();
   const router = useRouter();
-  const next = useSearchParams().get("next") ?? "/me";
+  const params = useSearchParams();
+  const next = params.get("next") ?? "/me";
+  const deleted = params.get("account") === "deleted";
   const [mode, setMode] = useState<"email" | "phone">("email");
   const [value, setValue] = useState("");
   const [code, setCode] = useState("");
@@ -49,17 +52,18 @@ function SignInInner() {
 
   return (
     <div className="mx-auto max-w-[520px] px-6 pt-12 pb-16 flex flex-col gap-6">
+      {deleted && <p role="status" className="m-0 rounded-2xl bg-sky-tint p-5 text-lg"><strong>Your account has been deleted.</strong> Thanks for volunteering with us.</p>}
       <h1 className="m-0 text-[clamp(36px,4.5vw,52px)] leading-none font-bold tracking-tight">Sign in</h1>
-      <p className="m-0 text-lg text-slate">No password. We'll send you a link or a code.</p>
+      <p className="m-0 text-lg text-slate">No password. {SMS_ENABLED ? "We'll send you a link or a code." : "We'll email you a link."}</p>
 
-      <div role="tablist" className="flex gap-1 rounded-full bg-sand p-1 self-start">
+      {SMS_ENABLED && <div role="tablist" className="flex gap-1 rounded-full bg-sand p-1 self-start">
         {(["email", "phone"] as const).map((m) => (
           <button key={m} role="tab" aria-selected={mode === m} onClick={() => { setMode(m); setStage("enter"); setValue(""); setError(""); }}
             className={"h-10 px-5 rounded-full font-bold " + (mode === m ? "bg-white" : "")}>
             {m === "email" ? "Email" : "Mobile number"}
           </button>
         ))}
-      </div>
+      </div>}
 
       {stage === "enter" && (
         <form onSubmit={send} className="flex flex-col gap-4">
@@ -88,6 +92,12 @@ function SignInInner() {
       )}
 
       {error && <p role="alert" className="m-0 text-rust font-bold">{error}</p>}
+
+      {/* Collection notice (APP 5): what we collect here and why. */}
+      <p className="m-0 text-[15px] text-slate">
+        We use your {mode === "email" ? "email address" : "mobile number"} to sign you in and, if you choose, to send reminders for volunteer slots you've confirmed.
+        It's kept secure, never sold, and only shared with a group if you tick to share it. <a href="/privacy">How we handle your information</a>
+      </p>
     </div>
   );
 }

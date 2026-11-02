@@ -7,7 +7,7 @@ export const revalidate = 300;
 
 export default async function Orgs() {
   const supabase = await createClient();
-  const { data: orgs } = await supabase.from("organisations").select("slug,name,about,child_safe_doc_path,logo_path").eq("status", "approved").order("name");
+  const { data: orgs } = await supabase.from("organisations").select("slug,name,about,has_child_safe,logo_path").eq("status", "approved").order("name");
 
   return (
     <div className="mx-auto max-w-[1240px] px-6 pt-10 pb-16 flex flex-col gap-6">
@@ -22,7 +22,7 @@ export default async function Orgs() {
             {o.about && <span className="text-slate">{o.about}</span>}
             <span className="flex gap-2 flex-wrap">
               <span className="px-2.5 py-0.5 rounded-full text-[13px] font-bold bg-sky-tint">Approved</span>
-              {o.child_safe_doc_path && <span className="px-2.5 py-0.5 rounded-full text-[13px] font-bold bg-peach text-rust">Child Safe evidence</span>}
+              {o.has_child_safe && <span className="px-2.5 py-0.5 rounded-full text-[13px] font-bold bg-peach text-rust">Child Safe evidence</span>}
             </span>
           </Link>
         ))}

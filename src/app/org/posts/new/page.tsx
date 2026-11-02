@@ -37,7 +37,7 @@ export default async function NewPost({ searchParams }: { searchParams: Promise<
   // New posts start with the organisation's registered contact as the point person.
   let init: PostInit = {
     kind: "slot", peopleNeeded: 6, start: "09:00", end: "12:00", requirements: [],
-    contactName: org.contact_name, contactEmail: org.contact_email, onsiteSame: true, shareConsent: false,
+    contactName: org.contact?.contact_name, contactEmail: org.contact?.contact_email, onsiteSame: true, shareConsent: false,
     reminderHours: [24], reminderChannels: ["email"],
   };
   if (source) {
@@ -51,7 +51,7 @@ export default async function NewPost({ searchParams }: { searchParams: Promise<
       peopleNeeded: source.people_needed, venue: source.venue ?? "", suburb: source.suburb ?? "",
       description: source.description ?? "", provides: source.provides ?? "", requirements: source.requirements ?? [],
       imagePath: source.image_path ?? undefined,
-      contactName: contacts?.contact_name ?? org.contact_name, contactEmail: contacts?.contact_email ?? org.contact_email,
+      contactName: contacts?.contact_name ?? org.contact?.contact_name, contactEmail: contacts?.contact_email ?? org.contact?.contact_email,
       contactPhone: contacts?.contact_phone ?? "", onsiteSame: contacts?.onsite_same ?? true,
       onsiteName: contacts?.onsite_name ?? "", onsitePhone: contacts?.onsite_phone ?? "",
       // A copy from last year must be re-confirmed: the people or their permission may have changed.

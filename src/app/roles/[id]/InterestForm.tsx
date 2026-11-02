@@ -45,11 +45,12 @@ export function InterestForm(p: Props) {
       {p.adultConfirmed && <input type="hidden" name="adult" value="on" />}
       <label className="flex flex-col gap-1.5 font-bold">
         Note for the group <span className="font-normal text-slate">(optional)</span>
-        <textarea name="note" rows={3} className="rounded-xl border-[1.5px] border-sand-line px-3.5 py-3 text-[17px] font-normal" />
+        <textarea name="note" rows={3} maxLength={500} className="rounded-xl border-[1.5px] border-sand-line px-3.5 py-3 text-[17px] font-normal" />
+        <span className="text-sm font-normal text-slate">Please don't include health, medical or other sensitive details. If you need adjustments, talk to the group directly.</span>
       </label>
       {state.error && <p role="alert" className="m-0 text-rust font-bold">{state.error}</p>}
       <button disabled={pending} className={btn + " disabled:opacity-60"}>{pending ? "Sending…" : "I'm interested"}</button>
-      <p className="m-0 text-[15px] text-slate">Nothing else about you is shared.</p>
+      <p className="m-0 text-[15px] text-slate">Nothing else about you is shared. <a href="/privacy">How we handle your information</a></p>
     </form>
   );
 }

@@ -77,6 +77,9 @@ export default function RegisterOrg() {
               <input name="childSafe" type="file" accept="application/pdf" className="text-[15px] font-normal" />
             </label>
             {state.error && <p role="alert" className="m-0 text-rust font-bold">{state.error}</p>}
+            <p className="m-0 text-[15px] text-slate">
+              We use these details to check your group and contact you about Pi-Volunteers. Your Child Safe document is private: only our admins can open it. <a href="/privacy">How we handle your information</a>
+            </p>
             <button disabled={pending} className="self-start h-14 px-7 rounded-full bg-orange hover:bg-orange-deep text-white text-lg font-bold disabled:opacity-60">
               {pending ? "Submitting…" : "Submit for approval"}
             </button>

@@ -8,8 +8,9 @@ type Links = { https: string; apple: string; google: string; outlook: string; mi
 const pill = "min-h-11 px-4 whitespace-nowrap rounded-full border-[1.5px] border-sand-line bg-white font-bold text-[15px] flex items-center justify-center no-underline hover:border-navy";
 
 /** Subscribe once and the calendar app keeps itself up to date. The link is private to the owner. */
-export function SubscribePanel({ links, what }: { links: Links; what: string }) {
+export function SubscribePanel({ links, what, onReset }: { links: Links; what: string; onReset: () => Promise<void> }) {
   const [copied, setCopied] = useState<boolean | null>(null);
+  const [confirmReset, setConfirmReset] = useState(false);
   return (
     <div className="h-full rounded-card bg-white border border-sand-line p-5 flex flex-col gap-3">
       <span className="text-lg font-bold">Keep {what} in your calendar</span>
@@ -28,7 +29,18 @@ export function SubscribePanel({ links, what }: { links: Links; what: string }) 
         </button>
       </div>
       {copied === false && <span role="alert" className="text-sm text-rust">Your browser blocked copying. Select the link and copy it by hand.</span>}
-      <span className="text-sm text-slate">Keep this link to yourself: anyone with it can see these volunteer slots. Apple Calendar shows reminders 1 day and 2 hours before.</span>
+      <span className="text-sm text-slate">
+        Keep this link to yourself: anyone with it can see these volunteer slots (but not anyone's contact details). Apple Calendar shows reminders 1 day and 2 hours before.
+      </span>
+      {!confirmReset ? (
+        <button onClick={() => setConfirmReset(true)} className="self-start text-sm font-bold underline underline-offset-2 min-h-11">Shared this link by mistake? Reset it</button>
+      ) : (
+        <form action={onReset} className="flex flex-wrap items-center gap-2 text-sm">
+          <span>Your old link stops working. Calendars using it will need the new one.</span>
+          <button className="h-11 px-4 rounded-full bg-rust text-white font-bold">Reset link</button>
+          <button type="button" onClick={() => setConfirmReset(false)} className="h-11 px-4 rounded-full border-[1.5px] border-sand-line bg-white font-bold">Cancel</button>
+        </form>
+      )}
     </div>
   );
 }
