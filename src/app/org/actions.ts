@@ -199,3 +199,10 @@ export async function setInterestStatus(interestId: string, status: "confirmed" 
   // TODO(phase 1): email the volunteer (confirmed → details + .ics invite).
   revalidatePath("/org/dashboard");
 }
+
+/** Optional record of who came. null clears it. The database checks the slot has started. */
+export async function markAttendance(interestId: string, attended: boolean | null) {
+  const supabase = await createClient();
+  await supabase.from("interests").update({ attended }).eq("id", interestId);
+  revalidatePath("/org/dashboard");
+}
