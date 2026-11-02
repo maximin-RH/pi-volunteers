@@ -17,7 +17,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
 
   const supabase = await createClient();
   const [{ data: posts }, { data: ints }] = await Promise.all([
-    supabase.from("opportunities").select("id,title,status,starts_at,ends_at,people_needed,suburb,venue,provides,image_path").eq("org_id", org.id).order("starts_at", { ascending: false }),
+    supabase.from("opportunities").select("id,title,status,starts_at,ends_at,people_needed,suburb,venue,provides,image_path,description").eq("org_id", org.id).order("starts_at", { ascending: false }),
     supabase.from("interests").select("id,status,display_name,shared_email,shared_phone,note,opportunity_id,opportunities!inner(title,org_id)").eq("opportunities.org_id", org.id).order("created_at"),
   ]);
 
@@ -101,7 +101,16 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
         </aside>
       </div>
 
-      {sharePost && <ShareDialog post={{ id: sharePost.id, title: sharePost.title, orgName: org.name }} />}
+      {sharePost && (
+        <ShareDialog
+          post={{
+            id: sharePost.id, title: sharePost.title, orgName: org.name, orgSlug: org.slug,
+            when: [fullDate(sharePost.starts_at), timeRange(sharePost.starts_at, sharePost.ends_at)].filter(Boolean).join(", "),
+            where: [sharePost.venue, sharePost.suburb].filter(Boolean).join(", "),
+            peopleNeeded: sharePost.people_needed, description: sharePost.description,
+          }}
+        />
+      )}
     </div>
   );
 }

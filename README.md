@@ -15,7 +15,7 @@ Stack: **Next.js 15 (App Router) · Supabase (Postgres, Auth, Storage) · Tailwi
 | Org registration (+ Child Safe PDF upload) | Working, admin approves in Supabase Studio |
 | Org dashboard: Live / Draft / Past, confirm or decline | Working |
 | Post editor with "Start from last year" clone | Working |
-| Facebook share (Open Graph preview on every role page) | Working |
+| Sharing: copy link, Facebook, WhatsApp, email, text message, newsletter text, website link and button (Open Graph preview on every role page) | Working |
 | About, Calendar, emails, admin screen, noticeboard PDF | To do. See `docs/ROADMAP.md` |
 
 Design reference: `docs/design/Pi-Volunteers Website v3.dc.html`. Open it in a browser to compare.
