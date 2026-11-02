@@ -26,10 +26,19 @@ export function timeRange(start: string | null, end: string | null) {
 
 /** Combine a yyyy-mm-dd date and hh:mm time entered in Melbourne into an ISO string. */
 export function melbourneToIso(date: string, hhmm: string) {
-  const guess = new Date(date + "T" + hhmm + ":00Z");
-  const local = new Date(guess.toLocaleString("en-US", { timeZone: TZ }));
-  const offset = local.getTime() - guess.getTime();
-  return new Date(guess.getTime() - offset).toISOString();
+  const guess = Date.parse(date + "T" + hhmm + ":00Z");
+  const first = guess - melbourneOffsetMs(guess);
+  // Re-check at the real instant in case daylight saving changes between the guess and the answer.
+  return new Date(guess - melbourneOffsetMs(first)).toISOString();
+}
+
+/** Melbourne's offset from UTC at a moment, in ms. Independent of the server's own time zone. */
+function melbourneOffsetMs(at: number) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: TZ, hourCycle: "h23", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit",
+  }).formatToParts(at);
+  const p = Object.fromEntries(parts.map((x) => [x.type, Number(x.value)]));
+  return Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second) - Math.floor(at / 1000) * 1000;
 }
 
 export function slugify(s: string) {

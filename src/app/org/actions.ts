@@ -5,8 +5,20 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { melbourneToIso, slugify } from "@/lib/format";
+import { IMAGE_TYPES, imageProblem } from "@/lib/images";
 
 export type RegState = { ok?: boolean; error?: string };
+
+type Supabase = Awaited<ReturnType<typeof createClient>>;
+
+/** Uploads an image to `bucket/folder/` and returns its path. */
+async function uploadImage(supabase: Supabase, bucket: "role-images" | "org-logos", folder: string, file: File) {
+  const path = folder + "/" + Date.now() + "." + IMAGE_TYPES[file.type];
+  const { error } = await supabase.storage.from(bucket).upload(path, file, { contentType: file.type });
+  return error ? null : path;
+}
+
+const fileOf = (v: FormDataEntryValue | null) => (v instanceof File && v.size > 0 ? v : null);
 
 const OrgSchema = z.object({
   name: z.string().trim().min(2, "Add your organisation name."),
@@ -18,14 +30,22 @@ const OrgSchema = z.object({
 });
 
 export async function registerOrg(_: RegState, form: FormData): Promise<RegState> {
-  const p = OrgSchema.safeParse(Object.fromEntries([...form].filter(([k]) => k !== "childSafe")));
+  const p = OrgSchema.safeParse(Object.fromEntries([...form].filter(([k]) => k !== "childSafe" && k !== "logo")));
   if (!p.success) return { error: p.error.issues[0].message };
   const v = p.data;
   if (v.type !== "informal_group" && !v.abn) return { error: "Add your ABN or incorporation number." };
 
+  const logo = fileOf(form.get("logo"));
+  if (!logo) return { error: "Add your group's logo." };
+  const logoProblem = imageProblem(logo);
+  if (logoProblem) return { error: "Logo: " + logoProblem };
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "Sign in first." };
+
+  const logoPath = await uploadImage(supabase, "org-logos", user.id, logo);
+  if (!logoPath) return { error: "The logo didn't upload. Try again." };
 
   let childSafePath: string | null = null;
   const file = form.get("childSafe");
@@ -45,6 +65,7 @@ export async function registerOrg(_: RegState, form: FormData): Promise<RegState
     contact_email: v.contactEmail,
     about: v.about || null,
     child_safe_doc_path: childSafePath,
+    logo_path: logoPath,
     created_by: user.id,
   });
   if (error) return { error: "That didn't save. Try again." };
@@ -69,13 +90,44 @@ const PostSchema = z.object({
   suburb: z.string().optional(),
   description: z.string().trim().optional(),
   provides: z.string().trim().optional(),
+  imagePath: z.string().optional(),
+  contactName: z.string().trim().max(80).optional(),
+  contactEmail: z.string().trim().email("Check the point person's email.").optional().or(z.literal("")),
+  contactPhone: z.string().trim().optional(),
+  onsiteSame: z.literal("on").optional(),
+  onsiteName: z.string().trim().max(80).optional(),
+  onsitePhone: z.string().trim().optional(),
+  shareConsent: z.literal("on").optional(),
   intent: z.enum(["draft", "live"]),
 });
 
+/** Australian landline or mobile, with or without +61, spaces, brackets or dashes. */
+const phoneOk = (s: string) => /^\+?\d{8,12}$/.test(s.replace(/[\s()-]/g, ""));
+
+/** Contact checks. Drafts only need valid formats; publishing needs the full set and permission. */
+function contactProblem(v: z.infer<typeof PostSchema>): string | null {
+  if (v.contactPhone && !phoneOk(v.contactPhone)) return "Check the point person's phone number.";
+  if (!v.onsiteSame && v.onsitePhone && !phoneOk(v.onsitePhone)) return "Check the on-the-day contact's phone number.";
+  if (v.intent === "draft") return null;
+  if (!v.contactName) return "Add a point person for volunteers' questions.";
+  if (!v.contactEmail && !v.contactPhone) return "Add an email or phone number for the point person.";
+  if (!v.onsiteSame && !v.onsiteName) return "Add who volunteers should meet on the day.";
+  if (!v.shareConsent) return "Confirm you have permission to share these contact details with registered volunteers.";
+  return null;
+}
+
 export async function savePost(_: RegState, form: FormData): Promise<RegState> {
-  const p = PostSchema.safeParse(Object.fromEntries([...form].filter(([k]) => k !== "requirements")));
+  const p = PostSchema.safeParse(Object.fromEntries([...form].filter(([k]) => k !== "requirements" && k !== "image")));
   if (!p.success) return { error: p.error.issues[0].message };
   const v = p.data;
+  const contactError = contactProblem(v);
+  if (contactError) return { error: contactError };
+
+  const image = fileOf(form.get("image"));
+  if (image) {
+    const problem = imageProblem(image);
+    if (problem) return { error: "Event photo: " + problem };
+  }
 
   let starts_at: string | null = null;
   let ends_at: string | null = null;
@@ -84,6 +136,14 @@ export async function savePost(_: RegState, form: FormData): Promise<RegState> {
     starts_at = melbourneToIso(v.date, v.start);
     ends_at = melbourneToIso(v.date, v.end);
     if (ends_at <= starts_at) return { error: "Finish time must be after the start time." };
+  }
+
+  const supabase = await createClient();
+  // Keep an existing or cloned photo unless a new one was chosen. Only paths in this org's folder.
+  let image_path = v.imagePath?.startsWith(v.orgId + "/") ? v.imagePath : null;
+  if (image) {
+    image_path = await uploadImage(supabase, "role-images", v.orgId, image);
+    if (!image_path) return { error: "The event photo didn't upload. Try again." };
   }
 
   const row = {
@@ -101,9 +161,9 @@ export async function savePost(_: RegState, form: FormData): Promise<RegState> {
     requirements: form.getAll("requirements").map(String),
     status: v.intent,
     cloned_from: v.clonedFrom || null,
+    image_path,
   };
 
-  const supabase = await createClient();
   const q = v.id
     ? supabase.from("opportunities").update(row).eq("id", v.id).select("id").single()
     : supabase.from("opportunities").insert(row).select("id").single();
@@ -111,6 +171,22 @@ export async function savePost(_: RegState, form: FormData): Promise<RegState> {
   if (error) {
     return { error: v.intent === "live" ? "Couldn't publish. Your group may still be waiting for approval, so save it as a draft for now." : "That didn't save. Try again." };
   }
+
+  const onsiteSame = !!v.onsiteSame;
+  const { error: contactSaveError } = await supabase.from("opportunity_contacts").upsert(
+    {
+      opportunity_id: data.id,
+      contact_name: v.contactName || null,
+      contact_email: v.contactEmail || null,
+      contact_phone: v.contactPhone || null,
+      onsite_same: onsiteSame,
+      onsite_name: onsiteSame ? null : v.onsiteName || null,
+      onsite_phone: onsiteSame ? null : v.onsitePhone || null,
+      share_consent: !!v.shareConsent,
+    },
+    { onConflict: "opportunity_id" }
+  );
+  if (contactSaveError) return { error: "The role saved but the contact details didn't. Open it again and re-save." };
 
   revalidatePath("/org/dashboard");
   revalidatePath("/");

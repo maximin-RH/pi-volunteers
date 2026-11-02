@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { fullDate, timeRange } from "@/lib/format";
 import { withdrawInterest } from "@/app/roles/[id]/actions";
+import { ContactDetails, type Contacts } from "@/components/ContactDetails";
 
 export const metadata = { title: "My volunteering" };
 
@@ -20,11 +21,17 @@ export default async function Me() {
 
   const { data: rows } = await supabase
     .from("interests")
-    .select("status, opportunity:opportunities(id,title,starts_at,ends_at,venue,suburb,org:organisations(name))")
+    .select("status, opportunity:opportunities(id,title,starts_at,ends_at,venue,suburb,org:organisations(name),contacts:opportunity_contacts(contact_name,contact_email,contact_phone,onsite_same,onsite_name,onsite_phone))")
     .eq("volunteer_id", user.id)
     .order("created_at", { ascending: false });
 
-  type Row = { status: string; opportunity: { id: string; title: string; starts_at: string | null; ends_at: string | null; venue: string | null; suburb: string | null; org: { name: string } } };
+  type Row = {
+    status: string;
+    opportunity: {
+      id: string; title: string; starts_at: string | null; ends_at: string | null; venue: string | null; suburb: string | null;
+      org: { name: string }; contacts: Contacts | null;
+    };
+  };
   const list = (rows ?? []) as unknown as Row[];
   const now = Date.now();
   const upcoming = list.filter((r) => ["interested", "confirmed"].includes(r.status) && (!r.opportunity.starts_at || new Date(r.opportunity.starts_at).getTime() > now));
@@ -73,6 +80,7 @@ export default async function Me() {
           <span className="text-[15px] text-slate">
             {[r.opportunity.org.name, fullDate(r.opportunity.starts_at), timeRange(r.opportunity.starts_at, r.opportunity.ends_at), r.opportunity.suburb].filter(Boolean).join(" · ")}
           </span>
+          {withdraw && r.opportunity.contacts && <div className="pt-2"><ContactDetails c={r.opportunity.contacts} compact /></div>}
         </div>
         {withdraw && (
           <form action={withdraw}><button className="h-11 px-4 rounded-full border-[1.5px] border-sand-line bg-white font-bold">Can't make it</button></form>

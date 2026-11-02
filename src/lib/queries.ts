@@ -19,6 +19,7 @@ export type Listing = {
   provides: string | null;
   requirements: string[];
   image_path: string | null;
+  org_logo: string | null;
 };
 
 export async function listOpportunities(opts: { category?: string; suburb?: string; days?: number } = {}) {

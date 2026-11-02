@@ -4,21 +4,18 @@ import type { Metadata } from "next";
 import { getOpportunity, REQ_LABELS } from "@/lib/queries";
 import { fullDate, timeRange } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
+import { roleImage } from "@/lib/images";
+import { ContactDetails, type Contacts } from "@/components/ContactDetails";
 import { InterestForm } from "./InterestForm";
 
 type P = { params: Promise<{ id: string }> };
-
-function imageUrl(path: string | null) {
-  if (!path) return "/images/coast.jpg";
-  return process.env.NEXT_PUBLIC_SUPABASE_URL + "/storage/v1/object/public/role-images/" + path;
-}
 
 // Drives the Facebook / link preview card.
 export async function generateMetadata({ params }: P): Promise<Metadata> {
   const o = await getOpportunity((await params).id);
   if (!o) return {};
   const desc = [fullDate(o.starts_at), timeRange(o.starts_at, o.ends_at), o.venue, o.suburb].filter(Boolean).join(" · ") + ". " + (o.people_needed - o.confirmed_count) + " people needed.";
-  return { title: o.title, description: desc, openGraph: { title: o.title + " · " + o.org_name, description: desc, images: [imageUrl(o.image_path)] } };
+  return { title: o.title, description: desc, openGraph: { title: o.title + " · " + o.org_name, description: desc, images: [roleImage(o).src] } };
 }
 
 export default async function Role({ params }: P) {
@@ -35,12 +32,24 @@ export default async function Role({ params }: P) {
       ])
     : [{ data: null }, { data: null }];
 
+  // RLS returns contacts only to volunteers registered for this role, and only with the org's permission.
+  const registered = existing?.status === "interested" || existing?.status === "confirmed";
+  const { data: contacts } = registered
+    ? await supabase.from("opportunity_contacts").select("contact_name,contact_email,contact_phone,onsite_same,onsite_name,onsite_phone").eq("opportunity_id", id).maybeSingle()
+    : { data: null };
+
   const left = Math.max(0, o.people_needed - o.confirmed_count);
+  const img = roleImage(o);
 
   return (
     <div className="mx-auto max-w-[1240px] px-6 pt-6 pb-16 flex flex-col gap-6">
       <Link href="/roles" className="font-bold no-underline">← All roles</Link>
-      <div role="img" aria-label="" className="w-full h-[clamp(220px,32vw,400px)] rounded-hero bg-navy bg-cover bg-center" style={{ backgroundImage: "url(" + imageUrl(o.image_path) + ")" }} />
+      <div
+        role="img"
+        aria-label={img.isLogo ? o.org_name + " logo" : ""}
+        className={"w-full h-[clamp(220px,32vw,400px)] rounded-hero bg-center bg-no-repeat " + (img.isLogo ? "bg-white border border-sand-line bg-contain bg-origin-content p-[clamp(24px,4vw,48px)]" : "bg-navy bg-cover")}
+        style={{ backgroundImage: "url(" + img.src + ")" }}
+      />
       <div className="flex flex-wrap gap-10 items-start">
         <article className="flex-[3_1_520px] min-w-0 flex flex-col gap-5">
           <Link href={"/orgs/" + o.org_slug} className="font-bold text-orange no-underline">{o.org_name}</Link>
@@ -70,6 +79,11 @@ export default async function Role({ params }: P) {
             status={existing?.status ?? null}
             full={!left}
           />
+          {contacts ? (
+            <ContactDetails c={contacts as Contacts} />
+          ) : (
+            !registered && <p className="m-0 text-[15px] text-slate">Once you register, you'll see who to contact with questions and who to meet on the day.</p>
+          )}
         </aside>
       </div>
     </div>

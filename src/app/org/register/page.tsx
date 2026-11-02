@@ -1,8 +1,9 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import Link from "next/link";
 import { registerOrg, type RegState } from "../actions";
+import { IMAGE_ACCEPT, MAX_IMAGE_MB, imageProblem } from "@/lib/images";
 
 const input = "h-12 rounded-xl border-[1.5px] border-sand-line bg-white px-3.5 text-[17px] font-normal w-full";
 const label = "flex flex-col gap-1.5 font-bold min-w-0";
@@ -15,6 +16,15 @@ const STEPS = [
 
 export default function RegisterOrg() {
   const [state, action, pending] = useActionState<RegState, FormData>(registerOrg, {});
+  const [logo, setLogo] = useState<{ url?: string; error?: string }>({});
+
+  function pickLogo(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return setLogo({});
+    const problem = imageProblem(file);
+    if (problem) { e.target.value = ""; return setLogo({ error: problem }); }
+    setLogo({ url: URL.createObjectURL(file) });
+  }
 
   return (
     <div className="mx-auto max-w-[1240px] px-6 pt-8 pb-16 grid gap-10 items-start grid-cols-[repeat(auto-fit,minmax(min(100%,420px),1fr))]">
@@ -53,6 +63,16 @@ export default function RegisterOrg() {
               <label className={label}>Contact email<input name="contactEmail" type="email" required className={input} /></label>
             </div>
             <label className={label}>One line about your group<input name="about" maxLength={160} className={input} /></label>
+            <div className="flex gap-4 items-center">
+              <span className="shrink-0 w-24 h-24 rounded-card border-[1.5px] border-dashed border-sand-strong bg-paper flex items-center justify-center overflow-hidden">
+                {logo.url ? <img src={logo.url} alt="Your logo" className="w-full h-full object-contain p-1.5" /> : <span className="text-sm text-slate">Logo</span>}
+              </span>
+              <label className={label}>Logo
+                <input name="logo" type="file" accept={IMAGE_ACCEPT} required onChange={pickLogo} className="text-[15px] font-normal" />
+                <span className="text-sm font-normal text-slate">Shown on your roles when you don't add an event photo. Square works best. JPG, PNG or WebP, up to {MAX_IMAGE_MB} MB.</span>
+                {logo.error && <span role="alert" className="text-sm text-rust">{logo.error}</span>}
+              </label>
+            </div>
             <label className={label}>Child Safe policy or code of conduct <span className="font-normal text-slate">(PDF, optional at launch)</span>
               <input name="childSafe" type="file" accept="application/pdf" className="text-[15px] font-normal" />
             </label>

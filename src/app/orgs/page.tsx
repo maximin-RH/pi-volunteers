@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { publicImage } from "@/lib/images";
 
 export const metadata = { title: "Organisations" };
 export const revalidate = 300;
 
 export default async function Orgs() {
   const supabase = await createClient();
-  const { data: orgs } = await supabase.from("organisations").select("slug,name,about,child_safe_doc_path").eq("status", "approved").order("name");
+  const { data: orgs } = await supabase.from("organisations").select("slug,name,about,child_safe_doc_path,logo_path").eq("status", "approved").order("name");
 
   return (
     <div className="mx-auto max-w-[1240px] px-6 pt-10 pb-16 flex flex-col gap-6">
@@ -14,7 +15,10 @@ export default async function Orgs() {
       <div className="grid gap-3 grid-cols-[repeat(auto-fill,minmax(min(100%,340px),1fr))]">
         {(orgs ?? []).map((o) => (
           <Link key={o.slug} href={"/orgs/" + o.slug} className="rounded-card bg-white border border-sand-line p-5 flex flex-col gap-2 no-underline hover:border-navy">
-            <span className="text-xl font-bold">{o.name}</span>
+            <span className="flex items-center gap-3">
+              {o.logo_path && <img src={publicImage("org-logos", o.logo_path)} alt="" className="w-12 h-12 shrink-0 rounded-xl border border-sand-line bg-white object-contain p-1" />}
+              <span className="text-xl font-bold">{o.name}</span>
+            </span>
             {o.about && <span className="text-slate">{o.about}</span>}
             <span className="flex gap-2 flex-wrap">
               <span className="px-2.5 py-0.5 rounded-full text-[13px] font-bold bg-sky-tint">Approved</span>

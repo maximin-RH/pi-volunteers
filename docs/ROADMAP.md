@@ -1,9 +1,9 @@
 # Roadmap
 
 ## Phase 1: before launch
-1. **Emails (Resend).** Org gets an email when someone is interested. Volunteer gets one when confirmed, with an `.ics` calendar invite. Admins get one when a new org registers.
-2. **Admin screen** at `/admin`: approve or reject organisations, view Child Safe PDFs (signed URLs), suspend posts.
-3. **Role images.** Upload in the post editor to the `role-images` bucket; fall back to a category photo.
+1. **Emails (Resend).** Org gets an email when someone is interested. Volunteer gets one when confirmed, with an `.ics` calendar invite and the role's contacts (`opportunity_contacts`). Admins get one when a new org registers.
+2. **Admin screen** at `/admin`: approve or reject organisations, view Child Safe PDFs (signed URLs) and logos, suspend posts.
+3. ~~Role images~~ Done: optional event photo in the post editor, falling back to the org logo (required at registration). Still to do: let orgs change their logo after registering.
 4. **About page.** Port from the design file.
 5. **Calendar view** (month / week / list) from the design file.
 6. **Privacy policy and volunteer terms.** Needs real wording. Not legal advice in this repo.

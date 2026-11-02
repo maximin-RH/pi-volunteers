@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { currentOrg } from "@/lib/org";
 import { listCategories, listSuburbs, REQ_LABELS } from "@/lib/queries";
+import { publicImage } from "@/lib/images";
 import { PostForm, type PostInit } from "./PostForm";
 
 export const metadata = { title: "New post" };
@@ -25,14 +26,19 @@ export default async function NewPost({ searchParams }: { searchParams: Promise<
 
   const supabase = await createClient();
   const sourceId = sp.edit || sp.clone;
-  const [cats, suburbs, { data: source }, { data: past }] = await Promise.all([
+  const [cats, suburbs, { data: source }, { data: past }, { data: contacts }] = await Promise.all([
     listCategories(),
     listSuburbs(),
     sourceId ? supabase.from("opportunities").select("*").eq("id", sourceId).eq("org_id", org.id).maybeSingle() : Promise.resolve({ data: null }),
     supabase.from("opportunities").select("id,title,starts_at").eq("org_id", org.id).lt("starts_at", new Date().toISOString()).order("starts_at", { ascending: false }).limit(6),
+    sourceId ? supabase.from("opportunity_contacts").select("*").eq("opportunity_id", sourceId).maybeSingle() : Promise.resolve({ data: null }),
   ]);
 
-  let init: PostInit = { kind: "slot", peopleNeeded: 6, start: "09:00", end: "12:00", requirements: [] };
+  // New posts start with the organisation's registered contact as the point person.
+  let init: PostInit = {
+    kind: "slot", peopleNeeded: 6, start: "09:00", end: "12:00", requirements: [],
+    contactName: org.contact_name, contactEmail: org.contact_email, onsiteSame: true, shareConsent: false,
+  };
   if (source) {
     const s = source.starts_at ? (sp.clone ? nextYear(source.starts_at) : new Date(source.starts_at)) : null;
     const e = source.ends_at && s ? new Date(s.getTime() + (new Date(source.ends_at).getTime() - new Date(source.starts_at!).getTime())) : null;
@@ -43,6 +49,12 @@ export default async function NewPost({ searchParams }: { searchParams: Promise<
       date: s ? ymd(s) : undefined, start: s ? hm(s) : undefined, end: e ? hm(e) : undefined,
       peopleNeeded: source.people_needed, venue: source.venue ?? "", suburb: source.suburb ?? "",
       description: source.description ?? "", provides: source.provides ?? "", requirements: source.requirements ?? [],
+      imagePath: source.image_path ?? undefined,
+      contactName: contacts?.contact_name ?? org.contact_name, contactEmail: contacts?.contact_email ?? org.contact_email,
+      contactPhone: contacts?.contact_phone ?? "", onsiteSame: contacts?.onsite_same ?? true,
+      onsiteName: contacts?.onsite_name ?? "", onsitePhone: contacts?.onsite_phone ?? "",
+      // A copy from last year must be re-confirmed: the people or their permission may have changed.
+      shareConsent: sp.edit ? !!contacts?.share_consent : false,
     };
   }
 
@@ -65,7 +77,7 @@ export default async function NewPost({ searchParams }: { searchParams: Promise<
           </div>
         </div>
       )}
-      <PostForm key={sourceId ?? "new"} orgId={org.id} orgName={org.name} init={init} categories={cats} suburbs={suburbs} reqs={Object.keys(REQ_LABELS)} />
+      <PostForm key={sourceId ?? "new"} orgId={org.id} orgName={org.name} orgLogo={org.logo_path ? publicImage("org-logos", org.logo_path) : null} init={init} categories={cats} suburbs={suburbs} reqs={Object.keys(REQ_LABELS)} />
     </div>
   );
 }
